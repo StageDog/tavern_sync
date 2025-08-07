@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "types": [
+      "node"
+    ],
+    "target": "ESNext",
+    "module": "NodeNext",
+    "outDir": "dist",
+    "baseUrl": "server",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "moduleDetection": "auto",
+    "moduleResolution": "nodenext",
+    "allowUmdGlobalAccess": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "checkJs": false,
+    "sourceMap": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "server"
+  ],
+  "exclude": [
+    "**/node_modules/**",
+    "**/dist/**"
+  ]
+}
