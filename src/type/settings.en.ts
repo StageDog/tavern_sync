@@ -1,0 +1,17 @@
+import * as z from 'zod';
+
+export type Config_type = z.infer<typeof Config_type>;
+export const Config_type = z.enum(['lorebook', 'preset']);
+
+export type Config = z.infer<typeof Config>;
+export const Config = z.object({
+  type: Config_type,
+  name: z.string(),
+  path: z.string(),
+});
+
+export type Settings = z.infer<typeof Settings>;
+export const Settings = z.object({
+  user_name: z.string(),
+  configs: z.record(z.string(), Config),
+});

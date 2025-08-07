@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "user名称": {
+      "type": "string"
+    },
+    "配置": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "类型": {
+            "type": "string",
+            "enum": [
+              "世界书",
+              "预设"
+            ]
+          },
+          "酒馆中的名称": {
+            "type": "string"
+          },
+          "本地文件路径": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "类型",
+          "酒馆中的名称",
+          "本地文件路径"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "user名称",
+    "配置"
+  ],
+  "additionalProperties": false
+}

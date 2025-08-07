@@ -2,25 +2,19 @@
   "compilerOptions": {
     "composite": true,
     "types": [
-      "jquery",
-      "jqueryui",
-      "lodash",
-      "toastr",
-      "type-fest",
-      "yaml",
-      "zod",
+      "node"
     ],
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "NodeNext",
     "outDir": "dist",
     "baseUrl": "src",
     "paths": {
       "@/*": [
-        "client/*"
+        "type/*"
       ]
     },
     "moduleDetection": "auto",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "allowUmdGlobalAccess": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
@@ -35,11 +29,10 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "src/client",
-    "tavern_helper/@types"
+    "src/type"
   ],
   "exclude": [
     "**/node_modules/**",
-    "**/dist/**",
+    "**/dist/**"
   ]
 }

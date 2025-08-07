@@ -7,10 +7,13 @@
     "target": "ESNext",
     "module": "NodeNext",
     "outDir": "dist",
-    "baseUrl": "server",
+    "baseUrl": "src",
     "paths": {
       "@/*": [
-        "./*"
+        "server/*"
+      ],
+      "@type/*": [
+        "type/*"
       ]
     },
     "moduleDetection": "auto",
@@ -29,7 +32,8 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "server"
+    "src/server",
+    "src/type"
   ],
   "exclude": [
     "**/node_modules/**",

@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "minItems": 1,
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "uid": {
+        "description": "uid 是相对于世界书内部的, 不要跨世界书使用",
+        "type": "number"
+      },
+      "display_index": {
+        "description": "酒馆中将排序设置为 \"自定义\" 时的显示顺序",
+        "type": "number"
+      },
+      "comment": {
+        "type": "string"
+      },
+      "enabled": {
+        "type": "boolean"
+      },
+      "type": {
+        "type": "string",
+        "enum": [
+          "constant",
+          "selective",
+          "vectorized"
+        ]
+      },
+      "position": {
+        "type": "string",
+        "enum": [
+          "before_character_definition",
+          "after_character_definition",
+          "before_example_messages",
+          "after_example_messages",
+          "before_author_note",
+          "after_author_note",
+          "at_depth_as_system",
+          "at_depth_as_assistant",
+          "at_depth_as_user"
+        ]
+      },
+      "depth": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "order": {
+        "type": "number"
+      },
+      "probability": {
+        "type": "number"
+      },
+      "keys": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "logic": {
+        "type": "string",
+        "enum": [
+          "and_any",
+          "and_all",
+          "not_all",
+          "not_any"
+        ]
+      },
+      "filters": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "scan_depth": {
+        "anyOf": [
+          {
+            "type": "string",
+            "const": "same_as_global"
+          },
+          {
+            "type": "number"
+          }
+        ]
+      },
+      "case_sensitive": {
+        "anyOf": [
+          {
+            "type": "string",
+            "const": "same_as_global"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      },
+      "match_whole_words": {
+        "anyOf": [
+          {
+            "type": "string",
+            "const": "same_as_global"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      },
+      "use_group_scoring": {
+        "anyOf": [
+          {
+            "type": "string",
+            "const": "same_as_global"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      },
+      "automation_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "exclude_recursion": {
+        "type": "boolean"
+      },
+      "prevent_recursion": {
+        "type": "boolean"
+      },
+      "delay_until_recursion": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "number"
+          }
+        ]
+      },
+      "content": {
+        "type": "string"
+      },
+      "group": {
+        "type": "string"
+      },
+      "group_prioritized": {
+        "type": "boolean"
+      },
+      "group_weight": {
+        "type": "number"
+      },
+      "sticky": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "cooldown": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "delay": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "uid",
+      "display_index",
+      "comment",
+      "enabled",
+      "type",
+      "position",
+      "depth",
+      "order",
+      "probability",
+      "keys",
+      "logic",
+      "filters",
+      "scan_depth",
+      "case_sensitive",
+      "match_whole_words",
+      "use_group_scoring",
+      "automation_id",
+      "exclude_recursion",
+      "prevent_recursion",
+      "delay_until_recursion",
+      "content",
+      "group",
+      "group_prioritized",
+      "group_weight",
+      "sticky",
+      "cooldown",
+      "delay"
+    ],
+    "additionalProperties": false
+  }
+}

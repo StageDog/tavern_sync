@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "user_name": {
+      "type": "string"
+    },
+    "configs": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "lorebook",
+              "preset"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "name",
+          "path"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "user_name",
+    "configs"
+  ],
+  "additionalProperties": false
+}

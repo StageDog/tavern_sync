@@ -1,0 +1,365 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "settings": {
+      "type": "object",
+      "properties": {
+        "max_context": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_completion_tokens": {
+          "type": "number",
+          "minimum": 0
+        },
+        "reply_count": {
+          "type": "number",
+          "minimum": 1
+        },
+        "should_stream": {
+          "type": "boolean"
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "frequency_penalty": {
+          "type": "number",
+          "minimum": -2,
+          "maximum": 2
+        },
+        "presence_penalty": {
+          "type": "number",
+          "minimum": -2,
+          "maximum": 2
+        },
+        "repetition_penalty": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "top_p": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_p": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "top_k": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 500
+        },
+        "top_a": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "seed": {
+          "type": "number"
+        },
+        "squash_system_messages": {
+          "type": "boolean"
+        },
+        "reasoning_effort": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "min",
+            "low",
+            "medium",
+            "high",
+            "max"
+          ]
+        },
+        "request_thoughts": {
+          "type": "boolean"
+        },
+        "request_images": {
+          "type": "boolean"
+        },
+        "enable_function_calling": {
+          "type": "boolean"
+        },
+        "enable_web_search": {
+          "type": "boolean"
+        },
+        "allow_images": {
+          "type": "string",
+          "enum": [
+            "disabled",
+            "auto",
+            "low",
+            "high"
+          ]
+        },
+        "allow_videos": {
+          "type": "boolean"
+        },
+        "character_name_prefix": {
+          "type": "string",
+          "enum": [
+            "none",
+            "default",
+            "content",
+            "completion"
+          ]
+        },
+        "wrap_user_messages_in_quotes": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "max_context",
+        "max_completion_tokens",
+        "reply_count",
+        "should_stream",
+        "temperature",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty",
+        "top_p",
+        "min_p",
+        "top_k",
+        "top_a",
+        "seed",
+        "squash_system_messages",
+        "reasoning_effort",
+        "request_thoughts",
+        "request_images",
+        "enable_function_calling",
+        "enable_web_search",
+        "allow_images",
+        "allow_videos",
+        "character_name_prefix",
+        "wrap_user_messages_in_quotes"
+      ],
+      "additionalProperties": false
+    },
+    "prompts": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "default": "f7c82bce-bd2b-4c40-ab04-60e8f4d2acc5",
+                "type": "string"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "name": {
+                "type": "string"
+              },
+              "position": {
+                "type": "string",
+                "enum": [
+                  "relative",
+                  "number"
+                ]
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "system",
+                  "user",
+                  "assistant"
+                ]
+              },
+              "content": {
+                "type": "string"
+              },
+              "extra": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "enabled",
+              "name",
+              "position",
+              "role",
+              "content"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "enum": [
+                  "main",
+                  "nsfw",
+                  "jailbreak",
+                  "enhanceDefinitions"
+                ]
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "system",
+                  "user",
+                  "assistant"
+                ]
+              },
+              "content": {
+                "type": "string"
+              },
+              "extra": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "enabled",
+              "name",
+              "role",
+              "content"
+            ],
+            "additionalProperties": false
+          },
+          {}
+        ]
+      }
+    },
+    "prompts_unused": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "default": "f7c82bce-bd2b-4c40-ab04-60e8f4d2acc5",
+                "type": "string"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "name": {
+                "type": "string"
+              },
+              "position": {
+                "type": "string",
+                "enum": [
+                  "relative",
+                  "number"
+                ]
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "system",
+                  "user",
+                  "assistant"
+                ]
+              },
+              "content": {
+                "type": "string"
+              },
+              "extra": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "enabled",
+              "name",
+              "position",
+              "role",
+              "content"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "enum": [
+                  "main",
+                  "nsfw",
+                  "jailbreak",
+                  "enhanceDefinitions"
+                ]
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "system",
+                  "user",
+                  "assistant"
+                ]
+              },
+              "content": {
+                "type": "string"
+              },
+              "extra": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "enabled",
+              "name",
+              "role",
+              "content"
+            ],
+            "additionalProperties": false
+          },
+          {}
+        ]
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    }
+  },
+  "required": [
+    "settings",
+    "prompts",
+    "prompts_unused",
+    "extensions"
+  ],
+  "additionalProperties": false
+}

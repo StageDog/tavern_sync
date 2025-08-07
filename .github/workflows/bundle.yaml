@@ -18,9 +18,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: JesseTG/rm@v1.0.3
-        with:
-          path: dist
+      - run: rm -rf dist
+        shell: bash
       - name: Use Node.js
         uses: actions/setup-node@v4
         with: { node-version: 22 }
@@ -29,6 +28,11 @@ jobs:
         with: { version: 10 }
       - run: pnpm i
       - run: pnpm build
+      - run: node ./dist/schema.js
+      - run: |-
+          cp -R src/type dist/type
+          rm -f dist/type/index.ts
+        shell: bash
       - name: Commit changes
         uses: EndBug/add-and-commit@v9.1.3
         with:

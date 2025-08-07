@@ -11,7 +11,7 @@
 
 - 在酒馆助手脚本库中创建脚本, 内容填写为 `import 'https://fastly.jsdelivr.net/gh/StageDog/tavern_sync/dist/script.js'`, 不用时记得关
 - 下载 dist 文件夹中的 `tavern_sync.js` 文件, 用 `node tavern_sync.js` 运行, 你可以用 `node tavern_sync.js -h` 查看帮助
-- 如果你需要, 可以将下载 server/types 里的文件定义, 将它和破限 (可能有版权问题?) 喂给 Cursor、Augment、RooCode 等 ai 工具, 让它帮你写世界书和预设
+- 如果你需要, 可以将下载 dist/type 里的文件定义, 将它和破限 (可能有版权问题?) 喂给 Cursor、Augment、RooCode 等 ai 工具, 让它帮你写世界书和预设
 
 ## 更新
 

@@ -26,6 +26,9 @@ importers:
       yaml:
         specifier: ^2.8.1
         version: 2.8.1
+      zod:
+        specifier: ^4.0.15
+        version: 4.0.15
     devDependencies:
       '@eslint/js':
         specifier: ^9.32.0
@@ -1332,6 +1335,9 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zod@4.0.15:
+    resolution: {integrity: sha512-2IVHb9h4Mt6+UXkyMs0XbfICUh1eUrlJJAOupBHUhLRnKkruawyDddYRCs0Eizt900ntIMk9/4RksYl+FgSpcQ==}
+
 snapshots:
 
   '@cspotcode/source-map-support@0.8.1':
@@ -2560,3 +2566,5 @@ snapshots:
   yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zod@4.0.15: {}
