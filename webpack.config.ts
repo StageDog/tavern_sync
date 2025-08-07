@@ -97,6 +97,7 @@ export default [
           toastr: 'toastr',
           yaml: 'YAML',
           jquery: '$',
+          zod: 'z',
         };
         if (request in builtin) {
           return callback(null, 'var ' + builtin[request as keyof typeof builtin]);
