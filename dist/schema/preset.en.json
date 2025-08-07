@@ -149,7 +149,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "default": "b27ece68-4650-423e-a41f-a1b098d3c3d0",
+                "default": "232ed735-bf8c-4641-9673-e1d79327a96d",
                 "type": "string"
               },
               "enabled": {
@@ -252,7 +252,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "default": "b27ece68-4650-423e-a41f-a1b098d3c3d0",
+                "default": "232ed735-bf8c-4641-9673-e1d79327a96d",
                 "type": "string"
               },
               "enabled": {
