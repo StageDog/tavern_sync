@@ -53367,7 +53367,7 @@ function get_settings() {
         const config_path = (0,external_node_path_.join)(__dirname, 'tavern_sync.yaml');
         if (!(0,external_node_fs_.existsSync)(config_path)) {
             // TODO: 询问 zh or en
-            const schema_url = 'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.yaml';
+            const schema_url = 'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json';
             let result = `# yaml-language-server: $schema=${schema_url}\n`;
             result += dist.stringify(default_settings);
             (0,external_node_fs_.writeFileSync)(config_path, result);
@@ -55257,7 +55257,7 @@ const Lorebook = array(Lorebook_entry).min(1);
 
 
 function beautingfy(entries, language) {
-    const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/lorebook.${language}.yaml`;
+    const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/lorebook.${language}.json`;
     let result = `# yaml-language-server: $schema=${schema_url}\n`;
     // TODO: zh
     result += dist.stringify(entries);
@@ -55425,7 +55425,7 @@ const Preset = object({
 
 
 function preset_beautingfy(preset, language) {
-    const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/preset.${language}.yaml`;
+    const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/preset.${language}.json`;
     let result = `# yaml-language-server: $schema=${schema_url}\n`;
     // TODO: zh
     result += dist.stringify(preset);
