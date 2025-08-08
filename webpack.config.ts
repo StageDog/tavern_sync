@@ -202,7 +202,7 @@ export default [
       plugins: [
         new TsconfigPathsPlugin({
           extensions: ['.ts', '.js'],
-          configFile: path.join(__dirname, 'tsconfig.server.json'),
+          configFile: path.join(__dirname, 'tsconfig.type.json'),
         }),
       ],
       alias: {},

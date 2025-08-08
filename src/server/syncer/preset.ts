@@ -1,6 +1,6 @@
-import { watch_on } from '@/component/watch_on';
-import { close_server, wait_socket } from '@/server';
-import { Pull_options, Syncer_interface } from '@/syncer/interface';
+import { watch_on } from '@server/component/watch_on';
+import { close_server, wait_socket } from '@server/server';
+import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Preset } from '@type/preset.en';
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';

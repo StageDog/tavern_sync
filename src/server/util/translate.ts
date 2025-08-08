@@ -1,4 +1,4 @@
-import { map_keys_deep, map_values_deep } from '@/util/map_deep';
+import { map_keys_deep, map_values_deep } from '@server/util/map_deep';
 
 export function translate(data: Record<string, any>, map: Record<string, string>) {
   const try_map = (string: string) => {

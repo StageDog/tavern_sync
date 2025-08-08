@@ -1,4 +1,4 @@
-import { get_settings } from '@/settings';
+import { get_settings } from '@client/settings';
 
 import { io, Socket } from 'socket.io-client';
 

@@ -1,8 +1,8 @@
-import { add_list_command } from '@/command/list';
-import { add_pull_command } from '@/command/pull';
-import { add_push_command } from '@/command/push';
-import { add_update_command } from '@/command/update';
-import { add_watch_command } from '@/command/watch';
+import { add_list_command } from '@server/command/list';
+import { add_pull_command } from '@server/command/pull';
+import { add_push_command } from '@server/command/push';
+import { add_update_command } from '@server/command/update';
+import { add_watch_command } from '@server/command/watch';
 
 import { program } from 'commander';
 import * as z from 'zod';

@@ -1,6 +1,6 @@
-import { Syncer_interface } from '@/syncer/interface';
-import { Lorebook_syncer } from '@/syncer/lorebook';
-import { Preset_syncer } from '@/syncer/preset';
+import { Syncer_interface } from '@server/syncer/interface';
+import { Lorebook_syncer } from '@server/syncer/lorebook';
+import { Preset_syncer } from '@server/syncer/preset';
 import { Config } from '@type/settings.en';
 
 export function create_syncer(config: Config): Syncer_interface {

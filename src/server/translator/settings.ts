@@ -1,4 +1,4 @@
-import { translate } from '@/util/translate';
+import { translate } from '@server/util/translate';
 import { Settings as Settings_en } from '@type/settings.en';
 import { Settings as Settings_zh } from '@type/settings.zh';
 

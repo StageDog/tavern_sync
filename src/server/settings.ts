@@ -1,4 +1,4 @@
-import { from_zh } from '@/translator/settings';
+import { from_zh } from '@server/translator/settings';
 import { Settings } from '@type/settings.en';
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -43,8 +43,7 @@ export function get_settings(): Settings {
     const config_path = join(__dirname, 'tavern_sync.yaml');
     if (!existsSync(config_path)) {
       // TODO: 询问 zh or en
-      const schema_url =
-        'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json';
+      const schema_url = 'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json';
       let result = `# yaml-language-server: $schema=${schema_url}\n`;
       result += YAML.stringify(default_settings);
       writeFileSync(config_path, result);

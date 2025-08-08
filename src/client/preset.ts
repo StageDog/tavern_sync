@@ -1,5 +1,5 @@
-import { get_settings } from '@/settings';
-import { get_socket } from '@/socket';
+import { get_settings } from '@client/settings';
+import { get_socket } from '@client/socket';
 import _ from 'lodash';
 async function update_preset(preset_name: string, preset: PromptPreset) {
   await createOrReplacePreset(preset_name, preset);

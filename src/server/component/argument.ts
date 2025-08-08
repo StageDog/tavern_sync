@@ -1,7 +1,7 @@
-import { beauingfy_configs } from '@/component/beauingfy_configs';
-import { get_settings } from '@/settings';
-import { create_syncer } from '@/syncer/factory';
-import { exit_on_error } from '@/util/exit_on_error';
+import { beauingfy_configs } from '@server/component/beauingfy_configs';
+import { get_settings } from '@server/settings';
+import { create_syncer } from '@server/syncer/factory';
+import { exit_on_error } from '@server/util/exit_on_error';
 
 import { Argument, Command, Option } from 'commander';
 

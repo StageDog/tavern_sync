@@ -1,5 +1,5 @@
-import { get_settings } from '@/settings';
-import { to_zh } from '@/translator/settings';
+import { get_settings } from '@server/settings';
+import { to_zh } from '@server/translator/settings';
 
 export function beauingfy_configs(): string {
   return `

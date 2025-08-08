@@ -1,4 +1,4 @@
-import { exit_on_error } from '@/util/exit_on_error';
+import { exit_on_error } from '@server/util/exit_on_error';
 
 import { Command } from 'commander';
 import { readFileSync, writeFileSync } from 'node:fs';

@@ -1,5 +1,5 @@
-import { get_settings } from '@/settings';
-import { get_socket } from '@/socket';
+import { get_settings } from '@client/settings';
+import { get_socket } from '@client/socket';
 
 async function update_lorebook(lorebook: string, entries: Partial<LorebookEntry>[]) {
   const lorebooks = getLorebooks();
