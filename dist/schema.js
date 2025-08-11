@@ -1,7 +1,113 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/core.js
+/***/ 354:
+/***/ (() => {
+
+
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+
+;// ./node_modules/.pnpm/dedent@1.6.0/node_modules/dedent/dist/dedent.mjs
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+const dedent = createDedent({});
+/* harmony default export */ const dist_dedent = (dedent);
+function createDedent(options) {
+  dedent.withOptions = newOptions => createDedent(_objectSpread(_objectSpread({}, options), newOptions));
+  return dedent;
+  function dedent(strings, ...values) {
+    const raw = typeof strings === "string" ? [strings] : strings.raw;
+    const {
+      escapeSpecialCharacters = Array.isArray(strings),
+      trimWhitespace = true
+    } = options;
+
+    // first, perform interpolation
+    let result = "";
+    for (let i = 0; i < raw.length; i++) {
+      let next = raw[i];
+      if (escapeSpecialCharacters) {
+        // handle escaped newlines, backticks, and interpolation characters
+        next = next.replace(/\\\n[ \t]*/g, "").replace(/\\`/g, "`").replace(/\\\$/g, "$").replace(/\\\{/g, "{");
+      }
+      result += next;
+      if (i < values.length) {
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        result += values[i];
+      }
+    }
+
+    // now strip indentation
+    const lines = result.split("\n");
+    let mindent = null;
+    for (const l of lines) {
+      const m = l.match(/^(\s+)\S+/);
+      if (m) {
+        const indent = m[1].length;
+        if (!mindent) {
+          // this is the first indented line
+          mindent = indent;
+        } else {
+          mindent = Math.min(mindent, indent);
+        }
+      }
+    }
+    if (mindent !== null) {
+      const m = mindent; // appease TypeScript
+      result = lines
+      // https://github.com/typescript-eslint/typescript-eslint/issues/7140
+      // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
+      .map(l => l[0] === " " || l[0] === "\t" ? l.slice(m) : l).join("\n");
+    }
+
+    // dedent eats leading and trailing whitespace too
+    if (trimWhitespace) {
+      result = result.trim();
+    }
+
+    // handle escaped newlines at the end to ensure they don't get stripped too
+    if (escapeSpecialCharacters) {
+      result = result.replace(/\\n/g, "\n");
+    }
+    return result;
+  }
+}
+
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/core.js
 /** A special constant with type `never` */
 const NEVER = Object.freeze({
     status: "aborted",
@@ -64,7 +170,7 @@ function config(newConfig) {
     return globalConfig;
 }
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/regexes.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/regexes.js
 const cuid = /^[cC][^\s-]{8,}$/;
 const cuid2 = /^[0-9a-z]+$/;
 const ulid = /^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$/;
@@ -162,7 +268,7 @@ const lowercase = /^[^A-Z]*$/;
 // regex for string with no lowercase letters
 const uppercase = /^[^a-z]*$/;
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/util.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/util.js
 // functions
 function assertEqual(val) {
     return val;
@@ -334,6 +440,11 @@ function isPlainObject(o) {
         return false;
     }
     return true;
+}
+function shallowClone(o) {
+    if (isPlainObject(o))
+        return { ...o };
+    return o;
 }
 function numKeys(data) {
     let keyCount = 0;
@@ -696,7 +807,7 @@ class Class {
     constructor(..._args) { }
 }
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/checks.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/checks.js
 // import { $ZodType } from "./schemas.js";
 
 
@@ -1265,7 +1376,7 @@ const $ZodCheckOverwrite = /*@__PURE__*/ $constructor("$ZodCheckOverwrite", (ins
     };
 });
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/doc.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/doc.js
 class Doc {
     constructor(args = []) {
         this.content = [];
@@ -1302,7 +1413,7 @@ class Doc {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/errors.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/errors.js
 
 
 const initializer = (inst, def) => {
@@ -1494,7 +1605,7 @@ function prettifyError(error) {
     return lines.join("\n");
 }
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/parse.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/parse.js
 
 
 
@@ -1553,14 +1664,14 @@ const _safeParseAsync = (_Err) => async (schema, value, _ctx) => {
 };
 const safeParseAsync = /* @__PURE__*/ _safeParseAsync($ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/versions.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/versions.js
 const version = {
     major: 4,
     minor: 0,
-    patch: 15,
+    patch: 17,
 };
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/schemas.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/schemas.js
 
 
 
@@ -2242,7 +2353,7 @@ const $ZodObject = /*@__PURE__*/ $constructor("$ZodObject", (inst, def) => {
     const _normalized = cached(() => {
         const keys = Object.keys(def.shape);
         for (const k of keys) {
-            if (!(def.shape[k] instanceof $ZodType)) {
+            if (!def.shape[k]._zod.traits.has("$ZodType")) {
                 throw new Error(`Invalid element at key "${k}": expected a Zod schema`);
             }
         }
@@ -2456,10 +2567,10 @@ const $ZodUnion = /*@__PURE__*/ $constructor("$ZodUnion", (inst, def) => {
 });
 const $ZodDiscriminatedUnion = 
 /*@__PURE__*/
-$constructor("$ZodDiscriminatedUnion", (inst, def) => {
+(/* unused pure expression or super */ null && (core.$constructor("$ZodDiscriminatedUnion", (inst, def) => {
     $ZodUnion.init(inst, def);
     const _super = inst._zod.parse;
-    defineLazy(inst._zod, "propValues", () => {
+    util.defineLazy(inst._zod, "propValues", () => {
         const propValues = {};
         for (const option of def.options) {
             const pv = option._zod.propValues;
@@ -2475,7 +2586,7 @@ $constructor("$ZodDiscriminatedUnion", (inst, def) => {
         }
         return propValues;
     });
-    const disc = cached(() => {
+    const disc = util.cached(() => {
         const opts = def.options;
         const map = new Map();
         for (const o of opts) {
@@ -2493,7 +2604,7 @@ $constructor("$ZodDiscriminatedUnion", (inst, def) => {
     });
     inst._zod.parse = (payload, ctx) => {
         const input = payload.value;
-        if (!util_isObject(input)) {
+        if (!util.isObject(input)) {
             payload.issues.push({
                 code: "invalid_type",
                 expected: "object",
@@ -2521,7 +2632,7 @@ $constructor("$ZodDiscriminatedUnion", (inst, def) => {
         });
         return payload;
     };
-});
+})));
 const $ZodIntersection = /*@__PURE__*/ $constructor("$ZodIntersection", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, ctx) => {
@@ -3164,7 +3275,8 @@ const $ZodTemplateLiteral = /*@__PURE__*/ (/* unused pure expression or super */
     $ZodType.init(inst, def);
     const regexParts = [];
     for (const part of def.parts) {
-        if (part instanceof $ZodType) {
+        if (typeof part === "object" && part !== null) {
+            // is Zod schema
             if (!part._zod.pattern) {
                 // if (!source)
                 throw new Error(`Invalid template literal part, no pattern found: ${[...part._zod.traits].shift()}`);
@@ -3265,7 +3377,7 @@ function handleRefineResult(result, payload, input, inst) {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/registries.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/registries.js
 const $output = Symbol("ZodOutput");
 const $input = Symbol("ZodInput");
 class $ZodRegistry {
@@ -3319,7 +3431,7 @@ function registry() {
 }
 const globalRegistry = /*@__PURE__*/ registry();
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/api.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/api.js
 
 
 
@@ -4065,7 +4177,7 @@ function _default(Class, innerType, defaultValue) {
         type: "default",
         innerType,
         get defaultValue() {
-            return typeof defaultValue === "function" ? defaultValue() : defaultValue;
+            return typeof defaultValue === "function" ? defaultValue() : util.shallowClone(defaultValue);
         },
     });
 }
@@ -4247,7 +4359,7 @@ function _stringFormat(Class, format, fnOrRegex, _params = {}) {
     return inst;
 }
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/classic/iso.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/classic/iso.js
 
 
 const ZodISODateTime = /*@__PURE__*/ $constructor("ZodISODateTime", (inst, def) => {
@@ -4279,7 +4391,7 @@ function iso_duration(params) {
     return _isoDuration(ZodISODuration, params);
 }
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/classic/errors.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/classic/errors.js
 
 
 
@@ -4329,7 +4441,7 @@ const ZodRealError = $constructor("ZodError", errors_initializer, {
 // /** @deprecated Use `z.core.$ZodErrorMapCtx` instead. */
 // export type ErrorMapCtx = core.$ZodErrorMapCtx;
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/classic/parse.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/classic/parse.js
 
 
 const parse_parse = /* @__PURE__ */ _parse(ZodRealError);
@@ -4337,7 +4449,7 @@ const parse_parseAsync = /* @__PURE__ */ _parseAsync(ZodRealError);
 const parse_safeParse = /* @__PURE__ */ _safeParse(ZodRealError);
 const parse_safeParseAsync = /* @__PURE__ */ _safeParseAsync(ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/classic/schemas.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/classic/schemas.js
 
 
 
@@ -4824,7 +4936,7 @@ function array(element, params) {
 // .keyof
 function keyof(schema) {
     const shape = schema._zod.def.shape;
-    return literal(Object.keys(shape));
+    return schemas_enum(Object.keys(shape));
 }
 const ZodObject = /*@__PURE__*/ $constructor("ZodObject", (inst, def) => {
     $ZodObject.init(inst, def);
@@ -4892,17 +5004,17 @@ function union(options, params) {
         ...normalizeParams(params),
     });
 }
-const ZodDiscriminatedUnion = /*@__PURE__*/ $constructor("ZodDiscriminatedUnion", (inst, def) => {
+const ZodDiscriminatedUnion = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodDiscriminatedUnion", (inst, def) => {
     ZodUnion.init(inst, def);
-    $ZodDiscriminatedUnion.init(inst, def);
-});
+    core.$ZodDiscriminatedUnion.init(inst, def);
+})));
 function discriminatedUnion(discriminator, options, params) {
     // const [options, params] = args;
     return new ZodDiscriminatedUnion({
         type: "union",
         options,
         discriminator,
-        ...normalizeParams(params),
+        ...util.normalizeParams(params),
     });
 }
 const ZodIntersection = /*@__PURE__*/ $constructor("ZodIntersection", (inst, def) => {
@@ -5155,7 +5267,7 @@ function schemas_default(innerType, defaultValue) {
         type: "default",
         innerType: innerType,
         get defaultValue() {
-            return typeof defaultValue === "function" ? defaultValue() : defaultValue;
+            return typeof defaultValue === "function" ? defaultValue() : shallowClone(defaultValue);
         },
     });
 }
@@ -5169,7 +5281,7 @@ function prefault(innerType, defaultValue) {
         type: "prefault",
         innerType: innerType,
         get defaultValue() {
-            return typeof defaultValue === "function" ? defaultValue() : defaultValue;
+            return typeof defaultValue === "function" ? defaultValue() : shallowClone(defaultValue);
         },
     });
 }
@@ -5331,183 +5443,123 @@ function preprocess(fn, schema) {
     return pipe(transform(fn), schema);
 }
 
-;// ./src/type/lorebook.en.ts
-
-const Lorebook_entry = object({
-    uid: schemas_number().describe('uid 是相对于世界书内部的, 不要跨世界书使用'),
-    display_index: schemas_number().describe('酒馆中将排序设置为 "自定义" 时的显示顺序'),
-    comment: schemas_string(),
-    enabled: schemas_boolean(),
-    type: schemas_enum(['constant', 'selective', 'vectorized']),
-    position: schemas_enum([
-        'before_character_definition',
-        'after_character_definition',
-        'before_example_messages',
-        'after_example_messages',
-        'before_author_note',
-        'after_author_note',
-        'at_depth_as_system',
-        'at_depth_as_assistant',
-        'at_depth_as_user',
-    ]),
-    /** 仅对于 `position === 'at_depth_as_???'` 有意义; 其他情况为 null */
-    depth: schemas_number().nullable(),
-    order: schemas_number(),
-    probability: schemas_number(),
-    keys: array(schemas_string()),
-    logic: schemas_enum(['and_any', 'and_all', 'not_all', 'not_any']),
-    filters: array(schemas_string()),
-    scan_depth: union([literal('same_as_global'), schemas_number()]),
-    case_sensitive: union([literal('same_as_global'), schemas_boolean()]),
-    match_whole_words: union([literal('same_as_global'), schemas_boolean()]),
-    use_group_scoring: union([literal('same_as_global'), schemas_boolean()]),
-    automation_id: schemas_string().nullable(),
-    exclude_recursion: schemas_boolean(),
-    prevent_recursion: schemas_boolean(),
-    /** 启用则是 true, 如果设置了具体的 Recursion Level 则是数字 (具体参考酒馆中勾选这个选项后的变化) */
-    delay_until_recursion: union([schemas_boolean(), schemas_number()]),
-    content: schemas_string(),
-    group: schemas_string(),
-    group_prioritized: schemas_boolean(),
-    group_weight: schemas_number(),
-    sticky: schemas_number().nullable(),
-    cooldown: schemas_number().nullable(),
-    delay: schemas_number().nullable(),
-});
-const Lorebook = array(Lorebook_entry).min(1);
-
-;// ./src/type/lorebook.zh.ts
-
-// TODO:
-const lorebook_zh_Lorebook = array(object()).min(1);
-
-;// external "node:crypto"
-const external_node_crypto_namespaceObject = require("node:crypto");
 ;// ./src/type/preset.en.ts
 
 
 const Prompt_normal = object({
-    id: schemas_string().default((0,external_node_crypto_namespaceObject.randomUUID)()),
-    enabled: schemas_boolean(),
     name: schemas_string(),
-    /** 插入位置: `'relative'` 则按提示词相对位置插入, `number` 则插入到聊天记录中的对应深度 */
-    position: schemas_enum(['relative', 'number']),
-    role: schemas_enum(['system', 'user', 'assistant']),
-    content: schemas_string(),
-    /** 额外字段, 用于为预设提示词绑定额外数据 */
-    extra: record(schemas_string(), any()).optional(),
-});
-const Prompt_system = object({
-    id: schemas_enum(['main', 'nsfw', 'jailbreak', 'enhanceDefinitions']),
     enabled: schemas_boolean(),
-    name: schemas_string(),
+    position: schemas_enum(['relative', 'number'])
+        .default('relative')
+        .describe('插入位置: `relative` 则按提示词相对位置插入, `number` 则插入到聊天记录中的对应深度'),
     role: schemas_enum(['system', 'user', 'assistant']),
-    content: schemas_string(),
-    /** 额外字段, 用于为预设提示词绑定额外数据 */
-    extra: record(schemas_string(), any()).optional(),
-});
+    content: schemas_string().optional(),
+    extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
+})
+    .describe('手动在预设中添加的提示词');
+const prompt_rolable_placeholder_ids = [
+    'world_info_before',
+    'persona_description',
+    'char_description',
+    'char_personality',
+    'scenario',
+    'world_info_after',
+];
+const prompt_unrolable_placeholder_ids = ['dialogue_examples', 'chat_history'];
+const prompt_placeholder_ids = [...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
 const Prompt_placeholder = object({
-    id: schemas_enum([
-        'world_info_before',
-        'persona_description',
-        'char_description',
-        'char_personality',
-        'scenario',
-        'world_info_after',
-        'dialogue_examples',
-        'chat_history',
-    ]),
+    id: schemas_enum(prompt_placeholder_ids),
     enabled: schemas_boolean(),
-    name: schemas_string().optional(),
-    /** 插入位置: `'relative'` 则按提示词相对位置插入, `number` 则插入到聊天记录中的对应深度 */
-    position: schemas_enum(['relative', 'number']),
-    role: schemas_enum(['system', 'user', 'assistant']),
-    content: schemas_string(),
-    /** 额外字段, 用于为预设提示词绑定额外数据 */
-    extra: record(schemas_string(), any()).optional(),
+    position: schemas_enum(['relative', 'number'])
+        .describe('插入位置: `relative` 则按提示词相对位置插入, `number` 则插入到聊天记录中的对应深度'),
+    role: schemas_enum(['system', 'user', 'assistant']).default('system'),
+    extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
+})
+    .superRefine((data, context) => {
+    if (_.includes(prompt_unrolable_placeholder_ids, data.id) && data.role !== undefined) {
+        context.addIssue({
+            code: 'custom',
+            message: `占位符提示词 '${data.id}' 不能设置自定义角色 (\`role\`)`,
+            path: ['role'],
+        });
+    }
 })
     .transform(data => ({
     ...data,
-    name: data.name ??
-        {
-            world_info_before: '角色定义之前',
-            persona_description: '角色卡描述',
-            char_description: '角色描述',
-            char_personality: '角色性格',
-            scenario: '情景',
-            world_info_after: '角色定义之后',
-            dialogue_examples: '对话示例',
-            chat_history: '聊天记录',
-        }[data.id],
-}));
-const Prompt = discriminatedUnion('id', [Prompt_normal, Prompt_system, Prompt_placeholder]);
+    name: {
+        world_info_before: 'World Info (before) - 角色定义之前',
+        persona_description: 'Persona Description - 角色卡描述',
+        char_description: 'Char Description - 角色描述',
+        char_personality: 'Char Personality - 角色性格',
+        scenario: 'Scenario - 情景',
+        world_info_after: 'World Info (after) - 角色定义之后',
+        dialogue_examples: 'Chat Examples - 对话示例',
+        chat_history: 'Chat History - 聊天记录',
+    }[data.id],
+}))
+    .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
 const Preset = object({
     settings: object({
-        /** 最大上下文 token 数 */
-        max_context: schemas_number().min(0),
-        /** 最大回复 token 数 */
-        max_completion_tokens: schemas_number().min(0),
-        /** 每次生成几个回复 */
-        reply_count: schemas_number().min(1),
-        /** 是否流式传输 */
-        should_stream: schemas_boolean(),
-        /** 温度 */
-        temperature: schemas_number().min(0).max(2),
-        /** 频率惩罚 */
-        frequency_penalty: schemas_number().min(-2).max(2),
-        /** 存在惩罚 */
-        presence_penalty: schemas_number().min(-2).max(2),
-        /** 重复惩罚 */
-        repetition_penalty: schemas_number().min(1).max(2),
+        max_context: schemas_number().min(0).max(2000000).describe('最大上下文 token 数'),
+        max_completion_tokens: schemas_number().min(0).describe('最大回复 token 数'),
+        reply_count: schemas_number().min(1).describe('每次生成几个回复'),
+        should_stream: schemas_boolean().describe('是否流式传输'),
+        temperature: schemas_number().min(0).max(2).describe('温度'),
+        frequency_penalty: schemas_number().min(-2).max(2).describe('频率惩罚'),
+        presence_penalty: schemas_number().min(-2).max(2).describe('存在惩罚'),
+        repetition_penalty: schemas_number().min(1).max(2).describe('重复惩罚'),
         top_p: schemas_number().min(0).max(1),
         min_p: schemas_number().min(0).max(1),
         top_k: schemas_number().min(0).max(500),
         top_a: schemas_number().min(0).max(1),
-        /** 种子, -1 表示随机 */
-        seed: schemas_number(),
-        /** 压缩系统消息: 将连续的系统消息合并为一条消息 */
-        squash_system_messages: schemas_boolean(),
-        /** 推理强度, 即内置思维链的投入程度. 例如, 如果酒馆直连 gemini-2.5-flash, 则 `min` 将会不使用内置思维链 */
-        reasoning_effort: schemas_enum(['auto', 'min', 'low', 'medium', 'high', 'max']),
-        /** 请求思维链: 允许模型返回内置思维链的思考过程; 注意这只影响内置思维链显不显示, 不决定模型是否使用内置思维链 */
-        request_thoughts: schemas_boolean(),
-        /** 请求图片: 允许模型在回复中返回图片 */
-        request_images: schemas_boolean(),
-        /** 启用函数调用: 允许模型使用函数调用功能; 比如 cursor 借此在回复中读写文件、运行命令 */
-        enable_function_calling: schemas_boolean(),
-        /** 启用网络搜索: 允许模型使用网络搜索功能 */
-        enable_web_search: schemas_boolean(),
-        /** 是否允许发送图片作为提示词 */
-        allow_images: schemas_enum(['disabled', 'auto', 'low', 'high']),
-        /** 是否允许发送视频作为提示词 */
-        allow_videos: schemas_boolean(),
-        /**
-         * 角色名称前缀: 是否要为消息添加角色名称前缀, 以及怎么添加
-         * - `none`: 不添加
-         * - `default`: 为与角色卡不同名的消息添加角色名称前缀, 添加到 `content` 字段开头 (即发送的消息内容是 `角色名: 消息内容`)
-         * - `content`: 为所有消息添加角色名称前缀, 添加到 `content` 字段开头 (即发送的消息内容是 `角色名: 消息内容`)
-         * - `completion`: 在发送给模型时, 将角色名称写入到 `name` 字段; 仅支持字母数字和下划线, 不适用于 Claude、Google 等模型
-         */
-        character_name_prefix: schemas_enum(['none', 'default', 'content', 'completion']),
-        /** 用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹 */
-        wrap_user_messages_in_quotes: schemas_boolean(),
+        seed: schemas_number().describe('种子, -1 表示随机'),
+        squash_system_messages: schemas_boolean().describe('压缩系统消息: 将连续的系统消息合并为一条消息'),
+        reasoning_effort: schemas_enum(['auto', 'min', 'low', 'medium', 'high', 'max'])
+            .describe('推理强度, 即内置思维链的投入程度. 例如, 如果酒馆直连 gemini-2.5-flash, 则 `min` 将会不使用内置思维链'),
+        request_thoughts: schemas_boolean()
+            .describe('请求思维链: 允许模型返回内置思维链的思考过程; 注意这只影响内置思维链显不显示, 不决定模型是否使用内置思维链'),
+        request_images: schemas_boolean().describe('请求图片: 允许模型在回复中返回图片'),
+        enable_function_calling: schemas_boolean()
+            .describe('启用函数调用: 允许模型使用函数调用功能; 比如 cursor 借此在回复中读写文件、运行命令'),
+        enable_web_search: schemas_boolean().describe('启用网络搜索: 允许模型使用网络搜索功能'),
+        allow_images: schemas_enum(['disabled', 'auto', 'low', 'high']).describe('是否允许发送图片作为提示词'),
+        allow_videos: schemas_boolean().describe('是否允许发送视频作为提示词'),
+        character_name_prefix: schemas_enum(['none', 'default', 'content', 'completion']).describe(dist_dedent(`
+        角色名称前缀: 是否要为消息添加角色名称前缀, 以及怎么添加
+        - none: 不添加
+        - default: 为与角色卡不同名的消息添加角色名称前缀, 添加到 \`content\` 字段开头 (即发送的消息内容是 \`角色名: 消息内容\`)
+        - content: 为所有消息添加角色名称前缀, 添加到 \`content\` 字段开头 (即发送的消息内容是 \`角色名: 消息内容\`)
+        - completion: 在发送给模型时, 将角色名称写入到 \`name\` 字段; 仅支持字母数字和下划线, 不适用于 Claude、Google 等模型
+      `)),
+        wrap_user_messages_in_quotes: schemas_boolean()
+            .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
     }),
-    /** 提示词列表里已经添加的提示词 */
-    prompts: array(Prompt),
-    /** 下拉框里没添加进来的提示词 */
-    prompts_unused: array(Prompt),
-    /** 额外字段, 用于为预设绑定额外数据 */
-    extensions: record(schemas_string(), any()),
+    prompts: array(union([Prompt_normal, Prompt_placeholder]))
+        .superRefine((data, context) => {
+        const unused_ids = _.reject(prompt_placeholder_ids, id => data.some(prompt => _.get(prompt, 'id') === id));
+        if (unused_ids.length > 0) {
+            context.addIssue({
+                code: 'custom',
+                message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
+            });
+        }
+    })
+        .describe('提示词列表里已经添加的提示词'),
+    prompts_unused: array(Prompt_normal).describe('下拉框里的, 没有添加进提示词列表的提示词'),
+    extensions: record(schemas_string(), any()).describe('额外字段: 用于为预设绑定额外数据'),
 });
 
 ;// ./src/type/preset.zh.ts
 
-// TODO:
+const zh_to_en_map = {};
+function is_zh(data) {
+    return _.has(data, '条目');
+}
 const preset_zh_Preset = object({});
 
 ;// ./src/type/settings.en.ts
 
-const Config_type = schemas_enum(['lorebook', 'preset']);
+const Config_type = schemas_enum(['worldbook', 'preset']);
 const Config = object({
     type: Config_type,
     name: schemas_string(),
@@ -5520,6 +5572,15 @@ const Settings = object({
 
 ;// ./src/type/settings.zh.ts
 
+const settings_zh_zh_to_en_map = {
+    user名称: 'user_name',
+    配置: 'configs',
+    类型: 'type',
+    世界书: 'worldbook',
+    预设: 'preset',
+    酒馆中的名称: 'name',
+    本地文件路径: 'path',
+};
 const settings_zh_Config_type = schemas_enum(['世界书', '预设']);
 const settings_zh_Config = object({
     类型: settings_zh_Config_type,
@@ -5535,11 +5596,144 @@ const settings_zh_Settings = object({
     })),
 });
 
+// EXTERNAL MODULE: ./src/server/util/parse_regex_from_string.ts
+var parse_regex_from_string = __webpack_require__(354);
+;// ./src/type/worldbook.en.ts
+
+
+
+const Worldbook_entry = object({
+    name: schemas_string(),
+    uid: schemas_number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
+    enabled: schemas_boolean(),
+    strategy: object({
+        type: schemas_enum(['constant', 'selective', 'vectorized']).describe(dist_dedent(`
+          激活策略类型:
+          - constant: 常量🔵, 俗称蓝灯. 只需要满足 "启用"、"激活概率%" 等别的要求即可.
+          - selective: 可选项🟢, 俗称绿灯. 除了蓝灯条件, 还需要满足 \`keys\` 扫描条件
+          - vectorized: 向量化🔗. 一般不使用
+        `)),
+        keys: array(schemas_string().transform(string => (0,parse_regex_from_string.parse_regex_from_string)(string) ?? string))
+            .min(1)
+            .optional()
+            .describe('主要关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
+        keys_secondary: object({
+            logic: schemas_enum(['and_any', 'and_all', 'not_all', 'not_any']).describe(dist_dedent(`
+              次要关键字逻辑:
+              - and_any: 次要关键字中任意一个关键字能在欲扫描文本中匹配到
+              - and_all: 次要关键字中所有关键字都能在欲扫描文本中匹配到
+              - not_all: 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到
+              - not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到
+            `)),
+            keys: array(schemas_string().transform(string => (0,parse_regex_from_string.parse_regex_from_string)(string) ?? string)).min(1),
+        })
+            .optional()
+            .describe('次要关键字: 如果设置了次要关键字, 则条目除了在主要关键字中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足其 `keys`'),
+        scan_depth: union([literal('same_as_global'), schemas_number().min(1)])
+            .optional()
+            .describe('扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推'),
+    })
+        .refine(data => data.type === 'selective' && data.keys !== undefined, {
+        message: "当激活策略为绿灯 (`'selective'`) 时, 必须至少一个主要关键词 `keys`",
+        path: ['keys'],
+    })
+        .describe('激活策略: 条目应该何时激活'),
+    position: object({
+        type: schemas_enum([
+            'before_character_definition',
+            'after_character_definition',
+            'before_example_messages',
+            'after_example_messages',
+            'before_author_note',
+            'after_author_note',
+            'at_depth',
+        ])
+            .describe(dist_dedent(`
+            插入位置类型:
+            - before_character_definition: 角色定义之前
+            - after_character_definition: 角色定义之后
+            - before_example_messages: 示例消息之前
+            - after_example_messages: 示例消息之后
+            - before_author_note: 作者注释之前
+            - after_author_note: 作者注释之后
+            - at_depth: 插入到指定深度
+          `)),
+        role: schemas_enum(['system', 'assistant', 'user'])
+            .optional()
+            .describe('该条目的消息身份, 仅位置类型为 `at_depth` 时有效'),
+        depth: schemas_number().optional().describe('该条目要插入的深度, 仅位置类型为 `at_depth` 时有效'),
+        order: schemas_number(),
+    })
+        .describe('插入位置: 如果条目激活应该插入到什么地方')
+        .superRefine((data, context) => {
+        if (data.type === 'at_depth') {
+            if (data.role === undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['role'],
+                    message: "当插入位置 (`position`) 为 `'at_depth'` 时, 必须填写 `role`",
+                });
+            }
+            if (data.depth === undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['depth'],
+                    message: "当插入位置 (`position`)为 `'at_depth'` 时, 必须填写 `depth`",
+                });
+            }
+        }
+        else {
+            if (data.role !== undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['role'],
+                    message: "当插入位置 (`position`) 不为 `'at_depth'` 时, `role` 不起作用, 不要填写",
+                });
+            }
+            if (data.depth !== undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['depth'],
+                    message: "当插入位置 (`position`) 不为 `'at_depth'` 时, `depth` 不起作用, 不要填写",
+                });
+            }
+        }
+    }),
+    probability: schemas_number().min(0).max(100).optional(),
+    recursion: object({
+        prevent_incoming: schemas_boolean().describe('禁止其他条目递归激活本条目'),
+        prevent_outgoing: schemas_boolean().describe('禁止本条目递归激活其他条目'),
+        delay_until: schemas_number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
+    })
+        .partial(),
+    effect: object({
+        sticky: schemas_number()
+            .min(1)
+            .nullable()
+            .describe('黏性: 条目激活后, 在之后 `n` 条消息内始终激活, 无视激活策略、激活概率%'),
+        cooldown: schemas_number().min(1).nullable().describe('冷却: 条目激活后, 在之后 `n` 条消息内不能再激活'),
+        delay: schemas_number().min(1).nullable().describe('延迟: 聊天中至少有 `1` 楼消息时, 才能激活条目'),
+    })
+        .partial(),
+    extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
+    content: schemas_string(),
+});
+const Worldbook = object({ entries: array(Worldbook_entry).min(1) });
+
+;// ./src/type/worldbook.zh.ts
+
+const worldbook_zh_zh_to_en_map = {};
+function worldbook_zh_is_zh(data) {
+    return _.has(data, '条目');
+}
+const worldbook_zh_Worldbook_entry = object({});
+const worldbook_zh_Worldbook = object({ 条目: array(worldbook_zh_Worldbook_entry).min(1) });
+
 ;// external "node:fs"
 const external_node_fs_namespaceObject = require("node:fs");
 ;// external "node:path"
 const external_node_path_namespaceObject = require("node:path");
-;// ./node_modules/.pnpm/zod@4.0.15/node_modules/zod/v4/core/to-json-schema.js
+;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/core/to-json-schema.js
 
 
 class JSONSchemaGenerator {
@@ -6432,12 +6626,12 @@ function write_json_schema(name, schema) {
     (0,external_node_fs_namespaceObject.writeFileSync)((0,external_node_path_namespaceObject.join)(__dirname, 'schema', `${name}.json`), JSON.stringify(toJSONSchema(schema, { unrepresentable: 'any' }), null, 2));
 }
 (0,external_node_fs_namespaceObject.mkdirSync)((0,external_node_path_namespaceObject.join)(__dirname, 'schema'), { recursive: true });
-write_json_schema('lorebook.en', Lorebook);
-write_json_schema('lorebook.zh', lorebook_zh_Lorebook);
 write_json_schema('preset.en', Preset);
 write_json_schema('preset.zh', preset_zh_Preset);
 write_json_schema('settings.en', Settings);
 write_json_schema('settings.zh', settings_zh_Settings);
+write_json_schema('worldbook.en', Worldbook);
+write_json_schema('worldbook.zh', worldbook_zh_Worldbook);
 
 /******/ })()
 ;

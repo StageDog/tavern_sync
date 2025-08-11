@@ -1,8 +1,9 @@
 import dedent from 'dedent';
 import * as z from 'zod';
 
-export type Worldbook_entry = z.infer<typeof Worldbook_entry>;
-export const Worldbook_entry = z.object({
+// TODO: 转换 kesy 中的 regex
+type Worldbook_entry = z.infer<typeof Worldbook_entry>;
+const Worldbook_entry = z.object({
   name: z.string(),
   uid: z.number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
   enabled: z.boolean(),
@@ -144,4 +145,4 @@ export const Worldbook_entry = z.object({
 });
 
 export type Worldbook = z.infer<typeof Worldbook>;
-export const Worldbook = z.array(Worldbook_entry).min(1);
+export const Worldbook = z.object({ entries: z.array(Worldbook_entry).min(1) });

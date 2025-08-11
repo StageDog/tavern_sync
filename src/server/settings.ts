@@ -1,10 +1,11 @@
-import { from_zh, to_zh } from '@server/translator/settings';
 import { Settings as Settings_en } from '@type/settings.en';
+import { zh_to_en_map } from '@type/settings.zh';
 
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { exit } from 'node:process';
 import YAML from 'yaml';
+import { translate } from './util/translate';
 import { write_file_recursively } from './util/write_file_recursively';
 
 const default_settings: Settings_en = {
@@ -41,7 +42,7 @@ const default_settings: Settings_en = {
 function beautingfy_settings(settings: Settings_en, language: 'zh' | 'en'): string {
   const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.${language}.json`;
   let result = `# yaml-language-server: $schema=${schema_url}\n`;
-  result += YAML.stringify(language === 'en' ? settings : to_zh(settings));
+  result += YAML.stringify(language === 'en' ? settings : translate(settings, _.invert(zh_to_en_map)));
   return result;
 }
 
@@ -50,11 +51,13 @@ export function get_settings(): Settings_en {
   if (!settings) {
     const config_path = join(__dirname, 'tavern_sync.yaml');
     if (!existsSync(config_path)) {
+      // TODO: 询问 zh or en
       write_file_recursively(config_path, beautingfy_settings(default_settings, 'zh'));
       console.error(`配置文件不存在，已自动生成在 ${config_path}，请填写配置文件后重新运行`);
       exit(1);
     }
-    settings = from_zh(YAML.parse(readFileSync(config_path, 'utf8')));
+    // TODO: en 配置文件
+    settings = Settings_en.parse(translate(YAML.parse(readFileSync(config_path, 'utf8')), zh_to_en_map));
   }
   return settings!;
 }

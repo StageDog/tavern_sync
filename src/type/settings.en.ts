@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
-export type Config_type = z.infer<typeof Config_type>;
-export const Config_type = z.enum(['worldbook', 'preset']);
+type Config_type = z.infer<typeof Config_type>;
+const Config_type = z.enum(['worldbook', 'preset']);
 
 export type Config = z.infer<typeof Config>;
 export const Config = z.object({

@@ -1,5 +1,6 @@
 import * as z from 'zod';
 
+// TODO: 调整为 Preset_en 可接收的数据, 移除不必要的, 转换 kesy 中的 regex
 export type Worldbook_entry = z.infer<typeof Worldbook_entry>;
 export const Worldbook_entry = z.object({
   name: z.string(),
@@ -39,13 +40,11 @@ export const Worldbook_entry = z.object({
     delay_until: z.number().min(1).nullable(),
   }),
 
-  effect: z
-    .object({
-      sticky: z.number().nullable(),
-      cooldown: z.number().nullable(),
-      delay: z.number().nullable(),
-    })
-    .partial(),
+  effect: z.object({
+    sticky: z.number().nullable(),
+    cooldown: z.number().nullable(),
+    delay: z.number().nullable(),
+  }),
 
   extra: z.record(z.string(), z.any()).optional(),
 
@@ -53,4 +52,7 @@ export const Worldbook_entry = z.object({
 });
 
 export type Worldbook = z.infer<typeof Worldbook>;
-export const Worldbook = z.array(Worldbook_entry).min(1);
+export const Worldbook = z
+  .array(Worldbook_entry)
+  .min(1)
+  .transform(entries => ({ entries }));
