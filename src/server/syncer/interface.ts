@@ -1,5 +1,6 @@
 import { watch_on } from '@server/component/watch_on';
 import { close_server, wait_socket } from '@server/server';
+import { exit_on_error } from '@server/util/exit_on_error';
 import { translate } from '@server/util/translate';
 import { write_file_recursively } from '@server/util/write_file_recursively';
 
@@ -56,7 +57,10 @@ export abstract class Syncer_interface {
 
   async pull({ language }: Pull_options) {
     const socket = await wait_socket();
-    socket.emit(`pull_${this.type}`, { name: this.name }, (data: Record<string, any>) => {
+    socket.emit(`pull_${this.type}`, { name: this.name }, (data: Record<string, any> | Error) => {
+      if (data instanceof Error) {
+        exit_on_error(`拉取${this.type_zh} '${this.name}' 失败: ${data}`);
+      }
       write_file_recursively(this.path, this.beautingfy(this.tavern_type.parse(data), language));
       console.info(`成功将世界书 '${this.name}' 拉取到本地文件 '${this.path}' 中`);
       close_server();

@@ -32,13 +32,13 @@
                 ]
               },
               "keys": {
-                "description": "主要关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活",
+                "description": "关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活",
                 "minItems": 1,
                 "type": "array",
                 "items": {}
               },
               "keys_secondary": {
-                "description": "次要关键字: 如果设置了次要关键字, 则条目除了在主要关键字中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足其 `keys`",
+                "description": "次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`",
                 "type": "object",
                 "properties": {
                   "logic": {
@@ -99,7 +99,7 @@
                 ]
               },
               "role": {
-                "description": "该条目的消息身份, 仅位置类型为 `at_depth` 时有效",
+                "description": "该条目的消息身份, 仅位置类型为 `'at_depth'` 时有效",
                 "type": "string",
                 "enum": [
                   "system",
@@ -108,7 +108,7 @@
                 ]
               },
               "depth": {
-                "description": "该条目要插入的深度, 仅位置类型为 `at_depth` 时有效",
+                "description": "该条目要插入的深度, 仅位置类型为 `'at_depth'` 时有效",
                 "type": "number"
               },
               "order": {
@@ -127,6 +127,7 @@
             "maximum": 100
           },
           "recursion": {
+            "description": "递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目",
             "type": "object",
             "properties": {
               "prevent_incoming": {
@@ -156,7 +157,7 @@
             "type": "object",
             "properties": {
               "sticky": {
-                "description": "黏性: 条目激活后, 在之后 `n` 条消息内始终激活, 无视激活策略、激活概率%",
+                "description": "黏性: 条目激活后, 在之后 n 条消息内始终激活, 无视激活策略、激活概率%",
                 "anyOf": [
                   {
                     "type": "number",
@@ -168,7 +169,7 @@
                 ]
               },
               "cooldown": {
-                "description": "冷却: 条目激活后, 在之后 `n` 条消息内不能再激活",
+                "description": "冷却: 条目激活后, 在之后 n 条消息内不能再激活",
                 "anyOf": [
                   {
                     "type": "number",
@@ -180,7 +181,7 @@
                 ]
               },
               "delay": {
-                "description": "延迟: 聊天中至少有 `1` 楼消息时, 才能激活条目",
+                "description": "延迟: 聊天中至少有 n 楼消息时, 才能激活条目",
                 "anyOf": [
                   {
                     "type": "number",
@@ -211,8 +212,6 @@
           "enabled",
           "strategy",
           "position",
-          "recursion",
-          "effect",
           "content"
         ],
         "additionalProperties": false

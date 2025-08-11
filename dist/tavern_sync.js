@@ -5779,7 +5779,7 @@ var YAMLMap = __webpack_require__(8741);
 var resolveProps = __webpack_require__(5300);
 var utilContainsNewline = __webpack_require__(1120);
 var utilFlowIndentCheck = __webpack_require__(2382);
-var utilMapIncludes = __webpack_require__(2371);
+var utilMapIncludes = __webpack_require__(4752);
 
 const startColMsg = 'All mapping items must start at the same column';
 function resolveBlockMap({ composeNode, composeEmptyNode }, ctx, bm, onError, tag) {
@@ -9339,29 +9339,6 @@ class ResponseWrapper {
         this.res.cork(fn);
     }
 }
-
-
-/***/ }),
-
-/***/ 2371:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-
-var identity = __webpack_require__(7182);
-
-function mapIncludes(ctx, items, search) {
-    const { uniqueKeys } = ctx.options;
-    if (uniqueKeys === false)
-        return false;
-    const isEqual = typeof uniqueKeys === 'function'
-        ? uniqueKeys
-        : (a, b) => a === b || (identity.isScalar(a) && identity.isScalar(b) && a.value === b.value);
-    return items.some(pair => isEqual(pair.key, search));
-}
-
-exports.mapIncludes = mapIncludes;
 
 
 /***/ }),
@@ -32443,6 +32420,29 @@ exports.resolvePairs = resolvePairs;
 
 /***/ }),
 
+/***/ 4752:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var identity = __webpack_require__(7182);
+
+function mapIncludes(ctx, items, search) {
+    const { uniqueKeys } = ctx.options;
+    if (uniqueKeys === false)
+        return false;
+    const isEqual = typeof uniqueKeys === 'function'
+        ? uniqueKeys
+        : (a, b) => a === b || (identity.isScalar(a) && identity.isScalar(b) && a.value === b.value);
+    return items.some(pair => isEqual(pair.key, search));
+}
+
+exports.mapIncludes = mapIncludes;
+
+
+/***/ }),
+
 /***/ 4756:
 /***/ ((module) => {
 
@@ -35265,15 +35265,6 @@ exports.resolveProps = resolveProps;
 
 /***/ }),
 
-/***/ 5354:
-/***/ (() => {
-
-"use strict";
-
-
-
-/***/ }),
-
 /***/ 5359:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -36610,7 +36601,7 @@ var YAMLSeq = __webpack_require__(2016);
 var resolveEnd = __webpack_require__(191);
 var resolveProps = __webpack_require__(5300);
 var utilContainsNewline = __webpack_require__(1120);
-var utilMapIncludes = __webpack_require__(2371);
+var utilMapIncludes = __webpack_require__(4752);
 
 const blockMsg = 'Block collections are not allowed within flow collections';
 const isBlock = (token) => token && (token.type === 'block-map' || token.type === 'block-seq');
@@ -53896,6 +53887,9 @@ const zh_to_en_map = {
     酒馆中的名称: 'name',
     本地文件路径: 'path',
 };
+function is_zh(data) {
+    return _.has(data, '配置');
+}
 const settings_zh_Config_type = schemas_enum(['世界书', '预设']);
 const settings_zh_Config = object({
     类型: settings_zh_Config_type,
@@ -54016,7 +54010,7 @@ const default_settings = {
         },
         猴子打字机: {
             type: 'preset',
-            name: '猴子打字机',
+            name: '【猴子打字机】v6.2.0',
             path: '猴子打字机.yaml',
         },
     },
@@ -54037,8 +54031,13 @@ function get_settings() {
             console.error(`配置文件不存在，已自动生成在 ${config_path}，请填写配置文件后重新运行`);
             (0,external_node_process_.exit)(1);
         }
-        // TODO: en 配置文件
-        settings = Settings.parse(translate(dist.parse((0,external_node_fs_.readFileSync)(config_path, 'utf8')), zh_to_en_map));
+        const data = dist.parse((0,external_node_fs_.readFileSync)(config_path, 'utf8'));
+        if (is_zh(data)) {
+            settings = translate(settings_zh_Settings.parse(data), zh_to_en_map);
+        }
+        else {
+            settings = Settings.parse(data);
+        }
     }
     return settings;
 }
@@ -55823,7 +55822,7 @@ async function wait_socket() {
     if (!io) {
         const server = (0,external_node_http_namespaceObject.createServer)();
         server.listen(port, () => {
-            console.info(`酒馆同步脚本服务器正运行在端口: ${port}, 请打开酒馆网页, 等待脚本连接... (如果等待时间过长, 请检查酒馆助手脚本库里的脚本是否开启)`);
+            console.info(`酒馆同步脚本服务器正运行在端口: ${port}, 请打开酒馆网页, 等待脚本连接... (如果等待时间超过 10 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`);
         });
         io = new Server(server, {
             cors: {
@@ -55856,7 +55855,15 @@ async function close_server() {
     await io?.close();
 }
 
+;// ./src/server/util/exit_on_error.ts
+
+function exit_on_error(error) {
+    console.error(error);
+    (0,external_node_process_.exit)(1);
+}
+
 ;// ./src/server/syncer/interface.ts
+
 
 
 
@@ -55894,6 +55901,9 @@ class Syncer_interface {
     async pull({ language }) {
         const socket = await wait_socket();
         socket.emit(`pull_${this.type}`, { name: this.name }, (data) => {
+            if (data instanceof Error) {
+                exit_on_error(`拉取${this.type_zh} '${this.name}' 失败: ${data}`);
+            }
             write_file_recursively(this.path, this.beautingfy(this.tavern_type.parse(data), language));
             console.info(`成功将世界书 '${this.name}' 拉取到本地文件 '${this.path}' 中`);
             close_server();
@@ -62336,7 +62346,7 @@ const preset_en_Preset = object({
 ;// ./src/type/preset.zh.ts
 
 const preset_zh_zh_to_en_map = {};
-function is_zh(data) {
+function preset_zh_is_zh(data) {
     return _.has(data, '条目');
 }
 const preset_zh_Preset = object({});
@@ -62348,7 +62358,7 @@ const preset_zh_Preset = object({});
 
 class Preset_syncer extends Syncer_interface {
     constructor(type, type_zh, name, path) {
-        super(type, type_zh, name, path, preset_en_Preset, preset_zh_Preset, preset_zh_zh_to_en_map, is_zh, Preset);
+        super(type, type_zh, name, path, preset_en_Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, Preset);
     }
 }
 
@@ -62421,8 +62431,11 @@ const Worldbook_entry = object({
     if (!data.effect.delay) {
         _.unset(data, 'effect.delay');
     }
-    if (_.isEmpty(data)) {
+    if (_.isEmpty(data.effect)) {
         _.unset(data, 'effect');
+    }
+    if (_.isEmpty(data.extra)) {
+        _.unset(data, 'extra');
     }
     return data;
 });
@@ -62430,8 +62443,25 @@ const Worldbook = array(Worldbook_entry)
     .min(1)
     .transform(entries => ({ entries }));
 
-// EXTERNAL MODULE: ./src/server/util/parse_regex_from_string.ts
-var parse_regex_from_string = __webpack_require__(5354);
+;// ./src/server/util/parse_regex_from_string.ts
+function parse_regex_from_string(input) {
+    let match = input.match(/^\/([\w\W]+?)\/([gimsuy]*)$/);
+    if (!match) {
+        return null;
+    }
+    let [, pattern, flags] = match;
+    if (pattern.match(/(^|[^\\])\//)) {
+        return null;
+    }
+    pattern = pattern.replace('\\/', '/');
+    try {
+        return new RegExp(pattern, flags);
+    }
+    catch (e) {
+        return null;
+    }
+}
+
 ;// ./src/type/worldbook.en.ts
 
 
@@ -62447,10 +62477,10 @@ const worldbook_en_Worldbook_entry = object({
           - selective: 可选项🟢, 俗称绿灯. 除了蓝灯条件, 还需要满足 \`keys\` 扫描条件
           - vectorized: 向量化🔗. 一般不使用
         `)),
-        keys: array(schemas_string().transform(string => (0,parse_regex_from_string.parse_regex_from_string)(string) ?? string))
+        keys: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string))
             .min(1)
             .optional()
-            .describe('主要关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
+            .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
         keys_secondary: object({
             logic: schemas_enum(['and_any', 'and_all', 'not_all', 'not_any']).describe(dist_dedent(`
               次要关键字逻辑:
@@ -62459,16 +62489,16 @@ const worldbook_en_Worldbook_entry = object({
               - not_all: 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到
               - not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到
             `)),
-            keys: array(schemas_string().transform(string => (0,parse_regex_from_string.parse_regex_from_string)(string) ?? string)).min(1),
+            keys: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string)).min(1),
         })
             .optional()
-            .describe('次要关键字: 如果设置了次要关键字, 则条目除了在主要关键字中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足其 `keys`'),
+            .describe('次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`'),
         scan_depth: union([literal('same_as_global'), schemas_number().min(1)])
             .optional()
             .describe('扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推'),
     })
         .refine(data => data.type === 'selective' && data.keys !== undefined, {
-        message: "当激活策略为绿灯 (`'selective'`) 时, 必须至少一个主要关键词 `keys`",
+        message: "当激活策略为绿灯 (`'selective'`) 时, `keys` 中有必须至少一个主要关键字",
         path: ['keys'],
     })
         .describe('激活策略: 条目应该何时激活'),
@@ -62494,8 +62524,8 @@ const worldbook_en_Worldbook_entry = object({
           `)),
         role: schemas_enum(['system', 'assistant', 'user'])
             .optional()
-            .describe('该条目的消息身份, 仅位置类型为 `at_depth` 时有效'),
-        depth: schemas_number().optional().describe('该条目要插入的深度, 仅位置类型为 `at_depth` 时有效'),
+            .describe("该条目的消息身份, 仅位置类型为 `'at_depth'` 时有效"),
+        depth: schemas_number().optional().describe("该条目要插入的深度, 仅位置类型为 `'at_depth'` 时有效"),
         order: schemas_number(),
     })
         .describe('插入位置: 如果条目激活应该插入到什么地方')
@@ -62539,16 +62569,19 @@ const worldbook_en_Worldbook_entry = object({
         prevent_outgoing: schemas_boolean().describe('禁止本条目递归激活其他条目'),
         delay_until: schemas_number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
     })
-        .partial(),
+        .partial()
+        .optional()
+        .describe('递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目'),
     effect: object({
         sticky: schemas_number()
             .min(1)
             .nullable()
-            .describe('黏性: 条目激活后, 在之后 `n` 条消息内始终激活, 无视激活策略、激活概率%'),
-        cooldown: schemas_number().min(1).nullable().describe('冷却: 条目激活后, 在之后 `n` 条消息内不能再激活'),
-        delay: schemas_number().min(1).nullable().describe('延迟: 聊天中至少有 `1` 楼消息时, 才能激活条目'),
+            .describe('黏性: 条目激活后, 在之后 n 条消息内始终激活, 无视激活策略、激活概率%'),
+        cooldown: schemas_number().min(1).nullable().describe('冷却: 条目激活后, 在之后 n 条消息内不能再激活'),
+        delay: schemas_number().min(1).nullable().describe('延迟: 聊天中至少有 n 楼消息时, 才能激活条目'),
     })
-        .partial(),
+        .partial()
+        .optional(),
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
     content: schemas_string(),
 });
@@ -62556,11 +62589,162 @@ const worldbook_en_Worldbook = object({ entries: array(worldbook_en_Worldbook_en
 
 ;// ./src/type/worldbook.zh.ts
 
-const worldbook_zh_zh_to_en_map = {};
+
+
+const worldbook_zh_zh_to_en_map = {
+    条目: 'entries',
+    名称: 'name',
+    启用: 'enabled',
+    激活策略: 'strategy',
+    类型: 'type',
+    蓝灯: 'constant',
+    绿灯: 'selective',
+    向量化: 'vectorized',
+    关键字: 'keys',
+    次要关键字: 'keys_secondary',
+    逻辑: 'logic',
+    与任意: 'and_any',
+    与所有: 'and_all',
+    非所有: 'not_all',
+    非任意: 'not_any',
+    扫描深度: 'scan_depth',
+    与全局设置相同: 'same_as_global',
+    插入位置: 'position',
+    角色定义之前: 'before_character_definition',
+    角色定义之后: 'after_character_definition',
+    示例消息之前: 'before_example_messages',
+    示例消息之后: 'after_example_messages',
+    作者注释之前: 'before_author_note',
+    作者注释之后: 'after_author_note',
+    指定深度: 'at_depth',
+    角色: 'role',
+    系统: 'system',
+    AI: 'assistant',
+    用户: 'user',
+    深度: 'depth',
+    顺序: 'order',
+    激活概率: 'probability',
+    递归: 'recursion',
+    不可被其他条目激活: 'prevent_incoming',
+    不可激活其他条目: 'prevent_outgoing',
+    延迟递归: 'delay_until',
+    特殊效果: 'effect',
+    黏性: 'sticky',
+    冷却: 'cooldown',
+    延迟: 'delay',
+    额外字段: 'extra',
+    内容: 'content',
+};
 function worldbook_zh_is_zh(data) {
     return _.has(data, '条目');
 }
-const worldbook_zh_Worldbook_entry = object({});
+const worldbook_zh_Worldbook_entry = object({
+    名称: schemas_string(),
+    uid: schemas_number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
+    启用: schemas_boolean(),
+    激活策略: object({
+        类型: schemas_enum(['蓝灯', '绿灯', '向量化']).describe(dist_dedent(`
+          激活策略类型:
+          - 蓝灯: 常量🔵 (constant). 只需要满足 "启用"、"激活概率%" 等别的要求即可.
+          - 绿灯: 可选项🟢 (selective). 除了蓝灯条件, 还需要满足 \`关键字\` 扫描条件
+          - 向量化: 向量化🔗 (vectorized). 一般不使用
+        `)),
+        关键字: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string))
+            .min(1)
+            .optional()
+            .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
+        次要关键字: object({
+            逻辑: schemas_enum(['与任意', '与所有', '非所有', '非任意']).describe(dist_dedent(`
+              次要关键字逻辑:
+              - 与任意 (and_any): 次要关键字中任意一个关键字能在欲扫描文本中匹配到
+              - 与所有 (and_all): 次要关键字中所有关键字都能在欲扫描文本中匹配到
+              - 非所有 (not_all): 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到
+              - 非任意 (not_any): 次要关键字中所有关键字都没能欲扫描文本中匹配到
+            `)),
+            关键字: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string)).min(1),
+        })
+            .optional()
+            .describe('次要关键字: 如果设置了次要关键字, 则条目除了在`关键字`中匹配到任意一个关键字外, 还需要按次要关键字的`逻辑`满足次要关键字的`关键字`'),
+        扫描深度: union([literal('与全局设置相同'), schemas_number().min(1)])
+            .optional()
+            .describe('扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推'),
+    })
+        .refine(data => data.类型 === '绿灯' && data.关键字 !== undefined, {
+        message: '当激活策略为`绿灯`时, `关键字`中有必须至少一个主要关键字',
+        path: ['关键字'],
+    })
+        .describe('激活策略: 条目应该何时激活'),
+    插入位置: object({
+        类型: schemas_enum([
+            '角色定义之前',
+            '角色定义之后',
+            '示例消息之前',
+            '示例消息之后',
+            '作者注释之前',
+            '作者注释之后',
+            '指定深度',
+        ]),
+        角色: schemas_enum(['系统', 'AI', '用户']).optional().describe("该条目的消息身份, 仅位置类型为`'指定深度'`时有效"),
+        深度: schemas_number().optional().describe("该条目要插入的深度, 仅位置类型为`'指定深度'`时有效"),
+        顺序: schemas_number(),
+    })
+        .describe('插入位置: 如果条目激活应该插入到什么地方')
+        .superRefine((data, context) => {
+        if (data.类型 === '指定深度') {
+            if (data.角色 === undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['角色'],
+                    message: "当`插入位置`为`'指定深度'`时, 必须填写`角色`",
+                });
+            }
+            if (data.深度 === undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['深度'],
+                    message: "当`插入位置`为`'指定深度'`时, 必须填写`深度`",
+                });
+            }
+        }
+        else {
+            if (data.角色 !== undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['角色'],
+                    message: "当`插入位置`不为`'指定深度'`时, `角色`不起作用, 不要填写",
+                });
+            }
+            if (data.深度 !== undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['深度'],
+                    message: "当`插入位置`不为`'指定深度'`时, `深度`不起作用, 不要填写",
+                });
+            }
+        }
+    }),
+    激活概率: schemas_number().min(0).max(100).optional(),
+    递归: object({
+        不可被其他条目激活: schemas_boolean().describe('禁止其他条目递归激活本条目'),
+        不可激活其他条目: schemas_boolean().describe('禁止本条目递归激活其他条目'),
+        延迟递归: schemas_number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
+    })
+        .partial()
+        .optional()
+        .describe('递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目'),
+    特殊效果: object({
+        黏性: schemas_number()
+            .min(1)
+            .nullable()
+            .describe('黏性: 条目激活后, 在之后 n 条消息内始终激活, 无视激活策略、激活概率%'),
+        冷却: schemas_number().min(1).nullable().describe('冷却: 条目激活后, 在之后 n 条消息内不能再激活'),
+        延迟: schemas_number().min(1).nullable().describe('延迟: 聊天中至少有 n 楼消息时, 才能激活条目'),
+    })
+        .partial()
+        .optional(),
+    额外字段: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
+    内容: schemas_string(),
+});
 const worldbook_zh_Worldbook = object({ 条目: array(worldbook_zh_Worldbook_entry).min(1) });
 
 ;// ./src/server/syncer/worldbook.ts
@@ -62585,13 +62769,6 @@ function create_syncer(config) {
     return new Preset_syncer(config.type, _.invert(zh_to_en_map)[config.type], config.name, config.path);
 }
 
-;// ./src/server/util/exit_on_error.ts
-
-function exit_on_error(error) {
-    console.error(error);
-    (0,external_node_process_.exit)(1);
-}
-
 ;// ./src/server/component/argument.ts
 
 
@@ -62608,17 +62785,6 @@ function add_configs_to_command(command) {
     }));
     return command;
 }
-function add_language_to_command(command) {
-    command.addOption(new Option('-l, --language <language>', '要使用的语言')
-        .choices(['zh', 'en'])
-        .default('en')
-        .argParser(value => {
-        if (value === 'zh') {
-            exit_on_error('暂不支持');
-        }
-    }));
-    return command;
-}
 
 ;// ./src/server/command/pull.ts
 
@@ -62626,7 +62792,7 @@ function add_language_to_command(command) {
 function add_pull_command() {
     const command = new Command('pull').description('将酒馆内容拉取到本地');
     add_configs_to_command(command);
-    add_language_to_command(command);
+    command.option('-l, --language <language>', '要使用的语言', 'zh');
     command.option('-s, --split', '对配置的拉取应该将条目放在单独的文件中', false);
     command.action(async (syncer, options) => {
         await syncer.pull({ language: options.language });

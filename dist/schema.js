@@ -1,42 +1,5 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
-
-/***/ 354:
-/***/ (() => {
-
-
-
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
 
 ;// ./node_modules/.pnpm/dedent@1.6.0/node_modules/dedent/dist/dedent.mjs
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -5581,6 +5544,9 @@ const settings_zh_zh_to_en_map = {
     酒馆中的名称: 'name',
     本地文件路径: 'path',
 };
+function settings_zh_is_zh(data) {
+    return _.has(data, '配置');
+}
 const settings_zh_Config_type = schemas_enum(['世界书', '预设']);
 const settings_zh_Config = object({
     类型: settings_zh_Config_type,
@@ -5596,8 +5562,25 @@ const settings_zh_Settings = object({
     })),
 });
 
-// EXTERNAL MODULE: ./src/server/util/parse_regex_from_string.ts
-var parse_regex_from_string = __webpack_require__(354);
+;// ./src/server/util/parse_regex_from_string.ts
+function parse_regex_from_string(input) {
+    let match = input.match(/^\/([\w\W]+?)\/([gimsuy]*)$/);
+    if (!match) {
+        return null;
+    }
+    let [, pattern, flags] = match;
+    if (pattern.match(/(^|[^\\])\//)) {
+        return null;
+    }
+    pattern = pattern.replace('\\/', '/');
+    try {
+        return new RegExp(pattern, flags);
+    }
+    catch (e) {
+        return null;
+    }
+}
+
 ;// ./src/type/worldbook.en.ts
 
 
@@ -5613,10 +5596,10 @@ const Worldbook_entry = object({
           - selective: 可选项🟢, 俗称绿灯. 除了蓝灯条件, 还需要满足 \`keys\` 扫描条件
           - vectorized: 向量化🔗. 一般不使用
         `)),
-        keys: array(schemas_string().transform(string => (0,parse_regex_from_string.parse_regex_from_string)(string) ?? string))
+        keys: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string))
             .min(1)
             .optional()
-            .describe('主要关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
+            .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
         keys_secondary: object({
             logic: schemas_enum(['and_any', 'and_all', 'not_all', 'not_any']).describe(dist_dedent(`
               次要关键字逻辑:
@@ -5625,16 +5608,16 @@ const Worldbook_entry = object({
               - not_all: 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到
               - not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到
             `)),
-            keys: array(schemas_string().transform(string => (0,parse_regex_from_string.parse_regex_from_string)(string) ?? string)).min(1),
+            keys: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string)).min(1),
         })
             .optional()
-            .describe('次要关键字: 如果设置了次要关键字, 则条目除了在主要关键字中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足其 `keys`'),
+            .describe('次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`'),
         scan_depth: union([literal('same_as_global'), schemas_number().min(1)])
             .optional()
             .describe('扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推'),
     })
         .refine(data => data.type === 'selective' && data.keys !== undefined, {
-        message: "当激活策略为绿灯 (`'selective'`) 时, 必须至少一个主要关键词 `keys`",
+        message: "当激活策略为绿灯 (`'selective'`) 时, `keys` 中有必须至少一个主要关键字",
         path: ['keys'],
     })
         .describe('激活策略: 条目应该何时激活'),
@@ -5660,8 +5643,8 @@ const Worldbook_entry = object({
           `)),
         role: schemas_enum(['system', 'assistant', 'user'])
             .optional()
-            .describe('该条目的消息身份, 仅位置类型为 `at_depth` 时有效'),
-        depth: schemas_number().optional().describe('该条目要插入的深度, 仅位置类型为 `at_depth` 时有效'),
+            .describe("该条目的消息身份, 仅位置类型为 `'at_depth'` 时有效"),
+        depth: schemas_number().optional().describe("该条目要插入的深度, 仅位置类型为 `'at_depth'` 时有效"),
         order: schemas_number(),
     })
         .describe('插入位置: 如果条目激活应该插入到什么地方')
@@ -5705,16 +5688,19 @@ const Worldbook_entry = object({
         prevent_outgoing: schemas_boolean().describe('禁止本条目递归激活其他条目'),
         delay_until: schemas_number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
     })
-        .partial(),
+        .partial()
+        .optional()
+        .describe('递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目'),
     effect: object({
         sticky: schemas_number()
             .min(1)
             .nullable()
-            .describe('黏性: 条目激活后, 在之后 `n` 条消息内始终激活, 无视激活策略、激活概率%'),
-        cooldown: schemas_number().min(1).nullable().describe('冷却: 条目激活后, 在之后 `n` 条消息内不能再激活'),
-        delay: schemas_number().min(1).nullable().describe('延迟: 聊天中至少有 `1` 楼消息时, 才能激活条目'),
+            .describe('黏性: 条目激活后, 在之后 n 条消息内始终激活, 无视激活策略、激活概率%'),
+        cooldown: schemas_number().min(1).nullable().describe('冷却: 条目激活后, 在之后 n 条消息内不能再激活'),
+        delay: schemas_number().min(1).nullable().describe('延迟: 聊天中至少有 n 楼消息时, 才能激活条目'),
     })
-        .partial(),
+        .partial()
+        .optional(),
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
     content: schemas_string(),
 });
@@ -5722,11 +5708,162 @@ const Worldbook = object({ entries: array(Worldbook_entry).min(1) });
 
 ;// ./src/type/worldbook.zh.ts
 
-const worldbook_zh_zh_to_en_map = {};
+
+
+const worldbook_zh_zh_to_en_map = {
+    条目: 'entries',
+    名称: 'name',
+    启用: 'enabled',
+    激活策略: 'strategy',
+    类型: 'type',
+    蓝灯: 'constant',
+    绿灯: 'selective',
+    向量化: 'vectorized',
+    关键字: 'keys',
+    次要关键字: 'keys_secondary',
+    逻辑: 'logic',
+    与任意: 'and_any',
+    与所有: 'and_all',
+    非所有: 'not_all',
+    非任意: 'not_any',
+    扫描深度: 'scan_depth',
+    与全局设置相同: 'same_as_global',
+    插入位置: 'position',
+    角色定义之前: 'before_character_definition',
+    角色定义之后: 'after_character_definition',
+    示例消息之前: 'before_example_messages',
+    示例消息之后: 'after_example_messages',
+    作者注释之前: 'before_author_note',
+    作者注释之后: 'after_author_note',
+    指定深度: 'at_depth',
+    角色: 'role',
+    系统: 'system',
+    AI: 'assistant',
+    用户: 'user',
+    深度: 'depth',
+    顺序: 'order',
+    激活概率: 'probability',
+    递归: 'recursion',
+    不可被其他条目激活: 'prevent_incoming',
+    不可激活其他条目: 'prevent_outgoing',
+    延迟递归: 'delay_until',
+    特殊效果: 'effect',
+    黏性: 'sticky',
+    冷却: 'cooldown',
+    延迟: 'delay',
+    额外字段: 'extra',
+    内容: 'content',
+};
 function worldbook_zh_is_zh(data) {
     return _.has(data, '条目');
 }
-const worldbook_zh_Worldbook_entry = object({});
+const worldbook_zh_Worldbook_entry = object({
+    名称: schemas_string(),
+    uid: schemas_number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
+    启用: schemas_boolean(),
+    激活策略: object({
+        类型: schemas_enum(['蓝灯', '绿灯', '向量化']).describe(dist_dedent(`
+          激活策略类型:
+          - 蓝灯: 常量🔵 (constant). 只需要满足 "启用"、"激活概率%" 等别的要求即可.
+          - 绿灯: 可选项🟢 (selective). 除了蓝灯条件, 还需要满足 \`关键字\` 扫描条件
+          - 向量化: 向量化🔗 (vectorized). 一般不使用
+        `)),
+        关键字: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string))
+            .min(1)
+            .optional()
+            .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
+        次要关键字: object({
+            逻辑: schemas_enum(['与任意', '与所有', '非所有', '非任意']).describe(dist_dedent(`
+              次要关键字逻辑:
+              - 与任意 (and_any): 次要关键字中任意一个关键字能在欲扫描文本中匹配到
+              - 与所有 (and_all): 次要关键字中所有关键字都能在欲扫描文本中匹配到
+              - 非所有 (not_all): 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到
+              - 非任意 (not_any): 次要关键字中所有关键字都没能欲扫描文本中匹配到
+            `)),
+            关键字: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string)).min(1),
+        })
+            .optional()
+            .describe('次要关键字: 如果设置了次要关键字, 则条目除了在`关键字`中匹配到任意一个关键字外, 还需要按次要关键字的`逻辑`满足次要关键字的`关键字`'),
+        扫描深度: union([literal('与全局设置相同'), schemas_number().min(1)])
+            .optional()
+            .describe('扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推'),
+    })
+        .refine(data => data.类型 === '绿灯' && data.关键字 !== undefined, {
+        message: '当激活策略为`绿灯`时, `关键字`中有必须至少一个主要关键字',
+        path: ['关键字'],
+    })
+        .describe('激活策略: 条目应该何时激活'),
+    插入位置: object({
+        类型: schemas_enum([
+            '角色定义之前',
+            '角色定义之后',
+            '示例消息之前',
+            '示例消息之后',
+            '作者注释之前',
+            '作者注释之后',
+            '指定深度',
+        ]),
+        角色: schemas_enum(['系统', 'AI', '用户']).optional().describe("该条目的消息身份, 仅位置类型为`'指定深度'`时有效"),
+        深度: schemas_number().optional().describe("该条目要插入的深度, 仅位置类型为`'指定深度'`时有效"),
+        顺序: schemas_number(),
+    })
+        .describe('插入位置: 如果条目激活应该插入到什么地方')
+        .superRefine((data, context) => {
+        if (data.类型 === '指定深度') {
+            if (data.角色 === undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['角色'],
+                    message: "当`插入位置`为`'指定深度'`时, 必须填写`角色`",
+                });
+            }
+            if (data.深度 === undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['深度'],
+                    message: "当`插入位置`为`'指定深度'`时, 必须填写`深度`",
+                });
+            }
+        }
+        else {
+            if (data.角色 !== undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['角色'],
+                    message: "当`插入位置`不为`'指定深度'`时, `角色`不起作用, 不要填写",
+                });
+            }
+            if (data.深度 !== undefined) {
+                context.addIssue({
+                    code: 'custom',
+                    path: ['深度'],
+                    message: "当`插入位置`不为`'指定深度'`时, `深度`不起作用, 不要填写",
+                });
+            }
+        }
+    }),
+    激活概率: schemas_number().min(0).max(100).optional(),
+    递归: object({
+        不可被其他条目激活: schemas_boolean().describe('禁止其他条目递归激活本条目'),
+        不可激活其他条目: schemas_boolean().describe('禁止本条目递归激活其他条目'),
+        延迟递归: schemas_number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
+    })
+        .partial()
+        .optional()
+        .describe('递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目'),
+    特殊效果: object({
+        黏性: schemas_number()
+            .min(1)
+            .nullable()
+            .describe('黏性: 条目激活后, 在之后 n 条消息内始终激活, 无视激活策略、激活概率%'),
+        冷却: schemas_number().min(1).nullable().describe('冷却: 条目激活后, 在之后 n 条消息内不能再激活'),
+        延迟: schemas_number().min(1).nullable().describe('延迟: 聊天中至少有 n 楼消息时, 才能激活条目'),
+    })
+        .partial()
+        .optional(),
+    额外字段: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
+    内容: schemas_string(),
+});
 const worldbook_zh_Worldbook = object({ 条目: array(worldbook_zh_Worldbook_entry).min(1) });
 
 ;// external "node:fs"

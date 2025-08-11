@@ -10,9 +10,15 @@ const update_worldbook_debounced = _.debounce(update_worldbook, get_settings().d
 
 export function register_worldbook() {
   const socket = get_socket();
-  socket.on('pull_worldbook', async (data: { name: string }, callback: (data?: WorldbookEntry[]) => void) => {
+  socket.on('pull_worldbook', async (data: { name: string }, callback: (data: WorldbookEntry[] | Error) => void) => {
     console.info(`[TavernSync] 收到提取世界书 '${data.name}' 的请求`);
-    callback((await getWorldbook(data.name)) ?? undefined);
+    try {
+      callback(await getWorldbook(data.name));
+    } catch (err) {
+      const error = err as Error;
+      console.error(`[TavernSync] 提取世界书 '${data.name}' 失败: ${error}`);
+      callback(error);
+    }
   });
   socket.on('push_worldbook', (data: { name: string; data: PartialDeep<WorldbookEntry>[] }, callback: () => void) => {
     console.info(`[TavernSync] 收到推送世界书 '${data.name}' 的请求`);
