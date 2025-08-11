@@ -101,9 +101,14 @@ const Worldbook_entry = z.object({
         .optional()
         .describe('扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推'),
     })
-    .refine(data => data.类型 === '绿灯' && data.关键字 !== undefined, {
-      message: '当激活策略为`绿灯`时, `关键字`中有必须至少一个主要关键字',
-      path: ['关键字'],
+    .superRefine((data, context) => {
+      if (data.类型 === '绿灯' && data.关键字 === undefined) {
+        context.addIssue({
+          code: 'custom',
+          path: ['关键字'],
+          message: '当激活策略为`绿灯`时, `关键字`中有必须至少一个主要关键字',
+        });
+      }
     })
     .describe('激活策略: 条目应该何时激活'),
 

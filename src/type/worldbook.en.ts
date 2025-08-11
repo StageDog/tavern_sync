@@ -46,9 +46,14 @@ const Worldbook_entry = z.object({
         .optional()
         .describe('扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推'),
     })
-    .refine(data => data.type === 'selective' && data.keys !== undefined, {
-      message: "当激活策略为绿灯 (`'selective'`) 时, `keys` 中有必须至少一个主要关键字",
-      path: ['keys'],
+    .superRefine((data, context) => {
+      if (data.type === 'selective' && data.keys === undefined) {
+        context.addIssue({
+          code: 'custom',
+          path: ['keys'],
+          message: "当激活策略为绿灯 (`'selective'`) 时, `keys` 中有必须至少一个主要关键字",
+        });
+      }
     })
     .describe('激活策略: 条目应该何时激活'),
 
