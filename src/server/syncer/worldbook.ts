@@ -1,38 +1,37 @@
 import { watch_on } from '@server/component/watch_on';
 import { close_server, wait_socket } from '@server/server';
 import { Pull_options, Syncer_interface } from '@server/syncer/interface';
-import { Lorebook } from '@type/lorebook.en';
+import { from_zh, to_zh } from '@server/translator/worldbook';
+import { write_file_recursively } from '@server/util/write_file_recursively';
+import { Worldbook as Worldbook_en } from '@type/worldbook.en';
+import { Worldbook as Worldbook_original } from '@type/worldbook.original';
 
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { readFileSync } from 'node:fs';
 import YAML from 'yaml';
 
-function beautingfy(entries: Lorebook, language: 'en' | 'zh'): string {
-  const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/lorebook.${language}.json`;
+function beautingfy(worldbook: Worldbook_original, language: 'zh' | 'en'): string {
+  const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/worldbook.${language}.json`;
   let result = `# yaml-language-server: $schema=${schema_url}\n`;
-  // TODO: zh
-  result += YAML.stringify(entries);
+  result += YAML.stringify(language === 'en' ? worldbook : to_zh(worldbook, { should_check: false }));
   return result;
 }
 
-export class Lorebook_syncer extends Syncer_interface {
+export class Worldbook_syncer extends Syncer_interface {
   async pull({ language }: Pull_options) {
     const socket = await wait_socket();
-    socket.emit('pull_lorebook', { lorebook: this.name }, (entries: Lorebook) => {
-      mkdirSync(dirname(this.path), { recursive: true });
-      writeFileSync(this.path, beautingfy(entries, language), {});
-
+    socket.emit('pull_worldbook', { worldbook_name: this.name }, (worldbook: Record<string, any>) => {
+      write_file_recursively(this.path, beautingfy(Worldbook_original.parse(worldbook), language));
       console.info(`成功将世界书 '${this.name}' 拉取到本地文件 '${this.path}' 中`);
-
       close_server();
     });
   }
 
   private async push_once(): Promise<void> {
     const socket = await wait_socket();
-    // TODO: zh
-    const entries = Lorebook.parse(YAML.parse(readFileSync(this.path, 'utf-8')));
-    return await socket.emitWithAck('push_lorebook', { lorebook: this.name, entries });
+
+    const data = YAML.parse(readFileSync(this.path, 'utf-8'));
+    const worldbook = _.has(data, '[0].名称') ? from_zh(data) : Worldbook_en.parse(data);
+    return await socket.emitWithAck('push_worldbook', { worldbook_name: this.name, worldbook });
   }
 
   async push() {
