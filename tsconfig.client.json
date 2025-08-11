@@ -2,8 +2,6 @@
   "compilerOptions": {
     "composite": true,
     "types": [
-      "jquery",
-      "jqueryui",
       "lodash",
       "toastr",
       "type-fest",
