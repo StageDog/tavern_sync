@@ -1,7 +1,8 @@
+import { parse_regex_from_string } from '@server/util/parse_regex_from_string';
+
 import dedent from 'dedent';
 import * as z from 'zod';
 
-// TODO: 转换 kesy 中的 regex
 type Worldbook_entry = z.infer<typeof Worldbook_entry>;
 const Worldbook_entry = z.object({
   name: z.string(),
@@ -19,10 +20,10 @@ const Worldbook_entry = z.object({
         `),
       ),
       keys: z
-        .array(z.string())
+        .array(z.string().transform(string => parse_regex_from_string(string) ?? string))
         .min(1)
         .optional()
-        .describe('主要关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
+        .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
       keys_secondary: z
         .object({
           logic: z.enum(['and_any', 'and_all', 'not_all', 'not_any']).describe(
@@ -34,11 +35,11 @@ const Worldbook_entry = z.object({
               - not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到
             `),
           ),
-          keys: z.array(z.string()).min(1),
+          keys: z.array(z.string().transform(string => parse_regex_from_string(string) ?? string)).min(1),
         })
         .optional()
         .describe(
-          '次要关键字: 如果设置了次要关键字, 则条目除了在主要关键字中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足其 `keys`',
+          '次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`',
         ),
       scan_depth: z
         .union([z.literal('same_as_global'), z.number().min(1)])
@@ -46,7 +47,7 @@ const Worldbook_entry = z.object({
         .describe('扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推'),
     })
     .refine(data => data.type === 'selective' && data.keys !== undefined, {
-      message: "当激活策略为绿灯 (`'selective'`) 时, 必须至少一个主要关键词 `keys`",
+      message: "当激活策略为绿灯 (`'selective'`) 时, `keys` 中有必须至少一个主要关键字",
       path: ['keys'],
     })
     .describe('激活策略: 条目应该何时激活'),
@@ -78,8 +79,8 @@ const Worldbook_entry = z.object({
       role: z
         .enum(['system', 'assistant', 'user'])
         .optional()
-        .describe('该条目的消息身份, 仅位置类型为 `at_depth` 时有效'),
-      depth: z.number().optional().describe('该条目要插入的深度, 仅位置类型为 `at_depth` 时有效'),
+        .describe("该条目的消息身份, 仅位置类型为 `'at_depth'` 时有效"),
+      depth: z.number().optional().describe("该条目要插入的深度, 仅位置类型为 `'at_depth'` 时有效"),
       order: z.number(),
     })
     .describe('插入位置: 如果条目激活应该插入到什么地方')
@@ -125,7 +126,9 @@ const Worldbook_entry = z.object({
       prevent_outgoing: z.boolean().describe('禁止本条目递归激活其他条目'),
       delay_until: z.number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
     })
-    .partial(),
+    .partial()
+    .optional()
+    .describe('递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目'),
 
   effect: z
     .object({
@@ -133,11 +136,12 @@ const Worldbook_entry = z.object({
         .number()
         .min(1)
         .nullable()
-        .describe('黏性: 条目激活后, 在之后 `n` 条消息内始终激活, 无视激活策略、激活概率%'),
-      cooldown: z.number().min(1).nullable().describe('冷却: 条目激活后, 在之后 `n` 条消息内不能再激活'),
-      delay: z.number().min(1).nullable().describe('延迟: 聊天中至少有 `1` 楼消息时, 才能激活条目'),
+        .describe('黏性: 条目激活后, 在之后 n 条消息内始终激活, 无视激活策略、激活概率%'),
+      cooldown: z.number().min(1).nullable().describe('冷却: 条目激活后, 在之后 n 条消息内不能再激活'),
+      delay: z.number().min(1).nullable().describe('延迟: 聊天中至少有 n 楼消息时, 才能激活条目'),
     })
-    .partial(),
+    .partial()
+    .optional(),
 
   extra: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 

@@ -1,5 +1,5 @@
 import { Settings as Settings_en } from '@type/settings.en';
-import { zh_to_en_map } from '@type/settings.zh';
+import { Settings as Settings_zh, is_zh, zh_to_en_map } from '@type/settings.zh';
 
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -33,7 +33,7 @@ const default_settings: Settings_en = {
     },
     猴子打字机: {
       type: 'preset',
-      name: '猴子打字机',
+      name: '【猴子打字机】v6.2.0',
       path: '猴子打字机.yaml',
     },
   },
@@ -56,8 +56,12 @@ export function get_settings(): Settings_en {
       console.error(`配置文件不存在，已自动生成在 ${config_path}，请填写配置文件后重新运行`);
       exit(1);
     }
-    // TODO: en 配置文件
-    settings = Settings_en.parse(translate(YAML.parse(readFileSync(config_path, 'utf8')), zh_to_en_map));
+    const data = YAML.parse(readFileSync(config_path, 'utf8'));
+    if (is_zh(data)) {
+      settings = translate(Settings_zh.parse(data), zh_to_en_map) as Settings_en;
+    } else {
+      settings = Settings_en.parse(data);
+    }
   }
   return settings!;
 }

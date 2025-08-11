@@ -9,6 +9,9 @@
     "outDir": "dist",
     "baseUrl": "src",
     "paths": {
+      "@server/*": [
+        "server/*"
+      ],
       "@type/*": [
         "type/*"
       ]

@@ -9,6 +9,9 @@ export const zh_to_en_map = {
   酒馆中的名称: 'name',
   本地文件路径: 'path',
 } as const;
+export function is_zh(data: Record<string, any>): boolean {
+  return _.has(data, '配置');
+}
 
 export type Config_type = z.infer<typeof Config_type>;
 export const Config_type = z.enum(['世界书', '预设']);
