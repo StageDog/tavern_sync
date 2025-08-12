@@ -24,7 +24,8 @@
             "type": "string"
           },
           "本地文件路径": {
-            "type": "string"
+            "type": "string",
+            "pattern": ".*\\.yaml$"
           }
         },
         "required": [

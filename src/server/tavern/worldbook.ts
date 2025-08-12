@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
-export type Worldbook_entry = z.infer<typeof Worldbook_entry>;
-export const Worldbook_entry = z
+type Worldbook_entry = z.infer<typeof Worldbook_entry>;
+const Worldbook_entry = z
   .object({
     name: z.string(),
     uid: z.number(),

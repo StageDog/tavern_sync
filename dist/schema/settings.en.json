@@ -24,7 +24,8 @@
             "type": "string"
           },
           "path": {
-            "type": "string"
+            "type": "string",
+            "pattern": ".*\\.yaml$"
           }
         },
         "required": [
