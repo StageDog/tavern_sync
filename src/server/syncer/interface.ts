@@ -72,7 +72,7 @@ export abstract class Syncer_interface {
   private async push_once(): Promise<void> {
     const socket = await wait_socket();
     const data = YAML.parse(readFileSync(this.path, 'utf-8'));
-    return await socket.emitWithAck(`push_${this.type}`, {
+    await socket.emitWithAck(`push_${this.type}`, {
       name: this.name,
       data: this.is_zh(data) ? translate(this.zh_type.parse(data), this.zh_to_en_map) : this.en_type.parse(data),
     });
@@ -92,7 +92,13 @@ export abstract class Syncer_interface {
     });
     watcher.on('all', async (_event, path) => {
       console.info(`检测到文件 '${path}' 发生变化, 进行推送...`);
-      await this.push_once();
+      try {
+        await this.push_once();
+        console.info(`推送成功`);
+      } catch (err) {
+        const error = err as Error;
+        console.error(`推送${this.type_zh} '${this.name}' 失败: ${error}`);
+      }
     });
   }
 }
