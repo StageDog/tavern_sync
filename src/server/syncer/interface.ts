@@ -51,7 +51,9 @@ export abstract class Syncer_interface {
   private beautingfy(data: Record<string, any>, language: 'zh' | 'en'): string {
     const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/${this.type}.${language}.json`;
     let result = `# yaml-language-server: $schema=${schema_url}\n`;
-    result += YAML.stringify(language === 'en' ? data : translate(data, _.invert(this.zh_to_en_map)));
+    result += YAML.stringify(language === 'en' ? data : translate(data, _.invert(this.zh_to_en_map)), {
+      blockQuote: 'literal',
+    });
     return result;
   }
 
