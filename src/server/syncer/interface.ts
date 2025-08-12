@@ -79,6 +79,7 @@ export abstract class Syncer_interface {
   }
 
   async push() {
+    console.info(`开始推送... (如果等待时间超过 3 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`);
     await this.push_once();
     console.info(`成功将${this.type_zh} '${this.name}' 在 '${this.path}' 中的本地内容推送到酒馆`);
     close_server();
@@ -88,10 +89,14 @@ export abstract class Syncer_interface {
     const watcher = watch_on(this.path);
     watcher.on('ready', async () => {
       await this.push_once();
-      console.info(`开始监听${this.type_zh} '${this.name}', 初始化推送...`);
+      console.info(
+        `开始监听${this.type_zh} '${this.name}', 初始化推送... (如果等待时间超过 3 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`,
+      );
     });
     watcher.on('all', async (_event, path) => {
-      console.info(`检测到文件 '${path}' 发生变化, 进行推送...`);
+      console.info(
+        `检测到文件 '${path}' 发生变化, 进行推送... (如果等待时间超过 3 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`,
+      );
       try {
         await this.push_once();
         console.info(`推送成功`);
