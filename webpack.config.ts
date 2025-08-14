@@ -28,6 +28,10 @@ export default [
         {
           oneOf: [
             {
+              resourceQuery: /raw/,
+              type: 'asset/source',
+            },
+            {
               test: /\.tsx?$/,
               loader: 'ts-loader',
               options: {
@@ -123,6 +127,10 @@ export default [
         {
           oneOf: [
             {
+              resourceQuery: /raw/,
+              type: 'asset/source',
+            },
+            {
               test: /\.tsx?$/,
               loader: 'ts-loader',
               options: {
@@ -185,6 +193,10 @@ export default [
       rules: [
         {
           oneOf: [
+            {
+              resourceQuery: /raw/,
+              type: 'asset/source',
+            },
             {
               test: /\.tsx?$/,
               loader: 'ts-loader',

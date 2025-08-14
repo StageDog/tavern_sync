@@ -51,6 +51,8 @@ const Worldbook_entry = z
     content: z.string(),
   })
   .transform(data => {
+    _.unset(data, 'uid');
+
     if (data.strategy.keys.length === 0) {
       _.unset(data, 'strategy.keys');
     }

@@ -12,7 +12,7 @@ export interface Pull_options {
 }
 
 export class Worldbook_syncer extends Syncer_interface {
-  constructor(type:string, type_zh: string,name: string, path: string) {
+  constructor(type: string, type_zh: string, name: string, path: string) {
     super(
       type,
       type_zh,
@@ -24,5 +24,17 @@ export class Worldbook_syncer extends Syncer_interface {
       worldbook_is_zh,
       Worldbook_tavern,
     );
+  }
+
+  protected check_safe(
+    local_data: Worldbook_en,
+    tavern_data: Worldbook_tavern,
+  ): { local_only_data: string[]; tavern_only_data: string[] } {
+    const local_names = local_data.entries.map(entry => entry.name);
+    const tavern_names = tavern_data.entries.map(entry => entry.name);
+    return {
+      local_only_data: _.difference(local_names, tavern_names),
+      tavern_only_data: _.difference(tavern_names, local_names),
+    };
   }
 }

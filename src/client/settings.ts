@@ -1,7 +1,7 @@
 type Settings = z.infer<typeof Settings>;
 const Settings = z.object({
   url: z.string().default('http://localhost:6620'),
-  delay: z.number().min(0).default(1000),
+  delay: z.number().min(0).default(500),
 });
 
 const variable_option = { type: 'script', script_id: getScriptId() } as const;

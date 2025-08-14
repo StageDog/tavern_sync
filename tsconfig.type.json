@@ -32,10 +32,11 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "src/type"
+    "src/type",
+    "global.d.ts",
   ],
   "exclude": [
     "**/node_modules/**",
-    "**/dist/**"
+    "**/dist/**",
   ]
 }

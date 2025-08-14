@@ -25,7 +25,7 @@
           },
           "path": {
             "type": "string",
-            "pattern": ".*\\.yaml$"
+            "pattern": "^(?:(?:[a-zA-Z]:|\\.|\\.\\.)?([\\\\/][^\\\\/]+)*|[^\\\\/]+)\\.yaml$"
           }
         },
         "required": [

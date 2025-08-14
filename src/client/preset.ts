@@ -12,7 +12,7 @@ const update_preset_debounced = _.debounce(update_preset, get_settings().delay);
 
 export function register_preset() {
   const socket = get_socket();
-  socket.on('pull_preset', (data: { name: string }, callback: (data: Preset | Error) => void) => {
+  socket.on('pull_preset', (data: { name: string }, callback: (data: Preset | string) => void) => {
     console.info(`[TavernSync] 收到提取预设 '${data.name}' 的请求`);
     try {
       const preset = getPreset(getLoadedPresetName() === data.name ? 'in_use' : data.name);
@@ -21,7 +21,7 @@ export function register_preset() {
     } catch (err) {
       const error = err as Error;
       console.error(`[TavernSync] 提取预设 '${data.name}' 失败: ${error}`);
-      callback(error);
+      callback(error.message);
     }
   });
   socket.on('push_preset', (data: { name: string; data: Preset }, callback: () => void) => {
