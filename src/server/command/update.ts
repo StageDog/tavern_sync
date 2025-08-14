@@ -27,11 +27,11 @@ export function add_update_command(): Command {
       }
       console.info('发现新版本，正在更新...');
 
-      const backupPath = `${__filename}.backup`;
+      const backup_path = `${__filename}.backup`;
       try {
         const currentContent = readFileSync(__filename, 'utf8');
-        writeFileSync(backupPath, currentContent);
-        console.info(`已备份当前版本到: ${backupPath}`);
+        writeFileSync(backup_path, currentContent);
+        console.info(`已备份当前版本到: ${backup_path}`);
       } catch (error) {
         console.warn('无法创建备份文件，继续更新过程');
       }

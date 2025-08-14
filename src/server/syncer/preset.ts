@@ -8,8 +8,8 @@ export interface Pull_options {
 }
 
 export class Preset_syncer extends Syncer_interface {
-  constructor(type: string, type_zh: string, name: string, path: string) {
-    super(type, type_zh, name, path, Preset_en, Preset_zh, preset_zh_to_en_map, preset_is_zh, Preset_tavern);
+  constructor(type: string, type_zh: string, name: string, file: string) {
+    super(type, type_zh, name, file, Preset_en, Preset_zh, preset_zh_to_en_map, preset_is_zh, Preset_tavern);
   }
 
   protected do_check_safe(

@@ -12,13 +12,13 @@ import YAML from 'yaml';
 let settings: Settings_en | null = null;
 export function get_settings(): Settings_en {
   if (!settings) {
-    const config_path = join(__dirname, 'tavern_sync.yaml');
-    if (!existsSync(config_path)) {
-      write_file_recursively(config_path, default_settings_content);
-      console.error(`配置文件不存在，已自动生成在 ${config_path}，请填写配置文件后重新运行`);
+    const config_file = join(__dirname, 'tavern_sync.yaml');
+    if (!existsSync(config_file)) {
+      write_file_recursively(config_file, default_settings_content);
+      console.error(`配置文件不存在，已自动生成在 ${config_file}，请填写配置文件后重新运行`);
       exit(1);
     }
-    const data = YAML.parse(readFileSync(config_path, 'utf8'));
+    const data = YAML.parse(readFileSync(config_file, 'utf8'));
     if (is_zh(data)) {
       settings = translate(Settings_zh.parse(data), zh_to_en_map) as Settings_en;
     } else {

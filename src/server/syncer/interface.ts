@@ -27,7 +27,7 @@ export abstract class Syncer_interface {
   type: string;
   type_zh: string;
   name: string;
-  path: string;
+  file: string;
 
   en_type: ZodType<any>;
   zh_type: ZodType<any>;
@@ -39,7 +39,7 @@ export abstract class Syncer_interface {
     type: string,
     type_zh: string,
     name: string,
-    path: string,
+    file: string,
     en_type: ZodType<any>,
     zh_type: ZodType<any>,
     zh_to_en_map: Record<string, string>,
@@ -49,7 +49,7 @@ export abstract class Syncer_interface {
     this.type = type;
     this.type_zh = type_zh;
     this.name = name;
-    this.path = resolve(__dirname, path);
+    this.file = resolve(__dirname, file);
 
     this.en_type = en_type;
     this.zh_type = zh_type;
@@ -65,10 +65,10 @@ export abstract class Syncer_interface {
   }
 
   private async get_parsed_local(): Promise<Record<string, any> | string> {
-    if (!existsSync(this.path)) {
-      return `配置文件 '${this.path}' 不存在`;
+    if (!existsSync(this.file)) {
+      return `配置文件 '${this.file}' 不存在`;
     }
-    const data = YAML.parse(readFileSync(this.path, 'utf-8'));
+    const data = YAML.parse(readFileSync(this.file, 'utf-8'));
     return this.is_zh(data) ? translate(this.zh_type.parse(data), this.zh_to_en_map) : this.en_type.parse(data);
   }
 
@@ -88,16 +88,19 @@ export abstract class Syncer_interface {
     local_only_data: string[];
     tavern_only_data: string[];
   };
-  private check_safe(local_data: Record<string, any>, tavern_data: Record<string, any>): Record<string, any> {
+  private check_safe(
+    local_data: Record<string, any>,
+    tavern_data: Record<string, any>,
+  ): { local_only_data: string[]; tavern_only_data: string[]; error_data: Record<string, any> } {
     const { local_only_data, tavern_only_data } = this.do_check_safe(local_data, tavern_data);
     let error_data = _({});
     if (local_only_data.length > 0) {
-      error_data = error_data.set([`本地文件 '${this.path}' 中存在以下条目, 但酒馆中不存在`], local_only_data);
+      error_data = error_data.set([`本地文件 '${this.file}' 中存在以下条目, 但酒馆中不存在`], local_only_data);
     }
     if (tavern_only_data.length > 0) {
-      error_data = error_data.set([`酒馆中存在以下条目, 但本地文件 '${this.path}' 中不存在`], tavern_only_data);
+      error_data = error_data.set([`酒馆中存在以下条目, 但本地文件 '${this.file}' 中不存在`], tavern_only_data);
     }
-    return error_data.value();
+    return { local_only_data, tavern_only_data, error_data: error_data.value() };
   }
 
   async pull({ language, should_force }: Pull_options) {
@@ -106,20 +109,20 @@ export abstract class Syncer_interface {
       return exit_on_error(`拉取${this.type_zh} '${this.name}' 失败: ${tavern_data}`);
     }
 
-    if (existsSync(this.path) && !should_force) {
+    if (existsSync(this.file) && !should_force) {
       const local_data = await this.get_parsed_local();
       if (typeof local_data === 'string') {
         return exit_on_error(`拉取${this.type_zh} '${this.name}' 失败: ${local_data}`);
       }
 
-      const error_data = this.check_safe(local_data, tavern_data);
+      const { error_data } = this.check_safe(local_data, tavern_data);
       if (!_.isEmpty(error_data)) {
-        return exit_on_error(YAML.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data.value() }));
+        return exit_on_error(YAML.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data }));
       }
     }
 
-    write_file_recursively(this.path, this.beautingfy(tavern_data, language));
-    console.info(`成功将世界书 '${this.name}' 拉取到本地文件 '${this.path}' 中`);
+    write_file_recursively(this.file, this.beautingfy(tavern_data, language));
+    console.info(`成功将世界书 '${this.name}' 拉取到本地文件 '${this.file}' 中`);
     close_server();
   }
 
@@ -135,9 +138,9 @@ export abstract class Syncer_interface {
         return exit_on_error(`推送${this.type_zh} '${this.name}' 失败: ${tavern_data}`);
       }
 
-      const error_data = this.check_safe(local_data, tavern_data);
+      const { error_data } = this.check_safe(local_data, tavern_data);
       if (!_.isEmpty(error_data)) {
-        return exit_on_error(YAML.stringify({ [`推送${this.type_zh} '${this.name}' 失败`]: error_data.value() }));
+        return exit_on_error(YAML.stringify({ [`推送${this.type_zh} '${this.name}' 失败`]: error_data }));
       }
     }
 
@@ -151,12 +154,12 @@ export abstract class Syncer_interface {
   async push(options: Push_options) {
     console.info(`开始推送... (如果等待时间超过 3 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`);
     await this.push_once(options);
-    console.info(`成功将${this.type_zh} '${this.name}' 在 '${this.path}' 中的本地内容推送到酒馆`);
+    console.info(`成功将${this.type_zh} '${this.name}' 在 '${this.file}' 中的本地内容推送到酒馆`);
     close_server();
   }
 
   async watch(options: Watch_options) {
-    const watcher = watch_on(this.path);
+    const watcher = watch_on(this.file);
 
     watcher.on('ready', async () => {
       await this.push_once(options);

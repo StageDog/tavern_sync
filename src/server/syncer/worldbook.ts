@@ -12,12 +12,12 @@ export interface Pull_options {
 }
 
 export class Worldbook_syncer extends Syncer_interface {
-  constructor(type: string, type_zh: string, name: string, path: string) {
+  constructor(type: string, type_zh: string, name: string, file: string) {
     super(
       type,
       type_zh,
       name,
-      path,
+      file,
       Worldbook_en,
       Worldbook_zh,
       worldbook_zh_to_en_map,
