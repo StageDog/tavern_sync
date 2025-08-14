@@ -1,3 +1,4 @@
+import { extract_file_content } from '@server/component/extract_file_content';
 import { Syncer_interface } from '@server/syncer/interface';
 import { Worldbook as Worldbook_tavern } from '@server/tavern/worldbook';
 import { Worldbook as Worldbook_en } from '@type/worldbook.en';
@@ -35,6 +36,34 @@ export class Worldbook_syncer extends Syncer_interface {
     return {
       local_only_data: _.difference(local_names, tavern_names),
       tavern_only_data: _.difference(tavern_names, local_names),
+    };
+  }
+
+  protected do_push(local_data: Worldbook_en): { result_data: Record<string, any>; error_data: Record<string, any> } {
+    let errors: string[] = [];
+
+    local_data.entries.forEach((entry, index) => {
+      if (entry.file === undefined) {
+        return;
+      }
+
+      const content = extract_file_content(this.file, entry.file!);
+      if (content === null) {
+        errors.push(`条目 '${index}' 的 '${entry.file}'`);
+      } else {
+        _.set(entry, 'content', content);
+        _.unset(entry, 'file');
+      }
+    });
+
+    return {
+      result_data: local_data,
+      error_data:
+        errors.length === 0
+          ? {}
+          : {
+              未找到以下外链提示词文件: errors,
+            },
     };
   }
 }

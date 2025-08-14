@@ -126,6 +126,10 @@ export abstract class Syncer_interface {
     close_server();
   }
 
+  protected abstract do_push(
+    local_data: Record<string, any>,
+  ): { result_data: Record<string, any>; error_data: Record<string, any> };
+
   private async push_once({ should_force }: Push_options): Promise<void> {
     const local_data = await this.get_parsed_local();
     if (typeof local_data === 'string') {
@@ -144,10 +148,15 @@ export abstract class Syncer_interface {
       }
     }
 
+    const { result_data, error_data } = this.do_push(local_data);
+    if (!_.isEmpty(error_data)) {
+      return exit_on_error(YAML.stringify({ [`推送${this.type_zh} '${this.name}' 失败`]: error_data }));
+    }
+
     const socket = await wait_socket();
     await socket.emitWithAck(`push_${this.type}`, {
       name: this.name,
-      data: local_data,
+      data: result_data,
     });
   }
 

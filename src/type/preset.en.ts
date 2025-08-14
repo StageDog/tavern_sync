@@ -14,9 +14,30 @@ const Prompt_normal = z
       .describe('插入位置: `relative` 则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
 
     role: z.enum(['system', 'user', 'assistant']).default('system').optional(),
-    content: z.string(),
+    content: z.string().optional().describe('内嵌的提示词内容'),
+    file: z.string().optional().describe('外链的提示词文件路径'),
 
     extra: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
+  })
+  .superRefine((data, context) => {
+    if (data.content === undefined && data.file === undefined) {
+      ['content', 'file'].forEach(key =>
+        context.addIssue({
+          code: 'custom',
+          path: [key],
+          message: '必须填写 `content` 或 `file`',
+        }),
+      );
+    }
+    if (data.content !== undefined && data.file !== undefined) {
+      ['content', 'file'].forEach(key =>
+        context.addIssue({
+          code: 'custom',
+          path: [key],
+          message: '不能同时填写 `content` 和 `file`',
+        }),
+      );
+    }
   })
   .transform(data => ({
     ...data,
@@ -59,6 +80,7 @@ const Prompt_placeholder = z
 
     role: z.enum(['system', 'user', 'assistant']).optional(),
     content: z.never().optional(),
+    file: z.never().optional(),
 
     extra: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
   })
