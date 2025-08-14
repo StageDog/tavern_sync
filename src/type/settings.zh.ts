@@ -20,7 +20,7 @@ export type Config = z.infer<typeof Config>;
 export const Config = z.object({
   类型: Config_type,
   酒馆中的名称: z.string(),
-  本地文件路径: z.string().endsWith('.yaml'),
+  本地文件路径: z.string(),
 });
 
 export type Settings = z.infer<typeof Settings>;
