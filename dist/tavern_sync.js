@@ -55230,6 +55230,17 @@ class Syncer_interface {
         });
         return result;
     }
+    check_safe(local_data, tavern_data) {
+        const { local_only_data, tavern_only_data } = this.do_check_safe(local_data, tavern_data);
+        let error_data = lodash_default()({});
+        if (local_only_data.length > 0) {
+            error_data = error_data.set([`本地文件 '${this.path}' 中存在以下条目, 但酒馆中不存在`], local_only_data);
+        }
+        if (tavern_only_data.length > 0) {
+            error_data = error_data.set([`酒馆中存在以下条目, 但本地文件 '${this.path}' 中不存在`], tavern_only_data);
+        }
+        return error_data.value();
+    }
     async pull({ language, should_force }) {
         const tavern_data = await this.get_parsed_tavern();
         if (typeof tavern_data === 'string') {
@@ -55240,15 +55251,8 @@ class Syncer_interface {
             if (typeof local_data === 'string') {
                 return exit_on_error(`拉取${this.type_zh} '${this.name}' 失败: ${local_data}`);
             }
-            const { local_only_data, tavern_only_data } = this.check_safe(local_data, tavern_data);
-            if (local_only_data.length > 0 || tavern_only_data.length > 0) {
-                let error_data = lodash_default()({});
-                if (local_only_data.length > 0) {
-                    error_data = error_data.set([`本地文件 '${this.path}' 中存在以下条目, 但酒馆中不存在`], local_only_data);
-                }
-                if (tavern_only_data.length > 0) {
-                    error_data = error_data.set([`酒馆中存在以下条目, 但本地文件 '${this.path}' 中不存在`], tavern_only_data);
-                }
+            const error_data = this.check_safe(local_data, tavern_data);
+            if (!lodash_default().isEmpty(error_data)) {
                 return exit_on_error(dist.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data.value() }));
             }
         }
@@ -55266,16 +55270,9 @@ class Syncer_interface {
             if (typeof tavern_data === 'string') {
                 return exit_on_error(`推送${this.type_zh} '${this.name}' 失败: ${tavern_data}`);
             }
-            const { local_only_data, tavern_only_data } = this.check_safe(local_data, tavern_data);
-            if (local_only_data.length > 0 || tavern_only_data.length > 0) {
-                let error_data = lodash_default()({});
-                if (local_only_data.length > 0) {
-                    error_data = error_data.set([`本地文件 '${this.path}' 中存在以下条目, 但酒馆中不存在`], local_only_data);
-                }
-                if (tavern_only_data.length > 0) {
-                    error_data = error_data.set([`酒馆中存在以下条目, 但本地文件 '${this.path}' 中不存在`], tavern_only_data);
-                }
-                return exit_on_error(dist.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data.value() }));
+            const error_data = this.check_safe(local_data, tavern_data);
+            if (!lodash_default().isEmpty(error_data)) {
+                return exit_on_error(dist.stringify({ [`推送${this.type_zh} '${this.name}' 失败`]: error_data.value() }));
             }
         }
         const socket = await wait_socket();
@@ -55868,7 +55865,7 @@ class Preset_syncer extends Syncer_interface {
     constructor(type, type_zh, name, path) {
         super(type, type_zh, name, path, preset_en_Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, Preset);
     }
-    check_safe(local_data, tavern_data) {
+    do_check_safe(local_data, tavern_data) {
         const get_names = (data) => {
             return _(data.prompts)
                 .concat(data.prompts_unused)
@@ -56309,7 +56306,7 @@ class Worldbook_syncer extends Syncer_interface {
     constructor(type, type_zh, name, path) {
         super(type, type_zh, name, path, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
     }
-    check_safe(local_data, tavern_data) {
+    do_check_safe(local_data, tavern_data) {
         const local_names = local_data.entries.map(entry => entry.name);
         const tavern_names = tavern_data.entries.map(entry => entry.name);
         return {
