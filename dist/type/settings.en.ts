@@ -7,7 +7,7 @@ export type Config = z.infer<typeof Config>;
 export const Config = z.object({
   type: Config_type,
   name: z.string(),
-  path: z.string().endsWith('.yaml'),
+  path: z.string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
 });
 
 export type Settings = z.infer<typeof Settings>;
