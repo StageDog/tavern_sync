@@ -81,13 +81,24 @@ export abstract class Syncer_interface {
     return result;
   }
 
-  protected abstract check_safe(
+  protected abstract do_check_safe(
     local_data: Record<string, any>,
     tavern_data: Record<string, any>,
   ): {
     local_only_data: string[];
     tavern_only_data: string[];
   };
+  private check_safe(local_data: Record<string, any>, tavern_data: Record<string, any>): Record<string, any> {
+    const { local_only_data, tavern_only_data } = this.do_check_safe(local_data, tavern_data);
+    let error_data = _({});
+    if (local_only_data.length > 0) {
+      error_data = error_data.set([`本地文件 '${this.path}' 中存在以下条目, 但酒馆中不存在`], local_only_data);
+    }
+    if (tavern_only_data.length > 0) {
+      error_data = error_data.set([`酒馆中存在以下条目, 但本地文件 '${this.path}' 中不存在`], tavern_only_data);
+    }
+    return error_data.value();
+  }
 
   async pull({ language, should_force }: Pull_options) {
     const tavern_data = await this.get_parsed_tavern();
@@ -101,15 +112,8 @@ export abstract class Syncer_interface {
         return exit_on_error(`拉取${this.type_zh} '${this.name}' 失败: ${local_data}`);
       }
 
-      const { local_only_data, tavern_only_data } = this.check_safe(local_data, tavern_data);
-      if (local_only_data.length > 0 || tavern_only_data.length > 0) {
-        let error_data = _({});
-        if (local_only_data.length > 0) {
-          error_data = error_data.set([`本地文件 '${this.path}' 中存在以下条目, 但酒馆中不存在`], local_only_data);
-        }
-        if (tavern_only_data.length > 0) {
-          error_data = error_data.set([`酒馆中存在以下条目, 但本地文件 '${this.path}' 中不存在`], tavern_only_data);
-        }
+      const error_data = this.check_safe(local_data, tavern_data);
+      if (!_.isEmpty(error_data)) {
         return exit_on_error(YAML.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data.value() }));
       }
     }
@@ -131,16 +135,9 @@ export abstract class Syncer_interface {
         return exit_on_error(`推送${this.type_zh} '${this.name}' 失败: ${tavern_data}`);
       }
 
-      const { local_only_data, tavern_only_data } = this.check_safe(local_data, tavern_data);
-      if (local_only_data.length > 0 || tavern_only_data.length > 0) {
-        let error_data = _({});
-        if (local_only_data.length > 0) {
-          error_data = error_data.set([`本地文件 '${this.path}' 中存在以下条目, 但酒馆中不存在`], local_only_data);
-        }
-        if (tavern_only_data.length > 0) {
-          error_data = error_data.set([`酒馆中存在以下条目, 但本地文件 '${this.path}' 中不存在`], tavern_only_data);
-        }
-        return exit_on_error(YAML.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data.value() }));
+      const error_data = this.check_safe(local_data, tavern_data);
+      if (!_.isEmpty(error_data)) {
+        return exit_on_error(YAML.stringify({ [`推送${this.type_zh} '${this.name}' 失败`]: error_data.value() }));
       }
     }
 

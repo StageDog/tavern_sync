@@ -12,7 +12,7 @@ export class Preset_syncer extends Syncer_interface {
     super(type, type_zh, name, path, Preset_en, Preset_zh, preset_zh_to_en_map, preset_is_zh, Preset_tavern);
   }
 
-  protected check_safe(
+  protected do_check_safe(
     local_data: Preset_en,
     tavern_data: Preset_tavern,
   ): { local_only_data: string[]; tavern_only_data: string[] } {

@@ -26,7 +26,7 @@ export class Worldbook_syncer extends Syncer_interface {
     );
   }
 
-  protected check_safe(
+  protected do_check_safe(
     local_data: Worldbook_en,
     tavern_data: Worldbook_tavern,
   ): { local_only_data: string[]; tavern_only_data: string[] } {
