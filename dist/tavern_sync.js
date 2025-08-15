@@ -53408,7 +53408,7 @@ function add_list_command() {
 
 ;// ./src/server/component/collection_file.ts
 function is_collection_file(file) {
-    return ['合集.yaml', 'collection.yaml'].some(suffix => file.endsWith(suffix));
+    return ['合集', 'collection'].some(keyword => file.includes(keyword));
 }
 function parse_collection_file(content) {
     return [...content.matchAll(/ *\# \^([^\n]+)\n([\s\S]*?)(?:(?=\n *\# \^[^\n]+\n)|$)/gs)].map(match => ({
@@ -55237,6 +55237,7 @@ function sanitize_filename(filename) {
 
 
 
+
 class Syncer_interface {
     type;
     type_zh;
@@ -55306,8 +55307,25 @@ ${this.do_beautify_config(tavern_data, language)}`;
             language,
             should_split,
         });
+        const collection_files = lodash_default()(files)
+            .remove(file => is_collection_file(file.path))
+            .groupBy(file => (0,external_node_path_.resolve)(this.dir, file.path))
+            .map((files, path) => {
+            let content = files.map(file => `# ^${file.name}\n` + file.content).join('\n');
+            try {
+                content = String(dist.parseDocument(content));
+            }
+            catch (error) {
+                // TODO: 如何报错
+            }
+            return {
+                path,
+                content: content,
+            };
+        })
+            .value();
         write_file_recursively(this.dir, this.file, this.beautify_config(result_data, language));
-        files.forEach(({ path, content }) => {
+        [...files, ...collection_files].forEach(({ path, content }) => {
             write_file_recursively(this.dir, path, content);
         });
         console.info(`成功将${this.type_zh} '${this.name}' 拉取到本地文件 '${this.file}' 中`);
@@ -56051,7 +56069,7 @@ class Preset_syncer extends Syncer_interface {
                     return;
                 }
                 const handle_file = (prompt, file_path) => {
-                    files.push({ path: file_path, content: prompt.content });
+                    files.push({ name: prompt.name, path: file_path, content: prompt.content });
                     _.unset(prompt, 'content');
                     _.set(prompt, 'file', file_path);
                 };
@@ -56668,24 +56686,7 @@ class Worldbook_syncer extends Syncer_interface {
                 handle_file(entry, state.file);
             }
         });
-        const collection_files = _(files)
-            .remove(file => is_collection_file(file.path))
-            .groupBy(file => (0,external_node_path_.resolve)(this.dir, file.path))
-            .map((files, path) => {
-            let content = files.map(file => `# ^${file.name}\n` + file.content).join('\n');
-            try {
-                content = String(dist.parseDocument(content));
-            }
-            catch (error) {
-                // TODO: 如何报错
-            }
-            return {
-                path,
-                content: content,
-            };
-        })
-            .value();
-        return { result_data: tavern_data, files: [...files, ...collection_files] };
+        return { result_data: tavern_data, files };
     }
     // TODO: 拆分 component
     do_beautify_config(tavern_data, language) {
