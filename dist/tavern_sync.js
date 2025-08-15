@@ -56076,6 +56076,13 @@ class Preset_syncer extends Syncer_interface {
         };
         handle_file(local_data.prompts, '提示词');
         handle_file(local_data.prompts_unused, '未添加的提示词');
+        const handle_raw_string = (prompts) => {
+            prompts.forEach(prompt => {
+                lodash_default().set(prompt, 'content', prompt.content?.replaceAll(/\s*# :(?=.*$)/gm, ''));
+            });
+        };
+        handle_raw_string(local_data.prompts);
+        handle_raw_string(local_data.prompts_unused);
         return {
             result_data: local_data,
             error_data: errors.length === 0
@@ -56617,6 +56624,9 @@ class Worldbook_syncer extends Syncer_interface {
                 _.set(entry, 'content', content);
                 _.unset(entry, 'file');
             }
+        });
+        local_data.entries.forEach(entry => {
+            _.set(entry, 'content', entry.content?.replaceAll(/\s*# :(?=.*$)/gm, ''));
         });
         return {
             result_data: local_data,
