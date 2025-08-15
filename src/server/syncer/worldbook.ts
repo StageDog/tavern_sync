@@ -99,6 +99,9 @@ export class Worldbook_syncer extends Syncer_interface {
         _.unset(entry, 'file');
       }
     });
+    local_data.entries.forEach(entry => {
+      _.set(entry, 'content', entry.content?.replaceAll(/\s*# :(?=.*$)/gm, ''));
+    });
 
     return {
       result_data: local_data,

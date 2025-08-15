@@ -126,6 +126,14 @@ export class Preset_syncer extends Syncer_interface {
     handle_file(local_data.prompts, '提示词');
     handle_file(local_data.prompts_unused, '未添加的提示词');
 
+    const handle_raw_string = (prompts: Preset_en['prompts']) => {
+      prompts.forEach(prompt => {
+        _.set(prompt, 'content', prompt.content?.replaceAll(/\s*# :(?=.*$)/gm, ''));
+      });
+    };
+    handle_raw_string(local_data.prompts);
+    handle_raw_string(local_data.prompts_unused);
+
     return {
       result_data: local_data,
       error_data:
