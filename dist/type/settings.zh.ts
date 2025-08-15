@@ -7,7 +7,7 @@ export const zh_to_en_map = {
   世界书: 'worldbook',
   预设: 'preset',
   酒馆中的名称: 'name',
-  本地文件路径: 'path',
+  本地文件路径: 'file',
 } as const;
 export function is_zh(data: Record<string, any>): boolean {
   return _.has(data, '配置');

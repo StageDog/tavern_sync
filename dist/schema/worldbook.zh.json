@@ -203,6 +203,11 @@
             "additionalProperties": {}
           },
           "内容": {
+            "description": "内嵌的提示词内容",
+            "type": "string"
+          },
+          "文件": {
+            "description": "外链的提示词文件路径",
             "type": "string"
           }
         },
@@ -210,8 +215,7 @@
           "名称",
           "启用",
           "激活策略",
-          "插入位置",
-          "内容"
+          "插入位置"
         ],
         "additionalProperties": false
       }

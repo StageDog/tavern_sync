@@ -204,6 +204,11 @@
             "additionalProperties": {}
           },
           "content": {
+            "description": "内嵌的提示词内容",
+            "type": "string"
+          },
+          "file": {
+            "description": "外链的提示词文件路径",
             "type": "string"
           }
         },
@@ -211,8 +216,7 @@
           "name",
           "enabled",
           "strategy",
-          "position",
-          "content"
+          "position"
         ],
         "additionalProperties": false
       }

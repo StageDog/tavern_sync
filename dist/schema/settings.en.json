@@ -23,7 +23,7 @@
           "name": {
             "type": "string"
           },
-          "path": {
+          "file": {
             "type": "string",
             "pattern": "^(?:(?:[a-zA-Z]:|\\.|\\.\\.)?([\\\\/][^\\\\/]+)*|[^\\\\/]+)\\.yaml$"
           }
@@ -31,7 +31,7 @@
         "required": [
           "type",
           "name",
-          "path"
+          "file"
         ],
         "additionalProperties": false
       }

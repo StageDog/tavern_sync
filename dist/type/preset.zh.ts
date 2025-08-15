@@ -11,6 +11,7 @@ export const zh_to_en_map = {
   用户: 'user',
   AI: 'assistant',
   内容: 'content',
+  文件: 'file',
   额外字段: 'extra',
 
   角色定义之前: 'world_info_before',
@@ -75,9 +76,30 @@ const Prompt_normal = z
       .describe('插入位置: `相对`则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
 
     角色: z.enum(['系统', '用户', 'AI']).default('系统').optional(),
-    内容: z.string(),
+    内容: z.string().optional().describe('内嵌的提示词内容'),
+    文件: z.string().optional().describe('外链的提示词文件路径'),
 
     额外字段: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
+  })
+  .superRefine((data, context) => {
+    if (data.内容 === undefined && data.文件 === undefined) {
+      ['内容', '文件'].forEach(key =>
+        context.addIssue({
+          code: 'custom',
+          path: [key],
+          message: '必须填写`内容`或`文件`',
+        }),
+      );
+    }
+    if (data.内容 !== undefined && data.文件 !== undefined) {
+      ['内容', '文件'].forEach(key =>
+        context.addIssue({
+          code: 'custom',
+          path: [key],
+          message: '不能同时填写`内容`和`文件`',
+        }),
+      );
+    }
   })
   .transform(data => ({
     ...data,
@@ -120,6 +142,7 @@ const Prompt_placeholder = z
 
     角色: z.enum(['系统', '用户', 'AI']).optional(),
     内容: z.never().optional(),
+    文件: z.never().optional(),
 
     额外字段: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
   })
