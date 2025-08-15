@@ -7,11 +7,13 @@ import { Preset as Preset_tavern } from '@server/tavern/preset';
 import { detect_extension } from '@server/util/detect_extension';
 import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
+import { translate } from '@server/util/translate';
 import { Preset as Preset_en, prompt_placeholder_ids } from '@type/preset.en';
 import { Preset as Preset_zh, is_zh as preset_is_zh, zh_to_en_map as preset_zh_to_en_map } from '@type/preset.zh';
 import { zh_to_en_map } from '@type/settings.zh';
 
 import { dirname, join, resolve } from 'node:path';
+import YAML from 'yaml';
 
 export class Preset_syncer extends Syncer_interface {
   constructor(config_name: string, name: string, file: string) {
@@ -117,6 +119,33 @@ export class Preset_syncer extends Syncer_interface {
     convert_prompts(tavern_data.prompts, { used: true });
     convert_prompts(tavern_data.prompts_unused, { used: false });
     return { result_data: tavern_data, files };
+  }
+
+  protected do_beautify_config(tavern_data: Preset_tavern, language: 'zh' | 'en'): string {
+    const document = new YAML.Document(
+      language === 'zh' ? translate(tavern_data, _.invert(this.zh_to_en_map)) : tavern_data,
+    );
+    ['提示词', '未添加的提示词', 'prompts', 'prompts_unused'].forEach(key =>
+      YAML.visit(document.get(key) as YAML.Node, (key, node) => {
+        if (YAML.isSeq(node)) {
+          return;
+        }
+        if (YAML.isMap(node) && typeof key === 'number' && key > 0) {
+          node.spaceBefore = true;
+        }
+        return YAML.visit.SKIP;
+      }),
+    );
+    YAML.visit(document, (key, node) => {
+      if (key === null) {
+        return;
+      }
+      if (YAML.isPair(node) && (key as number) > 0) {
+        (node.key as YAML.Node).spaceBefore = true;
+      }
+      return YAML.visit.SKIP;
+    });
+    return document.toString({ blockQuote: 'literal' });
   }
 
   // TODO: 拆分 component

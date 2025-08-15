@@ -111,13 +111,10 @@ export abstract class Syncer_interface {
       content: string;
     }[];
   };
+  protected abstract do_beautify_config(tavern_data: Record<string, any>, language: 'zh' | 'en'): string;
   private beautify_config(tavern_data: Record<string, any>, language: 'zh' | 'en'): string {
-    const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/${this.type}.${language}.json`;
-    let result = `# yaml-language-server: $schema=${schema_url}\n`;
-    result += YAML.stringify(language === 'en' ? tavern_data : translate(tavern_data, _.invert(this.zh_to_en_map)), {
-      blockQuote: 'literal',
-    });
-    return result;
+    return `# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/${this.type}.${language}.json
+${this.do_beautify_config(tavern_data, language)}`;
   }
   async pull({ language, should_force, should_split }: Pull_options) {
     const tavern_data = await this.get_parsed_tavern();

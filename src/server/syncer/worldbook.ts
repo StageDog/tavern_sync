@@ -7,6 +7,7 @@ import { Worldbook as Worldbook_tavern } from '@server/tavern/worldbook';
 import { detect_extension } from '@server/util/detect_extension';
 import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
+import { translate } from '@server/util/translate';
 import { zh_to_en_map } from '@type/settings.zh';
 import { Worldbook as Worldbook_en } from '@type/worldbook.en';
 import {
@@ -109,6 +110,36 @@ export class Worldbook_syncer extends Syncer_interface {
       })
       .value();
     return { result_data: tavern_data, files: [...files, ...collection_files] };
+  }
+
+  // TODO: 拆分 component
+  protected do_beautify_config(tavern_data: Worldbook_tavern, language: 'zh' | 'en'): string {
+    const document = new YAML.Document(
+      language === 'zh' ? translate(tavern_data, _.invert(this.zh_to_en_map)) : tavern_data,
+    );
+    ['条目', 'entries'].forEach(key =>
+      YAML.visit(document.get(key) as YAML.Node, (key, node) => {
+        if (YAML.isSeq(node)) {
+          return;
+        }
+        if (YAML.isMap(node) && typeof key === 'number' && key > 0) {
+          node.spaceBefore = true;
+          return YAML.visit.SKIP;
+        }
+        return YAML.visit.BREAK;
+      }),
+    );
+    YAML.visit(document, (key, node) => {
+      if (key === null) {
+        return;
+      }
+      if (YAML.isPair(node) && (key as number) > 0) {
+        (node.key as YAML.Node).spaceBefore = true;
+        return YAML.visit.SKIP;
+      }
+      return YAML.visit.BREAK;
+    });
+    return document.toString({ blockQuote: 'literal' });
   }
 
   // TODO: 拆分 component
