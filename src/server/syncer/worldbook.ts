@@ -150,13 +150,12 @@ export class Worldbook_syncer extends Syncer_interface {
   }
 
   protected do_watch(local_data: Worldbook_en): string[] {
-    return _([this.file])
-      .concat(
-        _(local_data.entries)
-          .filter(entry => entry.file !== undefined)
-          .map(entry => resolve(this.dir, entry.file!))
-          .value(),
-      )
+    return _(
+      _(local_data.entries)
+        .filter(entry => entry.file !== undefined)
+        .map(entry => resolve(this.dir, entry.file!))
+        .value(),
+    )
       .map(path => dirname(path))
       .reduce((result: string[], path: string) => {
         if (result.some(parent => is_parent(parent, path))) {
@@ -164,6 +163,7 @@ export class Worldbook_syncer extends Syncer_interface {
         }
         result.push(path);
         return result;
-      }, []);
+      }, [])
+      .concat(this.file);
   }
 }

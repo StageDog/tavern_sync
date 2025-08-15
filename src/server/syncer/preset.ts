@@ -169,14 +169,13 @@ export class Preset_syncer extends Syncer_interface {
   }
 
   protected do_watch(local_data: Preset_en): string[] {
-    return _([this.file])
-      .concat(
-        _(local_data.prompts)
-          .concat(local_data.prompts_unused)
-          .filter(prompt => prompt.file !== undefined)
-          .map(prompt => resolve(this.dir, prompt.file!))
-          .value(),
-      )
+    return _(
+      _(local_data.prompts)
+        .concat(local_data.prompts_unused)
+        .filter(prompt => prompt.file !== undefined)
+        .map(prompt => resolve(this.dir, prompt.file!))
+        .value(),
+    )
       .map(path => dirname(path))
       .reduce((result: string[], path: string) => {
         if (result.some(parent => is_parent(parent, path))) {
@@ -184,6 +183,7 @@ export class Preset_syncer extends Syncer_interface {
         }
         result.push(path);
         return result;
-      }, []);
+      }, [])
+      .concat(this.file);
   }
 }
