@@ -55312,7 +55312,7 @@ class Syncer_interface {
         files.forEach(({ path, content }) => {
             write_file_recursively(this.dir, path, content);
         });
-        console.info(`成功将世界书 '${this.name}' 拉取到本地文件 '${this.file}' 中`);
+        console.info(`成功将${this.type_zh} '${this.name}' 拉取到本地文件 '${this.file}' 中`);
         close_server();
     }
     async push_once({ should_force }) {
