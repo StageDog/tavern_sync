@@ -55286,12 +55286,8 @@ class Syncer_interface {
         return { local_only_data, tavern_only_data, error_data: error_data.value() };
     }
     beautify_config(tavern_data, language) {
-        const schema_url = `https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/${this.type}.${language}.json`;
-        let result = `# yaml-language-server: $schema=${schema_url}\n`;
-        result += dist.stringify(language === 'en' ? tavern_data : translate(tavern_data, lodash_default().invert(this.zh_to_en_map)), {
-            blockQuote: 'literal',
-        });
-        return result;
+        return `# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/${this.type}.${language}.json
+${this.do_beautify_config(tavern_data, language)}`;
     }
     async pull({ language, should_force, should_split }) {
         const tavern_data = await this.get_parsed_tavern();
@@ -56006,6 +56002,8 @@ const preset_zh_Preset = object({
 
 
 
+
+
 class Preset_syncer extends Syncer_interface {
     constructor(config_name, name, file) {
         super('preset', _.invert(zh_to_en_map)['preset'], config_name, name, file, preset_en_Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, Preset);
@@ -56069,6 +56067,28 @@ class Preset_syncer extends Syncer_interface {
         convert_prompts(tavern_data.prompts, { used: true });
         convert_prompts(tavern_data.prompts_unused, { used: false });
         return { result_data: tavern_data, files };
+    }
+    do_beautify_config(tavern_data, language) {
+        const document = new dist.Document(language === 'zh' ? translate(tavern_data, _.invert(this.zh_to_en_map)) : tavern_data);
+        ['提示词', '未添加的提示词', 'prompts', 'prompts_unused'].forEach(key => dist.visit(document.get(key), (key, node) => {
+            if (dist.isSeq(node)) {
+                return;
+            }
+            if (dist.isMap(node) && typeof key === 'number' && key > 0) {
+                node.spaceBefore = true;
+            }
+            return dist.visit.SKIP;
+        }));
+        dist.visit(document, (key, node) => {
+            if (key === null) {
+                return;
+            }
+            if (dist.isPair(node) && key > 0) {
+                node.key.spaceBefore = true;
+            }
+            return dist.visit.SKIP;
+        });
+        return document.toString({ blockQuote: 'literal' });
     }
     // TODO: 拆分 component
     do_push(local_data) {
@@ -56605,6 +56625,7 @@ const worldbook_zh_Worldbook = object({ 条目: array(worldbook_zh_Worldbook_ent
 
 
 
+
 class Worldbook_syncer extends Syncer_interface {
     constructor(config_name, name, file) {
         super('worldbook', _.invert(zh_to_en_map)['worldbook'], config_name, name, file, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
@@ -56663,6 +56684,31 @@ class Worldbook_syncer extends Syncer_interface {
         })
             .value();
         return { result_data: tavern_data, files: [...files, ...collection_files] };
+    }
+    // TODO: 拆分 component
+    do_beautify_config(tavern_data, language) {
+        const document = new dist.Document(language === 'zh' ? translate(tavern_data, _.invert(this.zh_to_en_map)) : tavern_data);
+        ['条目', 'entries'].forEach(key => dist.visit(document.get(key), (key, node) => {
+            if (dist.isSeq(node)) {
+                return;
+            }
+            if (dist.isMap(node) && typeof key === 'number' && key > 0) {
+                node.spaceBefore = true;
+                return dist.visit.SKIP;
+            }
+            return dist.visit.BREAK;
+        }));
+        dist.visit(document, (key, node) => {
+            if (key === null) {
+                return;
+            }
+            if (dist.isPair(node) && key > 0) {
+                node.key.spaceBefore = true;
+                return dist.visit.SKIP;
+            }
+            return dist.visit.BREAK;
+        });
+        return document.toString({ blockQuote: 'literal' });
     }
     // TODO: 拆分 component
     do_push(local_data) {
