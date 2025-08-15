@@ -3,7 +3,7 @@ import { zh_to_en_map } from '@type/settings.zh';
 
 export function beauingfy_configs(): string {
   return `
-可用的条目有:
+可用的配置有:
 ${Object.entries(get_settings().configs)
   .map(([name, value]) => `- (${_.invert(zh_to_en_map)[value.type]}) ${name}`)
   .join('\n')}`;

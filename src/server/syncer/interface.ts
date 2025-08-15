@@ -126,7 +126,10 @@ ${this.do_beautify_config(tavern_data, language)}`;
     if (typeof local_data !== 'string' && !should_force) {
       const { error_data } = this.check_safe(local_data, tavern_data);
       if (!_.isEmpty(error_data)) {
-        exit_on_error(YAML.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data }));
+        exit_on_error(
+          YAML.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data }) +
+            `如果想无视条目差异, 请在命令尾部添加 '-f' 或 '--force' 选项, 如: 'node tavern_sync.js pull 猴子打字机 -f'`,
+        );
       }
     }
 
@@ -160,7 +163,10 @@ ${this.do_beautify_config(tavern_data, language)}`;
 
       const { error_data } = this.check_safe(local_data, tavern_data);
       if (!_.isEmpty(error_data)) {
-        throw Error(YAML.stringify({ [`推送${this.type_zh} '${this.name}' 失败`]: error_data }));
+        throw Error(
+          YAML.stringify({ [`推送${this.type_zh} '${this.name}' 失败`]: error_data }) +
+            `如果想无视条目差异, 请在命令尾部添加 '-f' 或 '--force' 选项, 如: 'node tavern_sync.js push 猴子打字机 -f'`,
+        );
       }
     }
 
