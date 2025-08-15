@@ -53439,79 +53439,6 @@ function replace_user_name(text) {
     return text?.replaceAll(get_settings().user_name, '<user>');
 }
 
-;// external "node:http"
-const external_node_http_namespaceObject = require("node:http");
-// EXTERNAL MODULE: ./node_modules/.pnpm/socket.io@4.8.1_bufferutil@4.0.9_utf-8-validate@6.0.5/node_modules/socket.io/dist/index.js
-var socket_io_dist = __webpack_require__(5263);
-;// ./node_modules/.pnpm/socket.io@4.8.1_bufferutil@4.0.9_utf-8-validate@6.0.5/node_modules/socket.io/wrapper.mjs
-
-
-const {Server, Namespace, Socket} = socket_io_dist;
-
-;// ./src/server/server.ts
-
-
-const port = 6620;
-let io = null;
-async function wait_socket() {
-    if (!io) {
-        const server = (0,external_node_http_namespaceObject.createServer)();
-        server.listen(port, () => {
-            console.info(`酒馆同步脚本服务器正运行在端口: ${port}, 请打开酒馆网页, 等待脚本连接... (如果等待时间超过 10 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`);
-        });
-        io = new Server(server, {
-            cors: {
-                origin: '*',
-            },
-        });
-        io.on('connect', socket => {
-            console.info(`服务器成功连接到酒馆网页 '${socket.id}'`);
-            socket.on('disconnect', reason => {
-                console.info(`服务器与酒馆网页 '${socket.id}' 断开连接: ${reason}`);
-            });
-        });
-    }
-    if (io.sockets.sockets.size > 0) {
-        if (io.sockets.sockets.size > 1) {
-            console.warn('目前连接到了多个酒馆网页, 为了保证数据同步, 请只打开、连接一个酒馆页面');
-        }
-        return io.sockets.sockets.values().next().value;
-    }
-    return new Promise(resolve => {
-        io.once('connect', (socket) => {
-            if (io.sockets.sockets.size > 1) {
-                console.warn('目前连接到了多个酒馆网页, 为了保证数据同步, 请只打开、连接一个酒馆页面');
-            }
-            resolve(socket);
-        });
-    });
-}
-async function close_server() {
-    await io?.close();
-}
-
-;// ./src/server/util/exit_on_error.ts
-
-function exit_on_error(error) {
-    console.error(error);
-    (0,external_node_process_.exit)(1);
-}
-
-;// ./src/server/util/sanitize_filename.ts
-function sanitize_filename(filename) {
-    switch (process.platform) {
-        case 'win32':
-        case 'cygwin':
-            return filename.replace(/[\s<>:"/\\|?*\x00-\x1F\x7F]/g, '_').toLowerCase();
-        case 'darwin':
-            return filename.replace(/:/g, '_').toLowerCase();
-        case 'linux':
-            return filename.replace(/\//g, '_').toLowerCase();
-        default:
-            return filename.toLowerCase();
-    }
-}
-
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __webpack_require__(9896);
 ;// external "fs/promises"
@@ -55227,6 +55154,79 @@ function watch_on(path) {
     });
 }
 
+;// external "node:http"
+const external_node_http_namespaceObject = require("node:http");
+// EXTERNAL MODULE: ./node_modules/.pnpm/socket.io@4.8.1_bufferutil@4.0.9_utf-8-validate@6.0.5/node_modules/socket.io/dist/index.js
+var socket_io_dist = __webpack_require__(5263);
+;// ./node_modules/.pnpm/socket.io@4.8.1_bufferutil@4.0.9_utf-8-validate@6.0.5/node_modules/socket.io/wrapper.mjs
+
+
+const {Server, Namespace, Socket} = socket_io_dist;
+
+;// ./src/server/server.ts
+
+
+const port = 6620;
+let io = null;
+async function wait_socket() {
+    if (!io) {
+        const server = (0,external_node_http_namespaceObject.createServer)();
+        server.listen(port, () => {
+            console.info(`酒馆同步脚本服务器正运行在端口: ${port}, 请打开酒馆网页, 等待脚本连接... (如果等待时间超过 10 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`);
+        });
+        io = new Server(server, {
+            cors: {
+                origin: '*',
+            },
+        });
+        io.on('connect', socket => {
+            console.info(`服务器成功连接到酒馆网页 '${socket.id}'`);
+            socket.on('disconnect', reason => {
+                console.info(`服务器与酒馆网页 '${socket.id}' 断开连接: ${reason}`);
+            });
+        });
+    }
+    if (io.sockets.sockets.size > 0) {
+        if (io.sockets.sockets.size > 1) {
+            console.warn('目前连接到了多个酒馆网页, 为了保证数据同步, 请只打开、连接一个酒馆页面');
+        }
+        return io.sockets.sockets.values().next().value;
+    }
+    return new Promise(resolve => {
+        io.once('connect', (socket) => {
+            if (io.sockets.sockets.size > 1) {
+                console.warn('目前连接到了多个酒馆网页, 为了保证数据同步, 请只打开、连接一个酒馆页面');
+            }
+            resolve(socket);
+        });
+    });
+}
+async function close_server() {
+    await io?.close();
+}
+
+;// ./src/server/util/exit_on_error.ts
+
+function exit_on_error(error) {
+    console.error(error);
+    (0,external_node_process_.exit)(1);
+}
+
+;// ./src/server/util/sanitize_filename.ts
+function sanitize_filename(filename) {
+    switch (process.platform) {
+        case 'win32':
+        case 'cygwin':
+            return filename.replace(/[\s<>:"/\\|?*\x00-\x1F\x7F]/g, '_').toLowerCase();
+        case 'darwin':
+            return filename.replace(/:/g, '_').toLowerCase();
+        case 'linux':
+            return filename.replace(/\//g, '_').toLowerCase();
+        default:
+            return filename.toLowerCase();
+    }
+}
+
 ;// ./src/server/syncer/interface.ts
 
 
@@ -55241,6 +55241,7 @@ function watch_on(path) {
 class Syncer_interface {
     type;
     type_zh;
+    config_name;
     name;
     file;
     dir;
@@ -55249,9 +55250,10 @@ class Syncer_interface {
     zh_to_en_map;
     is_zh;
     tavern_type;
-    constructor(type, type_zh, name, file, en_type, zh_type, zh_to_en_map, is_zh, tavern_type) {
+    constructor(type, type_zh, config_name, name, file, en_type, zh_type, zh_to_en_map, is_zh, tavern_type) {
         this.type = type;
         this.type_zh = type_zh;
+        this.config_name = config_name;
         this.name = name;
         this.file = (0,external_node_path_.resolve)(__dirname, sanitize_filename(file));
         this.dir = (0,external_node_path_.dirname)(this.file);
@@ -56006,34 +56008,34 @@ const preset_zh_Preset = object({
 
 
 class Preset_syncer extends Syncer_interface {
-    constructor(type, type_zh, name, file) {
-        super(type, type_zh, name, file, preset_en_Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, Preset);
+    constructor(config_name, name, file) {
+        super('preset', _.invert(zh_to_en_map)['preset'], config_name, name, file, preset_en_Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, Preset);
     }
     // TODO: 拆分 component
     do_check_safe(local_data, tavern_data) {
         const get_names = (data) => {
-            return lodash_default()(data.prompts)
+            return _(data.prompts)
                 .concat(data.prompts_unused)
-                .filter(prompt => !lodash_default().includes(preset_en_prompt_placeholder_ids, prompt.id))
+                .filter(prompt => !_.includes(preset_en_prompt_placeholder_ids, prompt.id))
                 .map(prompt => prompt.name)
                 .value();
         };
         const local_names = get_names(local_data);
         const tavern_names = get_names(tavern_data);
         return {
-            local_only_data: lodash_default().difference(local_names, tavern_names),
-            tavern_only_data: lodash_default().difference(tavern_names, local_names),
+            local_only_data: _.difference(local_names, tavern_names),
+            tavern_only_data: _.difference(tavern_names, local_names),
         };
     }
     // TODO: 拆分 component
     do_pull(local_data, tavern_data, { language, should_split }) {
         const get_prompts_state = (prompts, used) => {
             return prompts
-                .filter(prompt => !lodash_default().has(prompt, 'id'))
+                .filter(prompt => !_.has(prompt, 'id'))
                 .map(prompt => should_split
                 ? {
                     name: prompt.name,
-                    file: (0,external_node_path_.join)('.', this.name, used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name) + detect_extension(prompt.content)),
+                    file: (0,external_node_path_.join)(sanitize_filename(this.config_name), used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name) + detect_extension(prompt.content)),
                 }
                 : { name: prompt.name, content: prompt.content });
         };
@@ -56042,21 +56044,21 @@ class Preset_syncer extends Syncer_interface {
                 ...get_prompts_state(tavern_data.prompts, { used: true }),
                 ...get_prompts_state(tavern_data.prompts_unused, { used: false }),
             ]
-            : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !lodash_default().has(prompt, 'id'));
+            : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !_.has(prompt, 'id'));
         let files = [];
         const convert_prompts = (prompts, { used }) => {
             prompts.forEach(prompt => {
-                if (lodash_default().has(prompt, 'id')) {
+                if (_.has(prompt, 'id')) {
                     return;
                 }
                 const handle_file = (prompt, file_path) => {
                     files.push({ path: file_path, content: prompt.content });
-                    lodash_default().unset(prompt, 'content');
-                    lodash_default().set(prompt, 'file', file_path);
+                    _.unset(prompt, 'content');
+                    _.set(prompt, 'file', file_path);
                 };
                 const state = prompts_state.find(state => state.name === prompt.name);
                 if (state === undefined && should_split) {
-                    const file_path = (0,external_node_path_.join)('.', this.name, used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name) + detect_extension(prompt.content));
+                    const file_path = (0,external_node_path_.join)(sanitize_filename(this.config_name), used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name) + detect_extension(prompt.content));
                     handle_file(prompt, file_path);
                     return;
                 }
@@ -56077,7 +56079,7 @@ class Preset_syncer extends Syncer_interface {
         };
         const handle_file = (prompts, source) => {
             prompts.forEach((prompt, index) => {
-                if (!lodash_default().has(prompt, 'file') || prompt.file === undefined) {
+                if (!_.has(prompt, 'file') || prompt.file === undefined) {
                     return;
                 }
                 const content = extract_file_content(this.dir, prompt.file);
@@ -56092,37 +56094,37 @@ class Preset_syncer extends Syncer_interface {
                         error_data.未能从合集文件中找到以下条目.push(`'${prompt.file}': 第 '${index}' 条目 '${prompt.name}'`);
                         return;
                     }
-                    lodash_default().set(prompt, 'content', collection_entry.content);
-                    lodash_default().unset(prompt, 'file');
+                    _.set(prompt, 'content', collection_entry.content);
+                    _.unset(prompt, 'file');
                     return;
                 }
-                lodash_default().set(prompt, 'content', content);
-                lodash_default().unset(prompt, 'file');
+                _.set(prompt, 'content', content);
+                _.unset(prompt, 'file');
             });
         };
         handle_file(local_data.prompts, '提示词');
         handle_file(local_data.prompts_unused, '未添加的提示词');
         const handle_user_name = (prompts) => {
             prompts.forEach(prompt => {
-                lodash_default().set(prompt, 'content', replace_user_name(prompt.content));
+                _.set(prompt, 'content', replace_user_name(prompt.content));
             });
         };
         handle_user_name(local_data.prompts);
         handle_user_name(local_data.prompts_unused);
         const handle_raw_string = (prompts) => {
             prompts.forEach(prompt => {
-                lodash_default().set(prompt, 'content', replace_raw_string(prompt.content));
+                _.set(prompt, 'content', replace_raw_string(prompt.content));
             });
         };
         handle_raw_string(local_data.prompts);
         handle_raw_string(local_data.prompts_unused);
         return {
             result_data: local_data,
-            error_data: lodash_default().pickBy(error_data, value => value.length > 0),
+            error_data: _.pickBy(error_data, value => value.length > 0),
         };
     }
     do_watch(local_data) {
-        return lodash_default()(lodash_default()(local_data.prompts)
+        return _(_(local_data.prompts)
             .concat(local_data.prompts_unused)
             .filter(prompt => prompt.file !== undefined)
             .map(prompt => (0,external_node_path_.resolve)(this.dir, prompt.file))
@@ -56603,9 +56605,10 @@ const worldbook_zh_Worldbook = object({ 条目: array(worldbook_zh_Worldbook_ent
 
 
 
+
 class Worldbook_syncer extends Syncer_interface {
-    constructor(type, type_zh, name, file) {
-        super(type, type_zh, name, file, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
+    constructor(config_name, name, file) {
+        super('worldbook', _.invert(zh_to_en_map)['worldbook'], config_name, name, file, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
     }
     // TODO: 拆分 component
     do_check_safe(local_data, tavern_data) {
@@ -56622,7 +56625,7 @@ class Worldbook_syncer extends Syncer_interface {
             ? tavern_data.entries.map(entry => should_split
                 ? {
                     name: entry.name,
-                    file: (0,external_node_path_.join)(this.name, sanitize_filename(entry.name) + detect_extension(entry.content)),
+                    file: (0,external_node_path_.join)(sanitize_filename(this.config_name), sanitize_filename(entry.name) + detect_extension(entry.content)),
                 }
                 : { name: entry.name, content: entry.content })
             : local_data.entries;
@@ -56635,7 +56638,7 @@ class Worldbook_syncer extends Syncer_interface {
             };
             const state = entries_state.find(state => state.name === entry.name);
             if (state === undefined && should_split) {
-                const file_path = (0,external_node_path_.join)('.', this.name, sanitize_filename(entry.name)) + detect_extension(entry.content);
+                const file_path = (0,external_node_path_.join)(sanitize_filename(this.config_name), sanitize_filename(entry.name)) + detect_extension(entry.content);
                 handle_file(entry, file_path);
                 return;
             }
@@ -56722,12 +56725,11 @@ class Worldbook_syncer extends Syncer_interface {
 ;// ./src/server/syncer/factory.ts
 
 
-
-function create_syncer(config) {
+function create_syncer(config_name, config) {
     if (config.type === 'worldbook') {
-        return new Worldbook_syncer(config.type, _.invert(zh_to_en_map)[config.type], config.name, config.file);
+        return new Worldbook_syncer(config_name, config.name, config.file);
     }
-    return new Preset_syncer(config.type, _.invert(zh_to_en_map)[config.type], config.name, config.file);
+    return new Preset_syncer(config_name, config.name, config.file);
 }
 
 ;// ./src/server/component/argument.ts
@@ -56741,7 +56743,7 @@ function add_configs_to_command(command) {
         if (!(value in settings.configs)) {
             throw Error(`配置 '${value}' 不存在, ${beauingfy_configs()}`);
         }
-        return create_syncer(settings.configs[value]);
+        return create_syncer(value, settings.configs[value]);
     }));
     return command;
 }
