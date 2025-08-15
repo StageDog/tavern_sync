@@ -1,3 +1,4 @@
+import { replace_user_name } from '@server/component/replace_user_name';
 import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Worldbook as Worldbook_tavern } from '@server/tavern/worldbook';
 import { detect_extension } from '@server/util/detect_extension';
@@ -98,6 +99,9 @@ export class Worldbook_syncer extends Syncer_interface {
         _.set(entry, 'content', content);
         _.unset(entry, 'file');
       }
+    });
+    local_data.entries.forEach(entry => {
+      _.set(entry, 'content', replace_user_name(entry.content!));
     });
     local_data.entries.forEach(entry => {
       _.set(entry, 'content', entry.content?.replaceAll(/\s*# :(?=.*$)/gm, ''));

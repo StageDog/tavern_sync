@@ -1,3 +1,4 @@
+import { replace_user_name } from '@server/component/replace_user_name';
 import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Preset as Preset_tavern } from '@server/tavern/preset';
 import { detect_extension } from '@server/util/detect_extension';
@@ -125,6 +126,14 @@ export class Preset_syncer extends Syncer_interface {
     };
     handle_file(local_data.prompts, '提示词');
     handle_file(local_data.prompts_unused, '未添加的提示词');
+
+    const handle_user_name = (prompts: Preset_en['prompts']) => {
+      prompts.forEach(prompt => {
+        _.set(prompt, 'content', replace_user_name(prompt.content!));
+      });
+    };
+    handle_user_name(local_data.prompts);
+    handle_user_name(local_data.prompts_unused);
 
     const handle_raw_string = (prompts: Preset_en['prompts']) => {
       prompts.forEach(prompt => {

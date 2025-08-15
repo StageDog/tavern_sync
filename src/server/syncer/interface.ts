@@ -2,7 +2,7 @@ import { close_server, wait_socket } from '@server/server';
 import { exit_on_error } from '@server/util/exit_on_error';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { translate } from '@server/util/translate';
-import { watch_on } from '@server/util/watch_on';
+import { watch_on } from '@server/component/watch_on';
 import { write_file_recursively } from '@server/util/write_file_recursively';
 import _ from 'lodash';
 

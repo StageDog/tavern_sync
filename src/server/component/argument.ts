@@ -1,6 +1,6 @@
+import { beauingfy_configs } from '@server/component/beauingfy_configs';
 import { get_settings } from '@server/settings';
 import { create_syncer } from '@server/syncer/factory';
-import { beauingfy_configs } from '@server/util/beauingfy_configs';
 
 import { Argument, Command } from 'commander';
 
