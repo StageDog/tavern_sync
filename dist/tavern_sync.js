@@ -53364,7 +53364,7 @@ function get_settings() {
     return settings;
 }
 
-;// ./src/server/util/beauingfy_configs.ts
+;// ./src/server/component/beauingfy_configs.ts
 
 
 function beauingfy_configs() {
@@ -53404,6 +53404,12 @@ function add_list_command() {
         console.info(beauingfy_configs());
     });
     return command;
+}
+
+;// ./src/server/component/replace_user_name.ts
+
+function replace_user_name(text) {
+    return text.replaceAll(get_settings().user_name, '<user>');
 }
 
 ;// external "node:http"
@@ -55183,7 +55189,7 @@ function watch(paths, options = {}) {
 }
 /* harmony default export */ const chokidar_esm = ({ watch, FSWatcher });
 
-;// ./src/server/util/watch_on.ts
+;// ./src/server/component/watch_on.ts
 
 function watch_on(path) {
     return chokidar_esm.watch(path, {
@@ -55995,6 +56001,7 @@ const preset_zh_Preset = object({
 
 
 
+
 class Preset_syncer extends Syncer_interface {
     constructor(type, type_zh, name, file) {
         super(type, type_zh, name, file, preset_en_Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, Preset);
@@ -56076,6 +56083,13 @@ class Preset_syncer extends Syncer_interface {
         };
         handle_file(local_data.prompts, '提示词');
         handle_file(local_data.prompts_unused, '未添加的提示词');
+        const handle_user_name = (prompts) => {
+            prompts.forEach(prompt => {
+                lodash_default().set(prompt, 'content', replace_user_name(prompt.content));
+            });
+        };
+        handle_user_name(local_data.prompts);
+        handle_user_name(local_data.prompts_unused);
         const handle_raw_string = (prompts) => {
             prompts.forEach(prompt => {
                 lodash_default().set(prompt, 'content', prompt.content?.replaceAll(/\s*# :(?=.*$)/gm, ''));
@@ -56570,6 +56584,7 @@ const worldbook_zh_Worldbook = object({ 条目: array(worldbook_zh_Worldbook_ent
 
 
 
+
 class Worldbook_syncer extends Syncer_interface {
     constructor(type, type_zh, name, file) {
         super(type, type_zh, name, file, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
@@ -56626,6 +56641,9 @@ class Worldbook_syncer extends Syncer_interface {
             }
         });
         local_data.entries.forEach(entry => {
+            _.set(entry, 'content', replace_user_name(entry.content));
+        });
+        local_data.entries.forEach(entry => {
             _.set(entry, 'content', entry.content?.replaceAll(/\s*# :(?=.*$)/gm, ''));
         });
         return {
@@ -56665,7 +56683,7 @@ function create_syncer(config) {
     return new Preset_syncer(config.type, _.invert(zh_to_en_map)[config.type], config.name, config.file);
 }
 
-;// ./src/server/util/argument.ts
+;// ./src/server/component/argument.ts
 
 
 
