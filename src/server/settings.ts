@@ -15,7 +15,7 @@ export function get_settings(): Settings_en {
     const config_file = resolve(__dirname, 'tavern_sync.yaml');
     if (!existsSync(config_file)) {
       write_file_recursively(__dirname, config_file, default_settings_content);
-      console.error(`配置文件不存在，已自动生成在 ${config_file}，请填写配置文件后重新运行`);
+      console.error(`配置文件不存在，已自动生成在 '${config_file}'，请填写配置文件后重新运行`);
       exit(1);
     }
     const data = YAML.parse(readFileSync(config_file, 'utf8'));
