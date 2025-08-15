@@ -7,7 +7,7 @@ interface Collection_file_entry {
   content: string;
 }
 export function parse_collection_file(content: string): Collection_file_entry[] {
-  return [...content.matchAll(/ *\# \^([^\n]+)\n([\s\S]*?)(?:(?= *\# \^[^\n]+\n)|$)/gs)].map(match => ({
+  return [...content.matchAll(/ *\# \^([^\n]+)\n([\s\S]*?)(?:(?=\n *\# \^[^\n]+\n)|$)/gs)].map(match => ({
     name: match[1],
     content: match[2],
   }));

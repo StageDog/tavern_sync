@@ -13,9 +13,9 @@ import {
   is_zh as worldbook_is_zh,
   zh_to_en_map as worldbook_zh_to_en_map,
 } from '@type/worldbook.zh';
-import _ from 'lodash';
 
 import { dirname, join, resolve } from 'node:path';
+import YAML from 'yaml';
 
 export class Worldbook_syncer extends Syncer_interface {
   constructor(type: string, type_zh: string, name: string, file: string) {
@@ -68,10 +68,10 @@ export class Worldbook_syncer extends Syncer_interface {
               : { name: entry.name, content: entry.content },
           )
         : local_data.entries;
-    let files: { path: string; content: string }[] = [];
+    let files: { name: string; path: string; content: string }[] = [];
     tavern_data.entries.forEach(entry => {
       const handle_file = (entry: Worldbook_tavern['entries'][number], file_path: string) => {
-        files.push({ path: file_path, content: entry.content });
+        files.push({ name: entry.name, path: file_path, content: entry.content });
         _.unset(entry, 'content');
         _.set(entry, 'file', file_path);
       };
@@ -86,7 +86,23 @@ export class Worldbook_syncer extends Syncer_interface {
         handle_file(entry, state.file);
       }
     });
-    return { result_data: tavern_data, files };
+    const collection_files = _(files)
+      .remove(file => is_collection_file(file.path))
+      .groupBy(file => resolve(this.dir, file.path))
+      .map((files, path) => {
+        let content = files.map(file => `# ^${file.name}\n` + file.content).join('\n');
+        try {
+          content = String(YAML.parseDocument(content));
+        } catch (error) {
+          // TODO: 如何报错
+        }
+        return {
+          path,
+          content: content,
+        };
+      })
+      .value();
+    return { result_data: tavern_data, files: [...files, ...collection_files] };
   }
 
   // TODO: 拆分 component
