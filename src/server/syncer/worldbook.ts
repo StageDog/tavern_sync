@@ -7,6 +7,7 @@ import { Worldbook as Worldbook_tavern } from '@server/tavern/worldbook';
 import { detect_extension } from '@server/util/detect_extension';
 import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
+import { zh_to_en_map } from '@type/settings.zh';
 import { Worldbook as Worldbook_en } from '@type/worldbook.en';
 import {
   Worldbook as Worldbook_zh,
@@ -18,10 +19,11 @@ import { dirname, join, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Worldbook_syncer extends Syncer_interface {
-  constructor(type: string, type_zh: string, name: string, file: string) {
+  constructor(config_name: string, name: string, file: string) {
     super(
-      type,
-      type_zh,
+      'worldbook',
+      _.invert(zh_to_en_map)['worldbook'],
+      config_name,
       name,
       file,
       Worldbook_en,
@@ -63,7 +65,10 @@ export class Worldbook_syncer extends Syncer_interface {
             should_split
               ? {
                   name: entry.name,
-                  file: join(this.name, sanitize_filename(entry.name) + detect_extension(entry.content!)),
+                  file: join(
+                    sanitize_filename(this.config_name),
+                    sanitize_filename(entry.name) + detect_extension(entry.content!),
+                  ),
                 }
               : { name: entry.name, content: entry.content },
           )
@@ -78,7 +83,8 @@ export class Worldbook_syncer extends Syncer_interface {
 
       const state = entries_state.find(state => state.name === entry.name);
       if (state === undefined && should_split) {
-        const file_path = join('.', this.name, sanitize_filename(entry.name)) + detect_extension(entry.content!);
+        const file_path =
+          join(sanitize_filename(this.config_name), sanitize_filename(entry.name)) + detect_extension(entry.content!);
         handle_file(entry, file_path);
         return;
       }

@@ -1,8 +1,8 @@
+import { watch_on } from '@server/component/watch_on';
 import { close_server, wait_socket } from '@server/server';
 import { exit_on_error } from '@server/util/exit_on_error';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { translate } from '@server/util/translate';
-import { watch_on } from '@server/component/watch_on';
 import { write_file_recursively } from '@server/util/write_file_recursively';
 import _ from 'lodash';
 
@@ -28,6 +28,7 @@ export interface Watch_options {
 export abstract class Syncer_interface {
   type: string;
   type_zh: string;
+  config_name: string;
   name: string;
   file: string;
   dir: string;
@@ -41,6 +42,7 @@ export abstract class Syncer_interface {
   constructor(
     type: string,
     type_zh: string,
+    config_name: string,
     name: string,
     file: string,
     en_type: ZodType<any>,
@@ -51,6 +53,7 @@ export abstract class Syncer_interface {
   ) {
     this.type = type;
     this.type_zh = type_zh;
+    this.config_name = config_name;
     this.name = name;
     this.file = resolve(__dirname, sanitize_filename(file));
     this.dir = dirname(this.file);

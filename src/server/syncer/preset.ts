@@ -9,13 +9,24 @@ import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { Preset as Preset_en, prompt_placeholder_ids } from '@type/preset.en';
 import { Preset as Preset_zh, is_zh as preset_is_zh, zh_to_en_map as preset_zh_to_en_map } from '@type/preset.zh';
-import _ from 'lodash';
+import { zh_to_en_map } from '@type/settings.zh';
 
 import { dirname, join, resolve } from 'node:path';
 
 export class Preset_syncer extends Syncer_interface {
-  constructor(type: string, type_zh: string, name: string, file: string) {
-    super(type, type_zh, name, file, Preset_en, Preset_zh, preset_zh_to_en_map, preset_is_zh, Preset_tavern);
+  constructor(config_name: string, name: string, file: string) {
+    super(
+      'preset',
+      _.invert(zh_to_en_map)['preset'],
+      config_name,
+      name,
+      file,
+      Preset_en,
+      Preset_zh,
+      preset_zh_to_en_map,
+      preset_is_zh,
+      Preset_tavern,
+    );
   }
 
   // TODO: 拆分 component
@@ -58,8 +69,7 @@ export class Preset_syncer extends Syncer_interface {
             ? {
                 name: prompt.name,
                 file: join(
-                  '.',
-                  this.name,
+                  sanitize_filename(this.config_name),
                   used ? '' : language === 'zh' ? '未使用' : 'unused',
                   sanitize_filename(prompt.name) + detect_extension(prompt.content!),
                 ),
@@ -92,8 +102,7 @@ export class Preset_syncer extends Syncer_interface {
         const state = prompts_state.find(state => state.name === prompt.name);
         if (state === undefined && should_split) {
           const file_path = join(
-            '.',
-            this.name,
+            sanitize_filename(this.config_name),
             used ? '' : language === 'zh' ? '未使用' : 'unused',
             sanitize_filename(prompt.name) + detect_extension(prompt.content!),
           );
