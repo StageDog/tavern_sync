@@ -55471,17 +55471,6 @@ const Preset = object({
     return data;
 });
 
-;// ./src/server/util/is_json.ts
-function is_json(content) {
-    try {
-        JSON.parse(content);
-        return true;
-    }
-    catch (error) {
-        return false;
-    }
-}
-
 ;// ./src/server/util/is_yaml.ts
 
 function is_yaml(content) {
@@ -55496,13 +55485,9 @@ function is_yaml(content) {
 
 ;// ./src/server/util/detect_extension.ts
 
-
 function detect_extension(content) {
     if (is_yaml(content)) {
         return '.yaml';
-    }
-    if (is_json(content)) {
-        return '.json';
     }
     return '.md';
 }
