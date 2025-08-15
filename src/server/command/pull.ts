@@ -8,7 +8,11 @@ export function add_pull_command(): Command {
 
   add_configs_to_command(command);
   command.option('-l, --language <language>', '要使用的语言', 'zh');
-  command.option('-s, --split', '拆分文件: 如果酒馆中有新增条目, 则它的内容应该放在单独的文件中', false);
+  command.option(
+    '-m, --merge',
+    '合并文件: 如果酒馆中有新增条目, 则该条目的提示词内容应该内嵌在配置文件中, 而不是拆成外链提示词文件',
+    false,
+  );
   command.option(
     '-f, --force',
     '强制拉取: 如果酒馆中的条目名称或数量与本地中的不一致, 将会覆盖本地文件中的内容',
@@ -16,8 +20,8 @@ export function add_pull_command(): Command {
   );
 
   command.action(
-    async (syncer: Syncer_interface, options: { language: 'zh' | 'en'; split: boolean; force: boolean }) => {
-      await syncer.pull({ language: options.language, should_split: options.split, should_force: options.force });
+    async (syncer: Syncer_interface, options: { language: 'zh' | 'en'; merge: boolean; force: boolean }) => {
+      await syncer.pull({ language: options.language, should_split: !options.merge, should_force: options.force });
     },
   );
   return command;
