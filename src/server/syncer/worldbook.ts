@@ -56,6 +56,7 @@ export class Worldbook_syncer extends Syncer_interface {
   ): {
     result_data: Record<string, any>;
     files: {
+      name: string;
       path: string;
       content: string;
     }[];
@@ -93,23 +94,8 @@ export class Worldbook_syncer extends Syncer_interface {
         handle_file(entry, state.file);
       }
     });
-    const collection_files = _(files)
-      .remove(file => is_collection_file(file.path))
-      .groupBy(file => resolve(this.dir, file.path))
-      .map((files, path) => {
-        let content = files.map(file => `# ^${file.name}\n` + file.content).join('\n');
-        try {
-          content = String(YAML.parseDocument(content));
-        } catch (error) {
-          // TODO: 如何报错
-        }
-        return {
-          path,
-          content: content,
-        };
-      })
-      .value();
-    return { result_data: tavern_data, files: [...files, ...collection_files] };
+
+    return { result_data: tavern_data, files };
   }
 
   // TODO: 拆分 component

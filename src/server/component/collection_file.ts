@@ -1,5 +1,5 @@
 export function is_collection_file(file: string) {
-  return ['合集.yaml', 'collection.yaml'].some(suffix => file.endsWith(suffix));
+  return ['合集', 'collection'].some(keyword => file.includes(keyword));
 }
 
 interface Collection_file_entry {

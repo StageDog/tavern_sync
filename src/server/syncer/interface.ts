@@ -1,3 +1,4 @@
+import { is_collection_file } from '@server/component/collection_file';
 import { watch_on } from '@server/component/watch_on';
 import { close_server, wait_socket } from '@server/server';
 import { exit_on_error } from '@server/util/exit_on_error';
@@ -107,6 +108,7 @@ export abstract class Syncer_interface {
   ): {
     result_data: Record<string, any>;
     files: {
+      name: string;
       path: string;
       content: string;
     }[];
@@ -137,8 +139,24 @@ ${this.do_beautify_config(tavern_data, language)}`;
       language,
       should_split,
     });
+    const collection_files = _(files)
+      .remove(file => is_collection_file(file.path))
+      .groupBy(file => resolve(this.dir, file.path))
+      .map((files, path) => {
+        let content = files.map(file => `# ^${file.name}\n` + file.content).join('\n');
+        try {
+          content = String(YAML.parseDocument(content));
+        } catch (error) {
+          // TODO: 如何报错
+        }
+        return {
+          path,
+          content: content,
+        };
+      })
+      .value();
     write_file_recursively(this.dir, this.file, this.beautify_config(result_data, language));
-    files.forEach(({ path, content }) => {
+    [...files, ...collection_files].forEach(({ path, content }) => {
       write_file_recursively(this.dir, path, content);
     });
     console.info(`成功将${this.type_zh} '${this.name}' 拉取到本地文件 '${this.file}' 中`);

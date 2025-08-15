@@ -59,6 +59,7 @@ export class Preset_syncer extends Syncer_interface {
   ): {
     result_data: Record<string, any>;
     files: {
+      name: string;
       path: string;
       content: string;
     }[];
@@ -87,7 +88,7 @@ export class Preset_syncer extends Syncer_interface {
           ]
         : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !_.has(prompt, 'id'));
 
-    let files: { path: string; content: string }[] = [];
+    let files: { name: string; path: string; content: string }[] = [];
 
     const convert_prompts = (prompts: Preset_tavern['prompts'], { used }: { used: boolean }) => {
       prompts.forEach(prompt => {
@@ -96,7 +97,7 @@ export class Preset_syncer extends Syncer_interface {
         }
 
         const handle_file = (prompt: Preset_tavern['prompts'][number], file_path: string) => {
-          files.push({ path: file_path, content: prompt.content! });
+          files.push({ name: prompt.name, path: file_path, content: prompt.content! });
           _.unset(prompt, 'content');
           _.set(prompt, 'file', file_path);
         };
