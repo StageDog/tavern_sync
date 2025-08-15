@@ -1,8 +1,10 @@
+import { is_collection_file, parse_collection_file } from '@server/component/collection_file';
+import { extract_file_content } from '@server/component/extract_file_content';
+import { replace_raw_string } from '@server/component/replace_raw_string';
 import { replace_user_name } from '@server/component/replace_user_name';
 import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Worldbook as Worldbook_tavern } from '@server/tavern/worldbook';
 import { detect_extension } from '@server/util/detect_extension';
-import { extract_file_content } from '@server/util/extract_file_content';
 import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { Worldbook as Worldbook_en } from '@type/worldbook.en';
@@ -11,6 +13,7 @@ import {
   is_zh as worldbook_is_zh,
   zh_to_en_map as worldbook_zh_to_en_map,
 } from '@type/worldbook.zh';
+import _ from 'lodash';
 
 import { dirname, join, resolve } from 'node:path';
 
@@ -29,6 +32,7 @@ export class Worldbook_syncer extends Syncer_interface {
     );
   }
 
+  // TODO: 拆分 component
   protected do_check_safe(
     local_data: Worldbook_en,
     tavern_data: Worldbook_tavern,
@@ -41,6 +45,7 @@ export class Worldbook_syncer extends Syncer_interface {
     };
   }
 
+  // TODO: 拆分 component
   protected do_pull(
     local_data: Worldbook_en | null,
     tavern_data: Worldbook_tavern,
@@ -84,8 +89,12 @@ export class Worldbook_syncer extends Syncer_interface {
     return { result_data: tavern_data, files };
   }
 
+  // TODO: 拆分 component
   protected do_push(local_data: Worldbook_en): { result_data: Record<string, any>; error_data: Record<string, any> } {
-    let errors: string[] = [];
+    let error_data = {
+      未能找到以下外链提示词文件: [] as string[],
+      未能从合集文件中找到以下条目: [] as string[],
+    };
 
     local_data.entries.forEach((entry, index) => {
       if (entry.file === undefined) {
@@ -94,27 +103,33 @@ export class Worldbook_syncer extends Syncer_interface {
 
       const content = extract_file_content(this.dir, entry.file!);
       if (content === null) {
-        errors.push(`条目 '${index}' 的 '${entry.file}'`);
-      } else {
-        _.set(entry, 'content', content);
-        _.unset(entry, 'file');
+        error_data.未能找到以下外链提示词文件.push(`第 '${index}' 条目 '${entry.name}': '${entry.file}'`);
+        return;
       }
+      if (is_collection_file(entry.file!)) {
+        const collection_file = parse_collection_file(content);
+        const collection_entry = collection_file.find(value => value.name === entry.name);
+        if (collection_entry === undefined) {
+          error_data.未能从合集文件中找到以下条目.push(`'${entry.file}': 第 '${index}' 条目 '${entry.name}'`);
+          return;
+        }
+        _.set(entry, 'content', collection_entry.content);
+        _.unset(entry, 'file');
+        return;
+      }
+      _.set(entry, 'content', content);
+      _.unset(entry, 'file');
     });
     local_data.entries.forEach(entry => {
-      _.set(entry, 'content', replace_user_name(entry.content!));
+      _.set(entry, 'content', replace_user_name(entry.content));
     });
     local_data.entries.forEach(entry => {
-      _.set(entry, 'content', entry.content?.replaceAll(/\s*# :(?=.*$)/gm, ''));
+      _.set(entry, 'content', replace_raw_string(entry.content));
     });
 
     return {
       result_data: local_data,
-      error_data:
-        errors.length === 0
-          ? {}
-          : {
-              未找到以下外链提示词文件: errors,
-            },
+      error_data: _.pickBy(error_data, value => value.length > 0),
     };
   }
 

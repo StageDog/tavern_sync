@@ -1,8 +1,10 @@
+import { is_collection_file, parse_collection_file } from '@server/component/collection_file';
+import { extract_file_content } from '@server/component/extract_file_content';
+import { replace_raw_string } from '@server/component/replace_raw_string';
 import { replace_user_name } from '@server/component/replace_user_name';
 import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Preset as Preset_tavern } from '@server/tavern/preset';
 import { detect_extension } from '@server/util/detect_extension';
-import { extract_file_content } from '@server/util/extract_file_content';
 import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { Preset as Preset_en, prompt_placeholder_ids } from '@type/preset.en';
@@ -16,6 +18,7 @@ export class Preset_syncer extends Syncer_interface {
     super(type, type_zh, name, file, Preset_en, Preset_zh, preset_zh_to_en_map, preset_is_zh, Preset_tavern);
   }
 
+  // TODO: 拆分 component
   protected do_check_safe(
     local_data: Preset_en,
     tavern_data: Preset_tavern,
@@ -35,6 +38,7 @@ export class Preset_syncer extends Syncer_interface {
     };
   }
 
+  // TODO: 拆分 component
   protected do_pull(
     local_data: Preset_en | null,
     tavern_data: Preset_tavern,
@@ -106,8 +110,12 @@ export class Preset_syncer extends Syncer_interface {
     return { result_data: tavern_data, files };
   }
 
+  // TODO: 拆分 component
   protected do_push(local_data: Preset_en): { result_data: Record<string, any>; error_data: Record<string, any> } {
-    let errors: string[] = [];
+    let error_data = {
+      未能找到以下外链提示词文件: [] as string[],
+      未能从合集文件中找到以下条目: [] as string[],
+    };
 
     const handle_file = (prompts: Preset_en['prompts'], source: string) => {
       prompts.forEach((prompt, index) => {
@@ -117,11 +125,22 @@ export class Preset_syncer extends Syncer_interface {
 
         const content = extract_file_content(this.dir, prompt.file);
         if (content === null) {
-          errors.push(`${source}条目 '${index}' 的 '${prompt.file}'`);
-        } else {
-          _.set(prompt, 'content', content);
-          _.unset(prompt, 'file');
+          error_data.未能找到以下外链提示词文件.push(`${source}条目 '${index}' 的 '${prompt.file}'`);
+          return;
         }
+        if (is_collection_file(prompt.file!)) {
+          const collection_file = parse_collection_file(content);
+          const collection_entry = collection_file.find(value => value.name === prompt.name);
+          if (collection_entry === undefined) {
+            error_data.未能从合集文件中找到以下条目.push(`'${prompt.file}': 第 '${index}' 条目 '${prompt.name}'`);
+            return;
+          }
+          _.set(prompt, 'content', collection_entry.content);
+          _.unset(prompt, 'file');
+          return;
+        }
+        _.set(prompt, 'content', content);
+        _.unset(prompt, 'file');
       });
     };
     handle_file(local_data.prompts, '提示词');
@@ -137,7 +156,7 @@ export class Preset_syncer extends Syncer_interface {
 
     const handle_raw_string = (prompts: Preset_en['prompts']) => {
       prompts.forEach(prompt => {
-        _.set(prompt, 'content', prompt.content?.replaceAll(/\s*# :(?=.*$)/gm, ''));
+        _.set(prompt, 'content', replace_raw_string(prompt.content));
       });
     };
     handle_raw_string(local_data.prompts);
@@ -145,12 +164,7 @@ export class Preset_syncer extends Syncer_interface {
 
     return {
       result_data: local_data,
-      error_data:
-        errors.length === 0
-          ? {}
-          : {
-              未找到以下外链提示词文件: errors,
-            },
+      error_data: _.pickBy(error_data, value => value.length > 0),
     };
   }
 

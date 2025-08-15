@@ -177,7 +177,7 @@ export abstract class Syncer_interface {
   }
 
   async push(options: Push_options) {
-    console.info(`开始推送... (如果等待时间超过 3 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`);
+    console.info(`开始推送...`);
     try {
       await this.push_once(options);
     } catch (err) {
