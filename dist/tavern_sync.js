@@ -56122,8 +56122,7 @@ class Preset_syncer extends Syncer_interface {
         };
     }
     do_watch(local_data) {
-        return lodash_default()([this.file])
-            .concat(lodash_default()(local_data.prompts)
+        return lodash_default()(lodash_default()(local_data.prompts)
             .concat(local_data.prompts_unused)
             .filter(prompt => prompt.file !== undefined)
             .map(prompt => (0,external_node_path_.resolve)(this.dir, prompt.file))
@@ -56135,7 +56134,8 @@ class Preset_syncer extends Syncer_interface {
             }
             result.push(path);
             return result;
-        }, []);
+        }, [])
+            .concat(this.file);
     }
 }
 
@@ -56703,8 +56703,7 @@ class Worldbook_syncer extends Syncer_interface {
         };
     }
     do_watch(local_data) {
-        return _([this.file])
-            .concat(_(local_data.entries)
+        return _(_(local_data.entries)
             .filter(entry => entry.file !== undefined)
             .map(entry => (0,external_node_path_.resolve)(this.dir, entry.file))
             .value())
@@ -56715,7 +56714,8 @@ class Worldbook_syncer extends Syncer_interface {
             }
             result.push(path);
             return result;
-        }, []);
+        }, [])
+            .concat(this.file);
     }
 }
 
