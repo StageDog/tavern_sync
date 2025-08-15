@@ -53350,7 +53350,7 @@ function get_settings() {
         const config_file = (0,external_node_path_.resolve)(__dirname, 'tavern_sync.yaml');
         if (!(0,external_node_fs_.existsSync)(config_file)) {
             write_file_recursively(__dirname, config_file, settings_defaultraw_namespaceObject);
-            console.error(`配置文件不存在，已自动生成在 ${config_file}，请填写配置文件后重新运行`);
+            console.error(`配置文件不存在，已自动生成在 '${config_file}'，请填写配置文件后重新运行`);
             (0,external_node_process_.exit)(1);
         }
         const data = dist.parse((0,external_node_fs_.readFileSync)(config_file, 'utf8'));
