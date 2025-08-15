@@ -5,11 +5,6 @@ export function watch_on(path: string | string[]) {
     awaitWriteFinish: true,
     ignoreInitial: true,
     alwaysStat: true,
-    ignored: [
-      '.DS_Store',
-      (_path, stats) => {
-        return stats?.isFile() == false;
-      },
-    ],
+    ignored: ['.DS_Store'],
   });
 }

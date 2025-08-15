@@ -1,5 +1,5 @@
-import { add_configs_to_command } from '@server/component/argument';
 import { Syncer_interface } from '@server/syncer/interface';
+import { add_configs_to_command } from '@server/util/argument';
 
 import { Command } from 'commander';
 

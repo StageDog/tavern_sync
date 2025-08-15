@@ -1,12 +1,14 @@
-import { extract_file_content } from '@server/component/extract_file_content';
-import { Syncer_interface } from '@server/syncer/interface';
+import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Preset as Preset_tavern } from '@server/tavern/preset';
+import { detect_extension } from '@server/util/detect_extension';
+import { extract_file_content } from '@server/util/extract_file_content';
+import { is_parent } from '@server/util/is_parent';
+import { sanitize_filename } from '@server/util/sanitize_filename';
 import { Preset as Preset_en, prompt_placeholder_ids } from '@type/preset.en';
 import { Preset as Preset_zh, is_zh as preset_is_zh, zh_to_en_map as preset_zh_to_en_map } from '@type/preset.zh';
+import _ from 'lodash';
 
-export interface Pull_options {
-  language: 'zh' | 'en';
-}
+import { dirname, join, resolve } from 'node:path';
 
 export class Preset_syncer extends Syncer_interface {
   constructor(type: string, type_zh: string, name: string, file: string) {
@@ -32,6 +34,77 @@ export class Preset_syncer extends Syncer_interface {
     };
   }
 
+  protected do_pull(
+    local_data: Preset_en | null,
+    tavern_data: Preset_tavern,
+    { language, should_split }: Omit<Pull_options, 'should_force'>,
+  ): {
+    result_data: Record<string, any>;
+    files: {
+      path: string;
+      content: string;
+    }[];
+  } {
+    const get_prompts_state = (prompts: Preset_tavern['prompts'], used: { used: boolean }) => {
+      return prompts
+        .filter(prompt => !_.has(prompt, 'id'))
+        .map(prompt =>
+          should_split
+            ? {
+                name: prompt.name,
+                file: join(
+                  '.',
+                  this.name,
+                  used ? '' : language === 'zh' ? '未使用' : 'unused',
+                  sanitize_filename(prompt.name) + detect_extension(prompt.content!),
+                ),
+              }
+            : { name: prompt.name, content: prompt.content },
+        );
+    };
+    const prompts_state: { name: string; content?: string; file?: string }[] =
+      local_data === null
+        ? [
+            ...get_prompts_state(tavern_data.prompts, { used: true }),
+            ...get_prompts_state(tavern_data.prompts_unused, { used: false }),
+          ]
+        : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !_.has(prompt, 'id'));
+
+    let files: { path: string; content: string }[] = [];
+
+    const convert_prompts = (prompts: Preset_tavern['prompts'], { used }: { used: boolean }) => {
+      prompts.forEach(prompt => {
+        if (_.has(prompt, 'id')) {
+          return;
+        }
+
+        const handle_file = (prompt: Preset_tavern['prompts'][number], file_path: string) => {
+          files.push({ path: file_path, content: prompt.content! });
+          _.unset(prompt, 'content');
+          _.set(prompt, 'file', file_path);
+        };
+
+        const state = prompts_state.find(state => state.name === prompt.name);
+        if (state === undefined && should_split) {
+          const file_path = join(
+            '.',
+            this.name,
+            used ? '' : language === 'zh' ? '未使用' : 'unused',
+            sanitize_filename(prompt.name) + detect_extension(prompt.content!),
+          );
+          handle_file(prompt, file_path);
+          return;
+        }
+        if (state?.file !== undefined) {
+          handle_file(prompt, state.file);
+        }
+      });
+    };
+    convert_prompts(tavern_data.prompts, { used: true });
+    convert_prompts(tavern_data.prompts_unused, { used: false });
+    return { result_data: tavern_data, files };
+  }
+
   protected do_push(local_data: Preset_en): { result_data: Record<string, any>; error_data: Record<string, any> } {
     let errors: string[] = [];
 
@@ -41,7 +114,7 @@ export class Preset_syncer extends Syncer_interface {
           return;
         }
 
-        const content = extract_file_content(this.file, prompt.file);
+        const content = extract_file_content(this.dir, prompt.file);
         if (content === null) {
           errors.push(`${source}条目 '${index}' 的 '${prompt.file}'`);
         } else {
@@ -62,5 +135,24 @@ export class Preset_syncer extends Syncer_interface {
               未找到以下外链提示词文件: errors,
             },
     };
+  }
+
+  protected do_watch(local_data: Preset_en): string[] {
+    return _([this.file])
+      .concat(
+        _(local_data.prompts)
+          .concat(local_data.prompts_unused)
+          .filter(prompt => prompt.file !== undefined)
+          .map(prompt => resolve(this.dir, prompt.file!))
+          .value(),
+      )
+      .map(path => dirname(path))
+      .reduce((result: string[], path: string) => {
+        if (result.some(parent => is_parent(parent, path))) {
+          return result;
+        }
+        result.push(path);
+        return result;
+      }, []);
   }
 }

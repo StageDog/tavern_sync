@@ -1,4 +1,4 @@
-import { beauingfy_configs } from '@server/component/beauingfy_configs';
+import { beauingfy_configs } from '@server/util/beauingfy_configs';
 
 import { Command } from 'commander';
 

@@ -1,5 +1,5 @@
-import { add_configs_to_command } from '@server/component/argument';
 import { Syncer_interface } from '@server/syncer/interface';
+import { add_configs_to_command } from '@server/util/argument';
 
 import { Command } from 'commander';
 
@@ -15,8 +15,10 @@ export function add_pull_command(): Command {
     false,
   );
 
-  command.action(async (syncer: Syncer_interface, options: { language: 'zh' | 'en'; force: boolean }) => {
-    await syncer.pull({ language: options.language, should_force: options.force });
-  });
+  command.action(
+    async (syncer: Syncer_interface, options: { language: 'zh' | 'en'; split: boolean; force: boolean }) => {
+      await syncer.pull({ language: options.language, should_split: options.split, should_force: options.force });
+    },
+  );
   return command;
 }
