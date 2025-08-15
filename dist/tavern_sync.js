@@ -55219,9 +55219,8 @@ function sanitize_filename(filename) {
         case 'cygwin':
             return filename.replace(/[\s<>:"/\\|?*\x00-\x1F\x7F]/g, '_').toLowerCase();
         case 'darwin':
-            return filename.replace(/:/g, '_').toLowerCase();
         case 'linux':
-            return filename.replace(/\//g, '_').toLowerCase();
+            return filename.replace(/[:\/]/g, '_').toLowerCase();
         default:
             return filename.toLowerCase();
     }
