@@ -56090,10 +56090,10 @@ class Preset_syncer extends Syncer_interface {
     do_beautify_config(tavern_data, language) {
         const document = new dist.Document(language === 'zh' ? translate(tavern_data, _.invert(this.zh_to_en_map)) : tavern_data);
         ['提示词', '未添加的提示词', 'prompts', 'prompts_unused'].forEach(key => dist.visit(document.get(key), (key, node) => {
-            if (dist.isSeq(node)) {
+            if (key === null) {
                 return;
             }
-            if (dist.isMap(node) && typeof key === 'number' && key > 0) {
+            if (key > 0) {
                 node.spaceBefore = true;
             }
             return dist.visit.SKIP;
@@ -56672,14 +56672,13 @@ class Worldbook_syncer extends Syncer_interface {
     do_beautify_config(tavern_data, language) {
         const document = new dist.Document(language === 'zh' ? translate(tavern_data, _.invert(this.zh_to_en_map)) : tavern_data);
         ['条目', 'entries'].forEach(key => dist.visit(document.get(key), (key, node) => {
-            if (dist.isSeq(node)) {
+            if (key === null) {
                 return;
             }
-            if (dist.isMap(node) && typeof key === 'number' && key > 0) {
+            if (key > 0) {
                 node.spaceBefore = true;
-                return dist.visit.SKIP;
             }
-            return dist.visit.BREAK;
+            return dist.visit.SKIP;
         }));
         dist.visit(document, (key, node) => {
             if (key === null) {
@@ -56687,9 +56686,8 @@ class Worldbook_syncer extends Syncer_interface {
             }
             if (dist.isPair(node) && key > 0) {
                 node.key.spaceBefore = true;
-                return dist.visit.SKIP;
             }
-            return dist.visit.BREAK;
+            return dist.visit.SKIP;
         });
         return document.toString({ blockQuote: 'literal' });
     }
