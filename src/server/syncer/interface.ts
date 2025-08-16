@@ -200,7 +200,6 @@ ${this.do_beautify_config(tavern_data, language)}`;
   }
 
   async push(options: Push_options) {
-    console.info(`开始推送...`);
     try {
       await this.push_once(options);
     } catch (err) {
