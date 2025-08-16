@@ -56741,11 +56741,12 @@ function create_syncer(config_name, config) {
 
 
 
+
 function add_configs_to_command(command) {
     const settings = get_settings();
     command.addArgument(new Argument('<config>', '配置名称').choices(Object.keys(settings.configs)).argParser(value => {
         if (!(value in settings.configs)) {
-            throw Error(`配置 '${value}' 不存在, ${beauingfy_configs()}`);
+            exit_on_error(`配置 '${value}' 不存在, ${beauingfy_configs()}`);
         }
         return create_syncer(value, settings.configs[value]);
     }));
