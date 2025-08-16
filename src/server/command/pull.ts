@@ -9,8 +9,8 @@ export function add_pull_command(): Command {
   add_configs_to_command(command);
   command.option('-l, --language <language>', '要使用的语言', 'zh');
   command.option(
-    '-m, --merge',
-    '合并文件: 如果酒馆中有新增条目, 则该条目的提示词内容应该内嵌在配置文件中, 而不是拆成外链提示词文件',
+    '-i, --inline',
+    '内嵌提示词: 如果酒馆中有新增条目, 则该条目的提示词内容应该内嵌在配置文件中, 而不是拆成外链提示词文件',
     false,
   );
   command.option(
@@ -20,8 +20,8 @@ export function add_pull_command(): Command {
   );
 
   command.action(
-    async (syncer: Syncer_interface, options: { language: 'zh' | 'en'; merge: boolean; force: boolean }) => {
-      await syncer.pull({ language: options.language, should_split: !options.merge, should_force: options.force });
+    async (syncer: Syncer_interface, options: { language: 'zh' | 'en'; inline: boolean; force: boolean }) => {
+      await syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force });
     },
   );
   return command;
