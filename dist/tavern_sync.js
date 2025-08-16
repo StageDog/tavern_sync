@@ -55212,22 +55212,7 @@ function exit_on_error(error) {
     (0,external_node_process_.exit)(1);
 }
 
-;// ./src/server/util/sanitize_filename.ts
-function sanitize_filename(filename) {
-    switch (process.platform) {
-        case 'win32':
-        case 'cygwin':
-            return filename.replace(/[\s<>:"/\\|?*\x00-\x1F\x7F]/g, '_').toLowerCase();
-        case 'darwin':
-        case 'linux':
-            return filename.replace(/[:\/]/g, '_').toLowerCase();
-        default:
-            return filename.toLowerCase();
-    }
-}
-
 ;// ./src/server/syncer/interface.ts
-
 
 
 
@@ -55255,7 +55240,7 @@ class Syncer_interface {
         this.type_zh = type_zh;
         this.config_name = config_name;
         this.name = name;
-        this.file = (0,external_node_path_.resolve)(__dirname, sanitize_filename(file));
+        this.file = (0,external_node_path_.resolve)(__dirname, file);
         this.dir = (0,external_node_path_.dirname)(this.file);
         this.en_type = en_type;
         this.zh_type = zh_type;
@@ -55514,6 +55499,20 @@ function detect_extension(content) {
 function is_parent(parent_path, possible_child_path) {
     const result = (0,external_path_.relative)(parent_path, possible_child_path);
     return result && !result.startsWith('..') && !(0,external_path_.isAbsolute)(result);
+}
+
+;// ./src/server/util/sanitize_filename.ts
+function sanitize_filename(filename) {
+    switch (process.platform) {
+        case 'win32':
+        case 'cygwin':
+            return filename.replace(/[\s<>:"/\\|?*\x00-\x1F\x7F]/g, '_').toLowerCase();
+        case 'darwin':
+        case 'linux':
+            return filename.replace(/[:\/]/g, '_').toLowerCase();
+        default:
+            return filename.toLowerCase();
+    }
 }
 
 ;// ./node_modules/.pnpm/dedent@1.6.0/node_modules/dedent/dist/dedent.mjs
