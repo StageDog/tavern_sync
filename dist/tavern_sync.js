@@ -51294,7 +51294,7 @@ function _coercedString(Class, params) {
     return new Class({
         type: "string",
         coerce: true,
-        ...normalizeParams(params),
+        ...util.normalizeParams(params),
     });
 }
 function _email(Class, params) {
@@ -53267,7 +53267,7 @@ function _instanceof(cls, params = {
         check: "custom",
         fn: (data) => data instanceof cls,
         abort: true,
-        ...util.normalizeParams(params),
+        ...normalizeParams(params),
     });
     inst._zod.bag.Class = cls;
     return inst;
@@ -56179,25 +56179,6 @@ class Preset_syncer extends Syncer_interface {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.0.17/node_modules/zod/v4/classic/coerce.js
-
-
-function coerce_string(params) {
-    return _coercedString(ZodString, params);
-}
-function coerce_number(params) {
-    return core._coercedNumber(schemas.ZodNumber, params);
-}
-function coerce_boolean(params) {
-    return core._coercedBoolean(schemas.ZodBoolean, params);
-}
-function coerce_bigint(params) {
-    return core._coercedBigint(schemas.ZodBigInt, params);
-}
-function coerce_date(params) {
-    return core._coercedDate(schemas.ZodDate, params);
-}
-
 ;// ./src/server/tavern/worldbook.ts
 
 const Worldbook_entry = object({
@@ -56206,10 +56187,10 @@ const Worldbook_entry = object({
     enabled: schemas_boolean(),
     strategy: object({
         type: schemas_enum(['constant', 'selective', 'vectorized']),
-        keys: array(coerce_string()),
+        keys: array(union([schemas_string(), _instanceof(RegExp)])).transform(_.toString),
         keys_secondary: object({
             logic: schemas_enum(['and_any', 'and_all', 'not_all', 'not_any']),
-            keys: array(coerce_string()),
+            keys: array(union([schemas_string(), _instanceof(RegExp)])).transform(_.toString),
         }),
         scan_depth: union([literal('same_as_global'), schemas_number()]),
     }),
