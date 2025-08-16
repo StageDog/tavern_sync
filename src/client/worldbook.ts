@@ -13,7 +13,12 @@ export function register_worldbook() {
   socket.on('pull_worldbook', async (data: { name: string }, callback: (data: WorldbookEntry[] | string) => void) => {
     console.info(`[TavernSync] 收到提取世界书 '${data.name}' 的请求`);
     try {
-      callback(await getWorldbook(data.name));
+      const worldbook = await getWorldbook(data.name);
+      worldbook.forEach(entry => {
+        entry.strategy.keys = entry.strategy.keys.map(_.toString);
+        entry.strategy.keys_secondary.keys = entry.strategy.keys_secondary.keys.map(_.toString);
+      });
+      callback(worldbook);
     } catch (err) {
       const error = err as Error;
       console.error(`[TavernSync] 提取世界书 '${data.name}' 失败: ${error}`);

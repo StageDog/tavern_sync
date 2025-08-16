@@ -9,10 +9,10 @@ const Worldbook_entry = z
 
     strategy: z.object({
       type: z.enum(['constant', 'selective', 'vectorized']),
-      keys: z.array(z.union([z.string(), z.instanceof(RegExp)])).transform(_.toString),
+      keys: z.array(z.string()),
       keys_secondary: z.object({
         logic: z.enum(['and_any', 'and_all', 'not_all', 'not_any']),
-        keys: z.array(z.union([z.string(), z.instanceof(RegExp)])).transform(_.toString),
+        keys: z.array(z.string()),
       }),
       scan_depth: z.union([z.literal('same_as_global'), z.number()]),
     }),
