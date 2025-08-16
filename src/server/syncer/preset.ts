@@ -128,11 +128,11 @@ export class Preset_syncer extends Syncer_interface {
     );
     ['提示词', '未添加的提示词', 'prompts', 'prompts_unused'].forEach(key =>
       YAML.visit(document.get(key) as YAML.Node, (key, node) => {
-        if (YAML.isSeq(node)) {
+        if (key === null) {
           return;
         }
-        if (YAML.isMap(node) && typeof key === 'number' && key > 0) {
-          node.spaceBefore = true;
+        if ((key as number) > 0) {
+          (node as YAML.Node).spaceBefore = true;
         }
         return YAML.visit.SKIP;
       }),

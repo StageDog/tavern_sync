@@ -105,14 +105,13 @@ export class Worldbook_syncer extends Syncer_interface {
     );
     ['条目', 'entries'].forEach(key =>
       YAML.visit(document.get(key) as YAML.Node, (key, node) => {
-        if (YAML.isSeq(node)) {
+        if (key === null) {
           return;
         }
-        if (YAML.isMap(node) && typeof key === 'number' && key > 0) {
-          node.spaceBefore = true;
-          return YAML.visit.SKIP;
+        if ((key as number) > 0) {
+          (node as YAML.Node).spaceBefore = true;
         }
-        return YAML.visit.BREAK;
+        return YAML.visit.SKIP;
       }),
     );
     YAML.visit(document, (key, node) => {
@@ -121,9 +120,8 @@ export class Worldbook_syncer extends Syncer_interface {
       }
       if (YAML.isPair(node) && (key as number) > 0) {
         (node.key as YAML.Node).spaceBefore = true;
-        return YAML.visit.SKIP;
       }
-      return YAML.visit.BREAK;
+      return YAML.visit.SKIP;
     });
     return document.toString({ blockQuote: 'literal' });
   }
