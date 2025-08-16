@@ -1,4 +1,3 @@
-import { parse_regex_from_string } from '@server/util/parse_regex_from_string';
 import dedent from 'dedent';
 import * as z from 'zod';
 
@@ -77,7 +76,7 @@ const Worldbook_entry = z
         `),
         ),
         关键字: z
-          .array(z.string().transform(string => parse_regex_from_string(string) ?? string))
+          .array(z.string())
           .min(1)
           .optional()
           .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
@@ -92,7 +91,7 @@ const Worldbook_entry = z
               - 非任意 (not_any): 次要关键字中所有关键字都没能欲扫描文本中匹配到
             `),
             ),
-            关键字: z.array(z.string().transform(string => parse_regex_from_string(string) ?? string)).min(1),
+            关键字: z.array(z.string()).min(1),
           })
           .optional()
           .describe(

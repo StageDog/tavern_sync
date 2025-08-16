@@ -35,7 +35,9 @@
                 "description": "关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活",
                 "minItems": 1,
                 "type": "array",
-                "items": {}
+                "items": {
+                  "type": "string"
+                }
               },
               "次要关键字": {
                 "description": "次要关键字: 如果设置了次要关键字, 则条目除了在`关键字`中匹配到任意一个关键字外, 还需要按次要关键字的`逻辑`满足次要关键字的`关键字`",
@@ -54,7 +56,9 @@
                   "关键字": {
                     "minItems": 1,
                     "type": "array",
-                    "items": {}
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 },
                 "required": [

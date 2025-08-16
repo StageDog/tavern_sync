@@ -5867,27 +5867,7 @@ const settings_zh_Settings = object({
     配置: record(schemas_string(), settings_zh_Config),
 });
 
-;// ./src/server/util/parse_regex_from_string.ts
-function parse_regex_from_string(input) {
-    let match = input.match(/^\/([\w\W]+?)\/([gimsuy]*)$/);
-    if (!match) {
-        return null;
-    }
-    let [, pattern, flags] = match;
-    if (pattern.match(/(^|[^\\])\//)) {
-        return null;
-    }
-    pattern = pattern.replace('\\/', '/');
-    try {
-        return new RegExp(pattern, flags);
-    }
-    catch (e) {
-        return null;
-    }
-}
-
 ;// ./src/type/worldbook.en.ts
-
 
 
 const Worldbook_entry = object({
@@ -5901,7 +5881,7 @@ const Worldbook_entry = object({
           - selective: 可选项🟢, 俗称绿灯. 除了蓝灯条件, 还需要满足 \`keys\` 扫描条件
           - vectorized: 向量化🔗. 一般不使用
         `)),
-        keys: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string))
+        keys: array(schemas_string())
             .min(1)
             .optional()
             .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
@@ -5913,7 +5893,7 @@ const Worldbook_entry = object({
               - not_all: 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到
               - not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到
             `)),
-            keys: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string)).min(1),
+            keys: array(schemas_string()).min(1),
         })
             .optional()
             .describe('次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`'),
@@ -6036,7 +6016,6 @@ const Worldbook = object({ entries: array(Worldbook_entry).min(1) });
 ;// ./src/type/worldbook.zh.ts
 
 
-
 const worldbook_zh_zh_to_en_map = {
     条目: 'entries',
     名称: 'name',
@@ -6096,7 +6075,7 @@ const worldbook_zh_Worldbook_entry = object({
           - 绿灯: 可选项🟢 (selective). 除了蓝灯条件, 还需要满足 \`关键字\` 扫描条件
           - 向量化: 向量化🔗 (vectorized). 一般不使用
         `)),
-        关键字: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string))
+        关键字: array(schemas_string())
             .min(1)
             .optional()
             .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
@@ -6108,7 +6087,7 @@ const worldbook_zh_Worldbook_entry = object({
               - 非所有 (not_all): 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到
               - 非任意 (not_any): 次要关键字中所有关键字都没能欲扫描文本中匹配到
             `)),
-            关键字: array(schemas_string().transform(string => parse_regex_from_string(string) ?? string)).min(1),
+            关键字: array(schemas_string()).min(1),
         })
             .optional()
             .describe('次要关键字: 如果设置了次要关键字, 则条目除了在`关键字`中匹配到任意一个关键字外, 还需要按次要关键字的`逻辑`满足次要关键字的`关键字`'),
