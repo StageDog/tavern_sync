@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as z from 'zod';
 
 const prompt_rolable_placeholder_ids = <const>[
