@@ -12,6 +12,7 @@ import { Preset as Preset_en, prompt_placeholder_ids } from '@type/preset.en';
 import { Preset as Preset_zh, is_zh as preset_is_zh, zh_to_en_map as preset_zh_to_en_map } from '@type/preset.zh';
 import { zh_to_en_map } from '@type/settings.zh';
 
+import _ from 'lodash';
 import { dirname, join, resolve } from 'node:path';
 import YAML from 'yaml';
 
@@ -39,7 +40,7 @@ export class Preset_syncer extends Syncer_interface {
     const get_names = (data: Record<string, any>) => {
       return _(data.prompts)
         .concat(data.prompts_unused)
-        .filter(prompt => !_.includes(prompt_placeholder_ids, prompt.id))
+        .filter(prompt => !_.includes(prompt_placeholder_ids, _.get(prompt, 'id', '')))
         .map(prompt => prompt.name)
         .value();
     };
@@ -155,6 +156,16 @@ export class Preset_syncer extends Syncer_interface {
       未能找到以下外链提示词文件: [] as string[],
       未能从合集文件中找到以下条目: [] as string[],
     };
+
+    const handle_placeholder_id = (prompts: Preset_en['prompts']) => {
+      prompts.forEach(prompt => {
+        if (_.includes(prompt_placeholder_ids, prompt.id)) {
+          _.set(prompt, 'id', _.snakeCase(prompt.id));
+        }
+      });
+    };
+    handle_placeholder_id(local_data.prompts);
+    handle_placeholder_id(local_data.prompts_unused);
 
     const handle_file = (prompts: Preset_en['prompts'], source: string) => {
       prompts.forEach((prompt, index) => {

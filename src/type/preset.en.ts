@@ -10,13 +10,14 @@ const Prompt_normal = z
 
     position: z
       .object({
-        type: z.enum(['relative', 'in_chat']).optional().default('relative'),
+        type: z.enum(['relative', 'in_chat']),
         depth: z.number().optional(),
         order: z.number().optional(),
       })
       .optional()
+      .default({ type: 'relative' })
       .superRefine((data, context) => {
-        if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
+        if (data.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
           context.addIssue({
             code: 'custom',
             path: ['position'],
@@ -58,7 +59,7 @@ const Prompt_normal = z
   }))
   .describe('手动在预设中添加的提示词');
 
-const prompt_rolable_placeholder_ids = <const>[
+export const prompt_rolable_placeholder_ids = <const>[
   'world_info_before',
   'persona_description',
   'char_description',
@@ -66,15 +67,13 @@ const prompt_rolable_placeholder_ids = <const>[
   'scenario',
   'world_info_after',
 ];
-const prompt_unrolable_placeholder_ids = <const>['dialogue_examples', 'chat_history'];
+export const prompt_unrolable_placeholder_ids = <const>['dialogue_examples', 'chat_history'];
 export const prompt_placeholder_ids = <const>[...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
 const Prompt_placeholder = z
   .object({
     name: z.never().optional(),
-    id: z
-      .enum(prompt_placeholder_ids)
-      .describe(
-        dedent(`
+    id: z.enum(prompt_placeholder_ids).describe(
+      dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
         - world_info_before: 角色定义之前
         - persona_description: 玩家描述. 创建 user 时填写的提示词
@@ -85,17 +84,17 @@ const Prompt_placeholder = z
         - dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了
         - chat_history: 聊天记录
       `),
-      )
-      .transform(_.camelCase),
+    ),
     enabled: z.boolean(),
 
     position: z
       .object({
-        type: z.enum(['relative', 'in_chat']).optional().default('relative'),
+        type: z.enum(['relative', 'in_chat']),
         depth: z.number().optional(),
         order: z.number().optional(),
       })
       .optional()
+      .default({ type: 'relative' })
       .superRefine((data, context) => {
         if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
           context.addIssue({
@@ -125,16 +124,18 @@ const Prompt_placeholder = z
   .transform(data => ({
     ...data,
     role: data.role ?? 'system',
-    name: {
-      world_info_before: 'World Info (before) - 角色定义之前',
-      persona_description: 'Persona Description - 玩家描述',
-      char_description: 'Char Description - 角色描述',
-      char_personality: 'Char Personality - 角色性格',
-      scenario: 'Scenario - 情景',
-      world_info_after: 'World Info (after) - 角色定义之后',
-      dialogue_examples: 'Chat Examples - 对话示例',
-      chat_history: 'Chat History - 聊天记录',
-    }[data.id],
+    name: (
+      {
+        world_info_before: 'World Info (before) - 角色定义之前',
+        persona_description: 'Persona Description - 玩家描述',
+        char_description: 'Char Description - 角色描述',
+        char_personality: 'Char Personality - 角色性格',
+        scenario: 'Scenario - 情景',
+        world_info_after: 'World Info (after) - 角色定义之后',
+        dialogue_examples: 'Chat Examples - 对话示例',
+        chat_history: 'Chat History - 聊天记录',
+      } as const
+    )[data.id as (typeof prompt_placeholder_ids)[number]],
   }))
   .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
 

@@ -22702,13 +22702,14 @@ const Prompt_normal = object({
     id: never().optional(),
     enabled: schemas_boolean(),
     position: object({
-        type: schemas_enum(['relative', 'in_chat']).optional().default('relative'),
+        type: schemas_enum(['relative', 'in_chat']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
     })
         .optional()
+        .default({ type: 'relative' })
         .superRefine((data, context) => {
-        if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
+        if (data.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
             context.addIssue({
                 code: 'custom',
                 path: ['position'],
@@ -22755,8 +22756,7 @@ const prompt_unrolable_placeholder_ids = ['dialogue_examples', 'chat_history'];
 const prompt_placeholder_ids = [...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
 const Prompt_placeholder = object({
     name: never().optional(),
-    id: schemas_enum(prompt_placeholder_ids)
-        .describe(dist_dedent(`
+    id: schemas_enum(prompt_placeholder_ids).describe(dist_dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
         - world_info_before: 角色定义之前
         - persona_description: 玩家描述. 创建 user 时填写的提示词
@@ -22766,15 +22766,15 @@ const Prompt_placeholder = object({
         - world_info_after: 角色定义之后
         - dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了
         - chat_history: 聊天记录
-      `))
-        .transform((lodash_default()).camelCase),
+      `)),
     enabled: schemas_boolean(),
     position: object({
-        type: schemas_enum(['relative', 'in_chat']).optional().default('relative'),
+        type: schemas_enum(['relative', 'in_chat']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
     })
         .optional()
+        .default({ type: 'relative' })
         .superRefine((data, context) => {
         if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
             context.addIssue({
@@ -22970,13 +22970,14 @@ const preset_zh_Prompt_normal = object({
     id: never().optional(),
     启用: schemas_boolean(),
     插入位置: object({
-        type: schemas_enum(['相对', '聊天中']).optional().default('相对'),
+        type: schemas_enum(['相对', '聊天中']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
     })
         .optional()
+        .default({ type: '相对' })
         .superRefine((data, context) => {
-        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
             context.addIssue({
                 code: 'custom',
                 path: ['插入位置'],
@@ -23023,8 +23024,7 @@ const preset_zh_prompt_unrolable_placeholder_ids = ['对话示例', '聊天记�
 const preset_zh_prompt_placeholder_ids = [...preset_zh_prompt_rolable_placeholder_ids, ...preset_zh_prompt_unrolable_placeholder_ids];
 const preset_zh_Prompt_placeholder = object({
     名称: never().optional(),
-    id: schemas_enum(preset_zh_prompt_placeholder_ids)
-        .describe(dist_dedent(`
+    id: schemas_enum(preset_zh_prompt_placeholder_ids).describe(dist_dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
         - 角色定义之前: world_info_before
         - 玩家描述: persona_description. 创建 user 时填写的提示词
@@ -23034,17 +23034,17 @@ const preset_zh_Prompt_placeholder = object({
         - 角色定义之后: world_info_after
         - 对话示例: dialogue_examples. 角色卡高级定义中的提示词, 一般没人用了
         - 聊天记录: chat_history
-      `))
-        .transform((lodash_default()).snakeCase),
+      `)),
     启用: schemas_boolean(),
     插入位置: object({
-        type: schemas_enum(['相对', '聊天中']).optional().default('相对'),
+        type: schemas_enum(['相对', '聊天中']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
     })
         .optional()
+        .default({ type: '相对' })
         .superRefine((data, context) => {
-        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
             context.addIssue({
                 code: 'custom',
                 path: ['插入位置'],

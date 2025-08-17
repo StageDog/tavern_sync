@@ -1,29 +1,19 @@
+import { prompt_placeholder_ids, prompt_unrolable_placeholder_ids } from '@type/preset.en';
 import _ from 'lodash';
 import * as z from 'zod';
 
-const prompt_rolable_placeholder_ids = <const>[
-  'world_info_before',
-  'persona_description',
-  'char_description',
-  'char_personality',
-  'scenario',
-  'world_info_after',
-];
-const prompt_unrolable_placeholder_ids = <const>['dialogue_examples', 'chat_history'];
-export const prompt_placeholder_ids = <const>[...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
 const Prompt = z
   .object({
     name: z.string(),
-    id: z.string().transform(_.camelCase),
+    id: z.string().transform(_.snakeCase),
     enabled: z.boolean(),
 
     position: z
       .object({
-        type: z.enum(['relative', 'in_chat']).default('relative'),
-        depth: z.number(),
-        order: z.number(),
+        type: z.enum(['relative', 'in_chat']),
+        depth: z.number().optional(),
+        order: z.number().optional(),
       })
-      .partial()
       .optional(),
 
     role: z.enum(['system', 'user', 'assistant']),
@@ -88,7 +78,17 @@ export const Preset = z
     }),
 
     prompts: z.array(Prompt),
-    prompts_unused: z.array(Prompt),
+    prompts_unused: z
+      .array(Prompt)
+      .transform(prompts =>
+        prompts.filter(
+          prompt =>
+            !_.includes(
+              ['Main Prompt', 'Auxiliary Prompt', 'Post-History Instructions', 'Enhance Definitions'],
+              prompt.name,
+            ),
+        ),
+      ),
 
     extensions: z.record(z.string(), z.any()),
   })

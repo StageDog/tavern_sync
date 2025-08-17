@@ -55378,149 +55378,6 @@ ${this.do_beautify_config(tavern_data, language)}`;
     }
 }
 
-;// ./src/server/tavern/preset.ts
-
-
-const prompt_rolable_placeholder_ids = [
-    'world_info_before',
-    'persona_description',
-    'char_description',
-    'char_personality',
-    'scenario',
-    'world_info_after',
-];
-const prompt_unrolable_placeholder_ids = ['dialogue_examples', 'chat_history'];
-const prompt_placeholder_ids = [...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
-const Prompt = object({
-    name: schemas_string(),
-    id: schemas_string().transform((lodash_default()).camelCase),
-    enabled: schemas_boolean(),
-    position: object({
-        type: schemas_enum(['relative', 'in_chat']).default('relative'),
-        depth: schemas_number(),
-        order: schemas_number(),
-    })
-        .partial()
-        .optional(),
-    role: schemas_enum(['system', 'user', 'assistant']),
-    content: schemas_string().optional(),
-    extra: record(schemas_string(), any()).optional(),
-})
-    .transform(data => {
-    if (lodash_default().includes(prompt_placeholder_ids, data.id)) {
-        lodash_default().unset(data, 'name');
-        lodash_default().unset(data, 'content');
-        if (data.position?.type === 'relative') {
-            lodash_default().unset(data, 'position');
-        }
-        if (lodash_default().includes(prompt_unrolable_placeholder_ids, data.id) || data.role === 'system') {
-            lodash_default().unset(data, 'role');
-        }
-        return data;
-    }
-    lodash_default().unset(data, 'id');
-    return data;
-});
-const Preset = object({
-    settings: object({
-        max_context: schemas_number().min(0).max(2000000),
-        max_completion_tokens: schemas_number().min(0),
-        reply_count: schemas_number().min(1),
-        should_stream: schemas_boolean(),
-        temperature: schemas_number().min(0).max(2),
-        frequency_penalty: schemas_number().min(-2).max(2),
-        presence_penalty: schemas_number().min(-2).max(2),
-        top_p: schemas_number().min(0).max(1),
-        repetition_penalty: schemas_number().min(1).max(2),
-        min_p: schemas_number().min(0).max(1),
-        top_k: schemas_number().min(0).max(500),
-        top_a: schemas_number().min(0).max(1),
-        seed: schemas_number(),
-        squash_system_messages: schemas_boolean(),
-        reasoning_effort: schemas_enum(['auto', 'min', 'low', 'medium', 'high', 'max']),
-        request_thoughts: schemas_boolean(),
-        request_images: schemas_boolean(),
-        enable_function_calling: schemas_boolean(),
-        enable_web_search: schemas_boolean(),
-        allow_sending_images: schemas_enum(['disabled', 'auto', 'low', 'high']),
-        allow_sending_videos: schemas_boolean(),
-        character_name_prefix: schemas_enum(['none', 'default', 'content', 'completion']),
-        wrap_user_messages_in_quotes: schemas_boolean(),
-    }),
-    prompts: array(Prompt),
-    prompts_unused: array(Prompt),
-    extensions: record(schemas_string(), any()),
-})
-    .transform(data => {
-    if (data.settings.reply_count === 1) {
-        lodash_default().unset(data, 'settings.reply_count');
-    }
-    if (data.settings.repetition_penalty === 1) {
-        lodash_default().unset(data, 'settings.repetition_penalty');
-    }
-    if (data.settings.min_p === 0) {
-        lodash_default().unset(data, 'settings.min_p');
-    }
-    if (data.settings.top_a === 0) {
-        lodash_default().unset(data, 'settings.top_a');
-    }
-    if (data.settings.top_k === 0) {
-        lodash_default().unset(data, 'settings.top_k');
-    }
-    if (data.settings.seed === -1) {
-        lodash_default().unset(data, 'settings.seed');
-    }
-    if (data.settings.wrap_user_messages_in_quotes === false) {
-        lodash_default().unset(data, 'settings.wrap_user_messages_in_quotes');
-    }
-    if (lodash_default().isEmpty(data.extensions)) {
-        lodash_default().unset(data, 'extensions');
-    }
-    return data;
-});
-
-;// ./src/server/util/is_yaml.ts
-
-function is_yaml(content) {
-    try {
-        dist.parse(content);
-        return true;
-    }
-    catch (error) {
-        return false;
-    }
-}
-
-;// ./src/server/util/detect_extension.ts
-
-function detect_extension(content) {
-    if (is_yaml(content)) {
-        return '.yaml';
-    }
-    return '.md';
-}
-
-;// ./src/server/util/is_parent.ts
-
-function is_parent(parent_path, possible_child_path) {
-    const result = (0,external_path_.relative)(parent_path, possible_child_path);
-    return result && !result.startsWith('..') && !(0,external_path_.isAbsolute)(result);
-}
-
-;// ./src/server/util/sanitize_filename.ts
-function sanitize_filename(filename) {
-    switch (process.platform) {
-        case 'win32':
-        case 'cygwin':
-            return filename.replace(/[\s<>:"/\\|?*\x00-\x1F\x7F]/g, '_').toLowerCase();
-        case 'darwin':
-        case 'linux':
-            return filename.replace(/[:\/]/g, '_').toLowerCase();
-        default:
-            return filename.toLowerCase();
-    }
-}
-
 ;// ./node_modules/.pnpm/dedent@1.6.0/node_modules/dedent/dist/dedent.mjs
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -55599,13 +55456,14 @@ const Prompt_normal = object({
     id: never().optional(),
     enabled: schemas_boolean(),
     position: object({
-        type: schemas_enum(['relative', 'in_chat']).optional().default('relative'),
+        type: schemas_enum(['relative', 'in_chat']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
     })
         .optional()
+        .default({ type: 'relative' })
         .superRefine((data, context) => {
-        if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
+        if (data.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
             context.addIssue({
                 code: 'custom',
                 path: ['position'],
@@ -55640,7 +55498,7 @@ const Prompt_normal = object({
     id: lodash_default().uniqueId(),
 }))
     .describe('手动在预设中添加的提示词');
-const preset_en_prompt_rolable_placeholder_ids = [
+const prompt_rolable_placeholder_ids = [
     'world_info_before',
     'persona_description',
     'char_description',
@@ -55648,12 +55506,11 @@ const preset_en_prompt_rolable_placeholder_ids = [
     'scenario',
     'world_info_after',
 ];
-const preset_en_prompt_unrolable_placeholder_ids = ['dialogue_examples', 'chat_history'];
-const preset_en_prompt_placeholder_ids = [...preset_en_prompt_rolable_placeholder_ids, ...preset_en_prompt_unrolable_placeholder_ids];
+const prompt_unrolable_placeholder_ids = ['dialogue_examples', 'chat_history'];
+const prompt_placeholder_ids = [...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
 const Prompt_placeholder = object({
     name: never().optional(),
-    id: schemas_enum(preset_en_prompt_placeholder_ids)
-        .describe(dist_dedent(`
+    id: schemas_enum(prompt_placeholder_ids).describe(dist_dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
         - world_info_before: 角色定义之前
         - persona_description: 玩家描述. 创建 user 时填写的提示词
@@ -55663,15 +55520,15 @@ const Prompt_placeholder = object({
         - world_info_after: 角色定义之后
         - dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了
         - chat_history: 聊天记录
-      `))
-        .transform((lodash_default()).camelCase),
+      `)),
     enabled: schemas_boolean(),
     position: object({
-        type: schemas_enum(['relative', 'in_chat']).optional().default('relative'),
+        type: schemas_enum(['relative', 'in_chat']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
     })
         .optional()
+        .default({ type: 'relative' })
         .superRefine((data, context) => {
         if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
             context.addIssue({
@@ -55688,7 +55545,7 @@ const Prompt_placeholder = object({
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 })
     .superRefine((data, context) => {
-    if (lodash_default().includes(preset_en_prompt_unrolable_placeholder_ids, data.id) && data.role !== undefined) {
+    if (lodash_default().includes(prompt_unrolable_placeholder_ids, data.id) && data.role !== undefined) {
         context.addIssue({
             code: 'custom',
             message: `占位符提示词 '${data.id}' 不能设置自定义角色 (\`role\`)`,
@@ -55711,8 +55568,8 @@ const Prompt_placeholder = object({
     }[data.id],
 }))
     .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
-const preset_en_Prompt = union([Prompt_normal, Prompt_placeholder]);
-const preset_en_Preset = object({
+const Prompt = union([Prompt_normal, Prompt_placeholder]);
+const Preset = object({
     settings: object({
         max_context: schemas_number()
             .min(0)
@@ -55763,10 +55620,10 @@ const preset_en_Preset = object({
             .optional()
             .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
     }),
-    prompts: array(preset_en_Prompt)
+    prompts: array(Prompt)
         .superRefine((data, context) => {
         const duplicate_ids = lodash_default()(data)
-            .filter(prompt => lodash_default().includes(preset_en_prompt_placeholder_ids, prompt.id))
+            .filter(prompt => lodash_default().includes(prompt_placeholder_ids, prompt.id))
             .groupBy('id')
             .filter(group => group.length > 1)
             .keys()
@@ -55777,7 +55634,7 @@ const preset_en_Preset = object({
                 message: `提示词列表中出现了重复的占位符提示词 id: ${duplicate_ids.join(', ')}`,
             });
         }
-        const unused_ids = lodash_default().reject(preset_en_prompt_placeholder_ids, id => data.some(prompt => lodash_default().get(prompt, 'id') === id));
+        const unused_ids = lodash_default().reject(prompt_placeholder_ids, id => data.some(prompt => lodash_default().get(prompt, 'id') === id));
         if (unused_ids.length > 0) {
             context.addIssue({
                 code: 'custom',
@@ -55785,7 +55642,7 @@ const preset_en_Preset = object({
             });
         }
         const disabled_ids = lodash_default()(data)
-            .filter(prompt => lodash_default().includes(preset_en_prompt_placeholder_ids, prompt.id) && prompt.enabled === false)
+            .filter(prompt => lodash_default().includes(prompt_placeholder_ids, prompt.id) && prompt.enabled === false)
             .map(prompt => lodash_default().get(prompt, 'id'))
             .value();
         if (disabled_ids.length > 0) {
@@ -55796,9 +55653,143 @@ const preset_en_Preset = object({
         }
     })
         .describe('提示词列表里已经添加的提示词'),
-    prompts_unused: array(preset_en_Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
+    prompts_unused: array(Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
     extensions: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设绑定额外数据'),
 });
+
+;// ./src/server/tavern/preset.ts
+
+
+
+const preset_Prompt = object({
+    name: schemas_string(),
+    id: schemas_string().transform((lodash_default()).snakeCase),
+    enabled: schemas_boolean(),
+    position: object({
+        type: schemas_enum(['relative', 'in_chat']),
+        depth: schemas_number().optional(),
+        order: schemas_number().optional(),
+    })
+        .optional(),
+    role: schemas_enum(['system', 'user', 'assistant']),
+    content: schemas_string().optional(),
+    extra: record(schemas_string(), any()).optional(),
+})
+    .transform(data => {
+    if (lodash_default().includes(prompt_placeholder_ids, data.id)) {
+        lodash_default().unset(data, 'name');
+        lodash_default().unset(data, 'content');
+        if (data.position?.type === 'relative') {
+            lodash_default().unset(data, 'position');
+        }
+        if (lodash_default().includes(prompt_unrolable_placeholder_ids, data.id) || data.role === 'system') {
+            lodash_default().unset(data, 'role');
+        }
+        return data;
+    }
+    lodash_default().unset(data, 'id');
+    return data;
+});
+const preset_Preset = object({
+    settings: object({
+        max_context: schemas_number().min(0).max(2000000),
+        max_completion_tokens: schemas_number().min(0),
+        reply_count: schemas_number().min(1),
+        should_stream: schemas_boolean(),
+        temperature: schemas_number().min(0).max(2),
+        frequency_penalty: schemas_number().min(-2).max(2),
+        presence_penalty: schemas_number().min(-2).max(2),
+        top_p: schemas_number().min(0).max(1),
+        repetition_penalty: schemas_number().min(1).max(2),
+        min_p: schemas_number().min(0).max(1),
+        top_k: schemas_number().min(0).max(500),
+        top_a: schemas_number().min(0).max(1),
+        seed: schemas_number(),
+        squash_system_messages: schemas_boolean(),
+        reasoning_effort: schemas_enum(['auto', 'min', 'low', 'medium', 'high', 'max']),
+        request_thoughts: schemas_boolean(),
+        request_images: schemas_boolean(),
+        enable_function_calling: schemas_boolean(),
+        enable_web_search: schemas_boolean(),
+        allow_sending_images: schemas_enum(['disabled', 'auto', 'low', 'high']),
+        allow_sending_videos: schemas_boolean(),
+        character_name_prefix: schemas_enum(['none', 'default', 'content', 'completion']),
+        wrap_user_messages_in_quotes: schemas_boolean(),
+    }),
+    prompts: array(preset_Prompt),
+    prompts_unused: array(preset_Prompt)
+        .transform(prompts => prompts.filter(prompt => !lodash_default().includes(['Main Prompt', 'Auxiliary Prompt', 'Post-History Instructions', 'Enhance Definitions'], prompt.name))),
+    extensions: record(schemas_string(), any()),
+})
+    .transform(data => {
+    if (data.settings.reply_count === 1) {
+        lodash_default().unset(data, 'settings.reply_count');
+    }
+    if (data.settings.repetition_penalty === 1) {
+        lodash_default().unset(data, 'settings.repetition_penalty');
+    }
+    if (data.settings.min_p === 0) {
+        lodash_default().unset(data, 'settings.min_p');
+    }
+    if (data.settings.top_a === 0) {
+        lodash_default().unset(data, 'settings.top_a');
+    }
+    if (data.settings.top_k === 0) {
+        lodash_default().unset(data, 'settings.top_k');
+    }
+    if (data.settings.seed === -1) {
+        lodash_default().unset(data, 'settings.seed');
+    }
+    if (data.settings.wrap_user_messages_in_quotes === false) {
+        lodash_default().unset(data, 'settings.wrap_user_messages_in_quotes');
+    }
+    if (lodash_default().isEmpty(data.extensions)) {
+        lodash_default().unset(data, 'extensions');
+    }
+    return data;
+});
+
+;// ./src/server/util/is_yaml.ts
+
+function is_yaml(content) {
+    try {
+        dist.parse(content);
+        return true;
+    }
+    catch (error) {
+        return false;
+    }
+}
+
+;// ./src/server/util/detect_extension.ts
+
+function detect_extension(content) {
+    if (is_yaml(content)) {
+        return '.yaml';
+    }
+    return '.md';
+}
+
+;// ./src/server/util/is_parent.ts
+
+function is_parent(parent_path, possible_child_path) {
+    const result = (0,external_path_.relative)(parent_path, possible_child_path);
+    return result && !result.startsWith('..') && !(0,external_path_.isAbsolute)(result);
+}
+
+;// ./src/server/util/sanitize_filename.ts
+function sanitize_filename(filename) {
+    switch (process.platform) {
+        case 'win32':
+        case 'cygwin':
+            return filename.replace(/[\s<>:"/\\|?*\x00-\x1F\x7F]/g, '_').toLowerCase();
+        case 'darwin':
+        case 'linux':
+            return filename.replace(/[:\/]/g, '_').toLowerCase();
+        default:
+            return filename.toLowerCase();
+    }
+}
 
 ;// ./src/type/preset.zh.ts
 
@@ -55867,13 +55858,14 @@ const preset_zh_Prompt_normal = object({
     id: never().optional(),
     启用: schemas_boolean(),
     插入位置: object({
-        type: schemas_enum(['相对', '聊天中']).optional().default('相对'),
+        type: schemas_enum(['相对', '聊天中']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
     })
         .optional()
+        .default({ type: '相对' })
         .superRefine((data, context) => {
-        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
             context.addIssue({
                 code: 'custom',
                 path: ['插入位置'],
@@ -55920,8 +55912,7 @@ const preset_zh_prompt_unrolable_placeholder_ids = ['对话示例', '聊天记�
 const preset_zh_prompt_placeholder_ids = [...preset_zh_prompt_rolable_placeholder_ids, ...preset_zh_prompt_unrolable_placeholder_ids];
 const preset_zh_Prompt_placeholder = object({
     名称: never().optional(),
-    id: schemas_enum(preset_zh_prompt_placeholder_ids)
-        .describe(dist_dedent(`
+    id: schemas_enum(preset_zh_prompt_placeholder_ids).describe(dist_dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
         - 角色定义之前: world_info_before
         - 玩家描述: persona_description. 创建 user 时填写的提示词
@@ -55931,17 +55922,17 @@ const preset_zh_Prompt_placeholder = object({
         - 角色定义之后: world_info_after
         - 对话示例: dialogue_examples. 角色卡高级定义中的提示词, 一般没人用了
         - 聊天记录: chat_history
-      `))
-        .transform((lodash_default()).snakeCase),
+      `)),
     启用: schemas_boolean(),
     插入位置: object({
-        type: schemas_enum(['相对', '聊天中']).optional().default('相对'),
+        type: schemas_enum(['相对', '聊天中']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
     })
         .optional()
+        .default({ type: '相对' })
         .superRefine((data, context) => {
-        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
             context.addIssue({
                 code: 'custom',
                 path: ['插入位置'],
@@ -56084,31 +56075,32 @@ const preset_zh_Preset = object({
 
 
 
+
 class Preset_syncer extends Syncer_interface {
     constructor(config_name, name, file) {
-        super('preset', _.invert(zh_to_en_map)['preset'], config_name, name, file, preset_en_Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, Preset);
+        super('preset', lodash_default().invert(zh_to_en_map)['preset'], config_name, name, file, Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, preset_Preset);
     }
     // TODO: 拆分 component
     do_check_safe(local_data, tavern_data) {
         const get_names = (data) => {
-            return _(data.prompts)
+            return lodash_default()(data.prompts)
                 .concat(data.prompts_unused)
-                .filter(prompt => !_.includes(preset_en_prompt_placeholder_ids, prompt.id))
+                .filter(prompt => !lodash_default().includes(prompt_placeholder_ids, lodash_default().get(prompt, 'id', '')))
                 .map(prompt => prompt.name)
                 .value();
         };
         const local_names = get_names(local_data);
         const tavern_names = get_names(tavern_data);
         return {
-            local_only_data: _.difference(local_names, tavern_names),
-            tavern_only_data: _.difference(tavern_names, local_names),
+            local_only_data: lodash_default().difference(local_names, tavern_names),
+            tavern_only_data: lodash_default().difference(tavern_names, local_names),
         };
     }
     // TODO: 拆分 component
     do_pull(local_data, tavern_data, { language, should_split }) {
         const get_prompts_state = (prompts, used) => {
             return prompts
-                .filter(prompt => !_.has(prompt, 'id'))
+                .filter(prompt => !lodash_default().has(prompt, 'id'))
                 .map(prompt => should_split
                 ? {
                     name: prompt.name,
@@ -56121,17 +56113,17 @@ class Preset_syncer extends Syncer_interface {
                 ...get_prompts_state(tavern_data.prompts, { used: true }),
                 ...get_prompts_state(tavern_data.prompts_unused, { used: false }),
             ]
-            : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !_.has(prompt, 'id'));
+            : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !lodash_default().has(prompt, 'id'));
         let files = [];
         const convert_prompts = (prompts, { used }) => {
             prompts.forEach(prompt => {
-                if (_.has(prompt, 'id')) {
+                if (lodash_default().has(prompt, 'id')) {
                     return;
                 }
                 const handle_file = (prompt, file_path) => {
                     files.push({ name: prompt.name, path: file_path, content: prompt.content });
-                    _.unset(prompt, 'content');
-                    _.set(prompt, 'file', file_path);
+                    lodash_default().unset(prompt, 'content');
+                    lodash_default().set(prompt, 'file', file_path);
                 };
                 const state = prompts_state.find(state => state.name === prompt.name);
                 if (state === undefined && should_split) {
@@ -56149,7 +56141,7 @@ class Preset_syncer extends Syncer_interface {
         return { result_data: tavern_data, files };
     }
     do_beautify_config(tavern_data, language) {
-        const document = new dist.Document(language === 'zh' ? translate(tavern_data, _.invert(this.zh_to_en_map)) : tavern_data);
+        const document = new dist.Document(language === 'zh' ? translate(tavern_data, lodash_default().invert(this.zh_to_en_map)) : tavern_data);
         ['提示词', '未添加的提示词', 'prompts', 'prompts_unused'].forEach(key => dist.visit(document.get(key), (key, node) => {
             if (key === null) {
                 return;
@@ -56176,9 +56168,18 @@ class Preset_syncer extends Syncer_interface {
             未能找到以下外链提示词文件: [],
             未能从合集文件中找到以下条目: [],
         };
+        const handle_placeholder_id = (prompts) => {
+            prompts.forEach(prompt => {
+                if (lodash_default().includes(prompt_placeholder_ids, prompt.id)) {
+                    lodash_default().set(prompt, 'id', lodash_default().snakeCase(prompt.id));
+                }
+            });
+        };
+        handle_placeholder_id(local_data.prompts);
+        handle_placeholder_id(local_data.prompts_unused);
         const handle_file = (prompts, source) => {
             prompts.forEach((prompt, index) => {
-                if (!_.has(prompt, 'file') || prompt.file === undefined) {
+                if (!lodash_default().has(prompt, 'file') || prompt.file === undefined) {
                     return;
                 }
                 const content = extract_file_content(this.dir, prompt.file);
@@ -56193,37 +56194,37 @@ class Preset_syncer extends Syncer_interface {
                         error_data.未能从合集文件中找到以下条目.push(`'${prompt.file}': 第 '${index}' 条目 '${prompt.name}'`);
                         return;
                     }
-                    _.set(prompt, 'content', collection_entry.content);
-                    _.unset(prompt, 'file');
+                    lodash_default().set(prompt, 'content', collection_entry.content);
+                    lodash_default().unset(prompt, 'file');
                     return;
                 }
-                _.set(prompt, 'content', content);
-                _.unset(prompt, 'file');
+                lodash_default().set(prompt, 'content', content);
+                lodash_default().unset(prompt, 'file');
             });
         };
         handle_file(local_data.prompts, '提示词');
         handle_file(local_data.prompts_unused, '未添加的提示词');
         const handle_user_name = (prompts) => {
             prompts.forEach(prompt => {
-                _.set(prompt, 'content', replace_user_name(prompt.content));
+                lodash_default().set(prompt, 'content', replace_user_name(prompt.content));
             });
         };
         handle_user_name(local_data.prompts);
         handle_user_name(local_data.prompts_unused);
         const handle_raw_string = (prompts) => {
             prompts.forEach(prompt => {
-                _.set(prompt, 'content', replace_raw_string(prompt.content));
+                lodash_default().set(prompt, 'content', replace_raw_string(prompt.content));
             });
         };
         handle_raw_string(local_data.prompts);
         handle_raw_string(local_data.prompts_unused);
         return {
             result_data: local_data,
-            error_data: _.pickBy(error_data, value => value.length > 0),
+            error_data: lodash_default().pickBy(error_data, value => value.length > 0),
         };
     }
     do_watch(local_data) {
-        return _(_(local_data.prompts)
+        return lodash_default()(lodash_default()(local_data.prompts)
             .concat(local_data.prompts_unused)
             .filter(prompt => prompt.file !== undefined)
             .map(prompt => (0,external_node_path_.resolve)(this.dir, prompt.file))
