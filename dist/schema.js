@@ -22911,8 +22911,11 @@ const zh_to_en_map = {
     名称: 'name',
     启用: 'enabled',
     插入位置: 'position',
+    类型: 'type',
     相对: 'relative',
     聊天中: 'in_chat',
+    深度: 'depth',
+    顺序: 'order',
     角色: 'role',
     系统: 'system',
     用户: 'user',
@@ -22970,14 +22973,14 @@ const preset_zh_Prompt_normal = object({
     id: never().optional(),
     启用: schemas_boolean(),
     插入位置: object({
-        type: schemas_enum(['相对', '聊天中']),
-        depth: schemas_number().optional(),
-        order: schemas_number().optional(),
+        类型: schemas_enum(['相对', '聊天中']),
+        深度: schemas_number().optional(),
+        顺序: schemas_number().optional(),
     })
         .optional()
-        .default({ type: '相对' })
+        .default({ 类型: '相对' })
         .superRefine((data, context) => {
-        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.类型 === '聊天中' && (data.深度 === undefined || data.顺序 === undefined)) {
             context.addIssue({
                 code: 'custom',
                 path: ['插入位置'],

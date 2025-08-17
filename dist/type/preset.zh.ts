@@ -6,8 +6,11 @@ export const zh_to_en_map = {
   名称: 'name',
   启用: 'enabled',
   插入位置: 'position',
+  类型: 'type',
   相对: 'relative',
   聊天中: 'in_chat',
+  深度: 'depth',
+  顺序: 'order',
   角色: 'role',
   系统: 'system',
   用户: 'user',
@@ -73,14 +76,14 @@ const Prompt_normal = z
 
     插入位置: z
       .object({
-        type: z.enum(['相对', '聊天中']),
-        depth: z.number().optional(),
-        order: z.number().optional(),
+        类型: z.enum(['相对', '聊天中']),
+        深度: z.number().optional(),
+        顺序: z.number().optional(),
       })
       .optional()
-      .default({ type: '相对' })
+      .default({ 类型: '相对' })
       .superRefine((data, context) => {
-        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.类型 === '聊天中' && (data.深度 === undefined || data.顺序 === undefined)) {
           context.addIssue({
             code: 'custom',
             path: ['插入位置'],
