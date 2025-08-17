@@ -70,8 +70,10 @@ export const prompt_placeholder_ids = <const>[...prompt_rolable_placeholder_ids,
 const Prompt_placeholder = z
   .object({
     name: z.never().optional(),
-    id: z.enum(prompt_placeholder_ids).describe(
-      dedent(`
+    id: z
+      .enum(prompt_placeholder_ids)
+      .describe(
+        dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
         - world_info_before: 角色定义之前
         - persona_description: 玩家描述. 创建 user 时填写的提示词
@@ -82,7 +84,8 @@ const Prompt_placeholder = z
         - dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了
         - chat_history: 聊天记录
       `),
-    ),
+      )
+      .transform(_.camelCase),
     enabled: z.boolean(),
 
     position: z

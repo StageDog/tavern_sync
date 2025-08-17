@@ -13,9 +13,7 @@ export const prompt_placeholder_ids = <const>[...prompt_rolable_placeholder_ids,
 const Prompt = z
   .object({
     name: z.string(),
-    id: z
-      .string()
-      .transform(id => _.get(_.merge({}, ...prompt_placeholder_ids.map(id => ({ [_.camelCase(id)]: id }))), id, id)),
+    id: z.string().transform(_.camelCase),
     enabled: z.boolean(),
 
     position: z
