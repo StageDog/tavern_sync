@@ -55380,6 +55380,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
 
 ;// ./src/server/tavern/preset.ts
 
+
 const prompt_rolable_placeholder_ids = [
     'world_info_before',
     'persona_description',
@@ -55392,8 +55393,7 @@ const prompt_unrolable_placeholder_ids = ['dialogue_examples', 'chat_history'];
 const prompt_placeholder_ids = [...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
 const Prompt = object({
     name: schemas_string(),
-    id: schemas_string()
-        .transform(id => _.get(_.merge({}, ...prompt_placeholder_ids.map(id => ({ [_.camelCase(id)]: id }))), id, id)),
+    id: schemas_string().transform((lodash_default()).camelCase),
     enabled: schemas_boolean(),
     position: object({
         type: schemas_enum(['relative', 'in_chat']).default('relative'),
@@ -55407,18 +55407,18 @@ const Prompt = object({
     extra: record(schemas_string(), any()).optional(),
 })
     .transform(data => {
-    if (_.includes(prompt_placeholder_ids, data.id)) {
-        _.unset(data, 'name');
-        _.unset(data, 'content');
+    if (lodash_default().includes(prompt_placeholder_ids, data.id)) {
+        lodash_default().unset(data, 'name');
+        lodash_default().unset(data, 'content');
         if (data.position?.type === 'relative') {
-            _.unset(data, 'position');
+            lodash_default().unset(data, 'position');
         }
-        if (_.includes(prompt_unrolable_placeholder_ids, data.id) || data.role === 'system') {
-            _.unset(data, 'role');
+        if (lodash_default().includes(prompt_unrolable_placeholder_ids, data.id) || data.role === 'system') {
+            lodash_default().unset(data, 'role');
         }
         return data;
     }
-    _.unset(data, 'id');
+    lodash_default().unset(data, 'id');
     return data;
 });
 const Preset = object({
@@ -55453,28 +55453,28 @@ const Preset = object({
 })
     .transform(data => {
     if (data.settings.reply_count === 1) {
-        _.unset(data, 'settings.reply_count');
+        lodash_default().unset(data, 'settings.reply_count');
     }
     if (data.settings.repetition_penalty === 1) {
-        _.unset(data, 'settings.repetition_penalty');
+        lodash_default().unset(data, 'settings.repetition_penalty');
     }
     if (data.settings.min_p === 0) {
-        _.unset(data, 'settings.min_p');
+        lodash_default().unset(data, 'settings.min_p');
     }
     if (data.settings.top_a === 0) {
-        _.unset(data, 'settings.top_a');
+        lodash_default().unset(data, 'settings.top_a');
     }
     if (data.settings.top_k === 0) {
-        _.unset(data, 'settings.top_k');
+        lodash_default().unset(data, 'settings.top_k');
     }
     if (data.settings.seed === -1) {
-        _.unset(data, 'settings.seed');
+        lodash_default().unset(data, 'settings.seed');
     }
     if (data.settings.wrap_user_messages_in_quotes === false) {
-        _.unset(data, 'settings.wrap_user_messages_in_quotes');
+        lodash_default().unset(data, 'settings.wrap_user_messages_in_quotes');
     }
-    if (_.isEmpty(data.extensions)) {
-        _.unset(data, 'extensions');
+    if (lodash_default().isEmpty(data.extensions)) {
+        lodash_default().unset(data, 'extensions');
     }
     return data;
 });
@@ -55593,6 +55593,7 @@ function createDedent(options) {
 ;// ./src/type/preset.en.ts
 
 
+
 const Prompt_normal = object({
     name: schemas_string(),
     id: never().optional(),
@@ -55636,7 +55637,7 @@ const Prompt_normal = object({
 })
     .transform(data => ({
     ...data,
-    id: _.uniqueId(),
+    id: lodash_default().uniqueId(),
 }))
     .describe('手动在预设中添加的提示词');
 const preset_en_prompt_rolable_placeholder_ids = [
@@ -55651,7 +55652,8 @@ const preset_en_prompt_unrolable_placeholder_ids = ['dialogue_examples', 'chat_h
 const preset_en_prompt_placeholder_ids = [...preset_en_prompt_rolable_placeholder_ids, ...preset_en_prompt_unrolable_placeholder_ids];
 const Prompt_placeholder = object({
     name: never().optional(),
-    id: schemas_enum(preset_en_prompt_placeholder_ids).describe(dist_dedent(`
+    id: schemas_enum(preset_en_prompt_placeholder_ids)
+        .describe(dist_dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
         - world_info_before: 角色定义之前
         - persona_description: 玩家描述. 创建 user 时填写的提示词
@@ -55661,7 +55663,8 @@ const Prompt_placeholder = object({
         - world_info_after: 角色定义之后
         - dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了
         - chat_history: 聊天记录
-      `)),
+      `))
+        .transform((lodash_default()).camelCase),
     enabled: schemas_boolean(),
     position: object({
         type: schemas_enum(['relative', 'in_chat']).optional().default('relative'),
@@ -55685,7 +55688,7 @@ const Prompt_placeholder = object({
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 })
     .superRefine((data, context) => {
-    if (_.includes(preset_en_prompt_unrolable_placeholder_ids, data.id) && data.role !== undefined) {
+    if (lodash_default().includes(preset_en_prompt_unrolable_placeholder_ids, data.id) && data.role !== undefined) {
         context.addIssue({
             code: 'custom',
             message: `占位符提示词 '${data.id}' 不能设置自定义角色 (\`role\`)`,
@@ -55762,8 +55765,8 @@ const preset_en_Preset = object({
     }),
     prompts: array(preset_en_Prompt)
         .superRefine((data, context) => {
-        const duplicate_ids = _(data)
-            .filter(prompt => _.includes(preset_en_prompt_placeholder_ids, prompt.id))
+        const duplicate_ids = lodash_default()(data)
+            .filter(prompt => lodash_default().includes(preset_en_prompt_placeholder_ids, prompt.id))
             .groupBy('id')
             .filter(group => group.length > 1)
             .keys()
@@ -55774,16 +55777,16 @@ const preset_en_Preset = object({
                 message: `提示词列表中出现了重复的占位符提示词 id: ${duplicate_ids.join(', ')}`,
             });
         }
-        const unused_ids = _.reject(preset_en_prompt_placeholder_ids, id => data.some(prompt => _.get(prompt, 'id') === id));
+        const unused_ids = lodash_default().reject(preset_en_prompt_placeholder_ids, id => data.some(prompt => lodash_default().get(prompt, 'id') === id));
         if (unused_ids.length > 0) {
             context.addIssue({
                 code: 'custom',
                 message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
             });
         }
-        const disabled_ids = _(data)
-            .filter(prompt => _.includes(preset_en_prompt_placeholder_ids, prompt.id) && prompt.enabled === false)
-            .map(prompt => _.get(prompt, 'id'))
+        const disabled_ids = lodash_default()(data)
+            .filter(prompt => lodash_default().includes(preset_en_prompt_placeholder_ids, prompt.id) && prompt.enabled === false)
+            .map(prompt => lodash_default().get(prompt, 'id'))
             .value();
         if (disabled_ids.length > 0) {
             context.addIssue({
@@ -55798,6 +55801,7 @@ const preset_en_Preset = object({
 });
 
 ;// ./src/type/preset.zh.ts
+
 
 
 const preset_zh_zh_to_en_map = {
@@ -55856,7 +55860,7 @@ const preset_zh_zh_to_en_map = {
     扩展字段: 'extensions',
 };
 function preset_zh_is_zh(data) {
-    return _.has(data, '提示词');
+    return lodash_default().has(data, '提示词');
 }
 const preset_zh_Prompt_normal = object({
     名称: schemas_string(),
@@ -55901,7 +55905,7 @@ const preset_zh_Prompt_normal = object({
 })
     .transform(data => ({
     ...data,
-    id: _.uniqueId(),
+    id: lodash_default().uniqueId(),
 }))
     .describe('手动在预设中添加的提示词');
 const preset_zh_prompt_rolable_placeholder_ids = [
@@ -55916,7 +55920,8 @@ const preset_zh_prompt_unrolable_placeholder_ids = ['对话示例', '聊天记�
 const preset_zh_prompt_placeholder_ids = [...preset_zh_prompt_rolable_placeholder_ids, ...preset_zh_prompt_unrolable_placeholder_ids];
 const preset_zh_Prompt_placeholder = object({
     名称: never().optional(),
-    id: schemas_enum(preset_zh_prompt_placeholder_ids).describe(dist_dedent(`
+    id: schemas_enum(preset_zh_prompt_placeholder_ids)
+        .describe(dist_dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
         - 角色定义之前: world_info_before
         - 玩家描述: persona_description. 创建 user 时填写的提示词
@@ -55926,7 +55931,8 @@ const preset_zh_Prompt_placeholder = object({
         - 角色定义之后: world_info_after
         - 对话示例: dialogue_examples. 角色卡高级定义中的提示词, 一般没人用了
         - 聊天记录: chat_history
-      `)),
+      `))
+        .transform((lodash_default()).snakeCase),
     启用: schemas_boolean(),
     插入位置: object({
         type: schemas_enum(['相对', '聊天中']).optional().default('相对'),
@@ -55950,7 +55956,7 @@ const preset_zh_Prompt_placeholder = object({
     额外字段: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 })
     .superRefine((data, context) => {
-    if (_.includes(preset_zh_prompt_unrolable_placeholder_ids, data.id) && data.角色 !== undefined) {
+    if (lodash_default().includes(preset_zh_prompt_unrolable_placeholder_ids, data.id) && data.角色 !== undefined) {
         context.addIssue({
             code: 'custom',
             message: `占位符提示词 '${data.id}' 不能设置自定义\`角色\``,
@@ -56027,8 +56033,8 @@ const preset_zh_Preset = object({
     }),
     提示词: array(preset_zh_Prompt)
         .superRefine((data, context) => {
-        const duplicate_ids = _(data)
-            .filter(prompt => _.includes(preset_zh_prompt_placeholder_ids, prompt.id))
+        const duplicate_ids = lodash_default()(data)
+            .filter(prompt => lodash_default().includes(preset_zh_prompt_placeholder_ids, prompt.id))
             .groupBy('id')
             .filter(group => group.length > 1)
             .keys()
@@ -56039,16 +56045,16 @@ const preset_zh_Preset = object({
                 message: `提示词列表中出现了重复的占位符提示词 id: ${duplicate_ids.join(', ')}`,
             });
         }
-        const unused_ids = _.reject(preset_zh_prompt_placeholder_ids, id => data.some(prompt => _.get(prompt, 'id') === id));
+        const unused_ids = lodash_default().reject(preset_zh_prompt_placeholder_ids, id => data.some(prompt => lodash_default().get(prompt, 'id') === id));
         if (unused_ids.length > 0) {
             context.addIssue({
                 code: 'custom',
                 message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
             });
         }
-        const disabled_ids = _(data)
-            .filter(prompt => _.includes(preset_zh_prompt_placeholder_ids, prompt.id) && prompt.启用 === false)
-            .map(prompt => _.get(prompt, 'id'))
+        const disabled_ids = lodash_default()(data)
+            .filter(prompt => lodash_default().includes(preset_zh_prompt_placeholder_ids, prompt.id) && prompt.启用 === false)
+            .map(prompt => lodash_default().get(prompt, 'id'))
             .value();
         if (disabled_ids.length > 0) {
             context.addIssue({
