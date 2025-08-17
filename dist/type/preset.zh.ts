@@ -73,13 +73,14 @@ const Prompt_normal = z
 
     插入位置: z
       .object({
-        type: z.enum(['相对', '聊天中']).optional().default('相对'),
+        type: z.enum(['相对', '聊天中']),
         depth: z.number().optional(),
         order: z.number().optional(),
       })
       .optional()
+      .default({ type: '相对' })
       .superRefine((data, context) => {
-        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
           context.addIssue({
             code: 'custom',
             path: ['插入位置'],
@@ -134,10 +135,8 @@ export const prompt_placeholder_ids = <const>[...prompt_rolable_placeholder_ids,
 const Prompt_placeholder = z
   .object({
     名称: z.never().optional(),
-    id: z
-      .enum(prompt_placeholder_ids)
-      .describe(
-        dedent(`
+    id: z.enum(prompt_placeholder_ids).describe(
+      dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
         - 角色定义之前: world_info_before
         - 玩家描述: persona_description. 创建 user 时填写的提示词
@@ -148,19 +147,19 @@ const Prompt_placeholder = z
         - 对话示例: dialogue_examples. 角色卡高级定义中的提示词, 一般没人用了
         - 聊天记录: chat_history
       `),
-      )
-      .transform(_.snakeCase),
+    ),
     启用: z.boolean(),
 
     插入位置: z
       .object({
-        type: z.enum(['相对', '聊天中']).optional().default('相对'),
+        type: z.enum(['相对', '聊天中']),
         depth: z.number().optional(),
         order: z.number().optional(),
       })
       .optional()
+      .default({ type: '相对' })
       .superRefine((data, context) => {
-        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
           context.addIssue({
             code: 'custom',
             path: ['插入位置'],
@@ -188,16 +187,18 @@ const Prompt_placeholder = z
   .transform(data => ({
     ...data,
     角色: data.角色 ?? '系统',
-    名称: {
-      角色定义之前: 'World Info (before) - 角色定义之前',
-      玩家描述: 'Persona Description - 玩家描述',
-      角色描述: 'Char Description - 角色描述',
-      角色性格: 'Char Personality - 角色性格',
-      情景: 'Scenario - 情景',
-      角色定义之后: 'World Info (after) - 角色定义之后',
-      对话示例: 'Chat Examples - 对话示例',
-      聊天记录: 'Chat History - 聊天记录',
-    }[data.id],
+    名称: (
+      {
+        角色定义之前: 'World Info (before) - 角色定义之前',
+        玩家描述: 'Persona Description - 玩家描述',
+        角色描述: 'Char Description - 角色描述',
+        角色性格: 'Char Personality - 角色性格',
+        情景: 'Scenario - 情景',
+        角色定义之后: 'World Info (after) - 角色定义之后',
+        对话示例: 'Chat Examples - 对话示例',
+        聊天记录: 'Chat History - 聊天记录',
+      } as const
+    )[data.id as (typeof prompt_placeholder_ids)[number]],
   }))
   .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
 
