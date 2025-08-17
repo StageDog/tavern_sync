@@ -8,10 +8,22 @@ const Prompt_normal = z
     enabled: z.boolean(),
 
     position: z
-      .union([z.literal('relative'), z.number()])
-      .default('relative')
+      .object({
+        type: z.enum(['relative', 'in_chat']).optional().default('relative'),
+        depth: z.number().optional(),
+        order: z.number().optional(),
+      })
       .optional()
-      .describe('插入位置: `relative` 则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
+      .superRefine((data, context) => {
+        if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
+          context.addIssue({
+            code: 'custom',
+            path: ['position'],
+            message: '当插入位置设置为`in_chat`时, 必须设置`depth`和`order`',
+          });
+        }
+      })
+      .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
 
     role: z.enum(['system', 'user', 'assistant']).default('system').optional(),
     content: z.string().optional().describe('内嵌的提示词内容'),
@@ -72,11 +84,24 @@ const Prompt_placeholder = z
       `),
     ),
     enabled: z.boolean(),
+
     position: z
-      .union([z.literal('relative'), z.number()])
-      .default('relative')
+      .object({
+        type: z.enum(['relative', 'in_chat']).optional().default('relative'),
+        depth: z.number().optional(),
+        order: z.number().optional(),
+      })
       .optional()
-      .describe('插入位置: `relative` 则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
+      .superRefine((data, context) => {
+        if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
+          context.addIssue({
+            code: 'custom',
+            path: ['position'],
+            message: '当插入位置设置为`in_chat`时, 必须设置`depth`和`order`',
+          });
+        }
+      })
+      .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
 
     role: z.enum(['system', 'user', 'assistant']).optional(),
     content: z.never().optional(),

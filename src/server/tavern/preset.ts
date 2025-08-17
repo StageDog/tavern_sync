@@ -13,10 +13,19 @@ export const prompt_placeholder_ids = <const>[...prompt_rolable_placeholder_ids,
 const Prompt = z
   .object({
     name: z.string(),
-    id: z.string(),
+    id: z
+      .string()
+      .transform(id => _.get(_.merge({}, ...prompt_placeholder_ids.map(id => ({ [_.camelCase(id)]: id }))), id, id)),
     enabled: z.boolean(),
 
-    position: z.union([z.literal('relative'), z.number()]).default('relative'),
+    position: z
+      .object({
+        type: z.enum(['relative', 'in_chat']).default('relative'),
+        depth: z.number(),
+        order: z.number(),
+      })
+      .partial()
+      .optional(),
 
     role: z.enum(['system', 'user', 'assistant']),
     content: z.string().optional(),
@@ -28,7 +37,7 @@ const Prompt = z
       _.unset(data, 'name');
       _.unset(data, 'content');
 
-      if (data.position === 'relative') {
+      if (data.position?.type === 'relative') {
         _.unset(data, 'position');
       }
 
