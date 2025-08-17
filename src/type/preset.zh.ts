@@ -155,14 +155,14 @@ const Prompt_placeholder = z
 
     插入位置: z
       .object({
-        type: z.enum(['相对', '聊天中']),
-        depth: z.number().optional(),
-        order: z.number().optional(),
+        类型: z.enum(['相对', '聊天中']),
+        深度: z.number().optional(),
+        顺序: z.number().optional(),
       })
       .optional()
-      .default({ type: '相对' })
+      .default({ 类型: '相对' })
       .superRefine((data, context) => {
-        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.类型 === '聊天中' && (data.深度 === undefined || data.顺序 === undefined)) {
           context.addIssue({
             code: 'custom',
             path: ['插入位置'],

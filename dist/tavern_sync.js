@@ -55928,14 +55928,14 @@ const preset_zh_Prompt_placeholder = object({
       `)),
     启用: schemas_boolean(),
     插入位置: object({
-        type: schemas_enum(['相对', '聊天中']),
-        depth: schemas_number().optional(),
-        order: schemas_number().optional(),
+        类型: schemas_enum(['相对', '聊天中']),
+        深度: schemas_number().optional(),
+        顺序: schemas_number().optional(),
     })
         .optional()
-        .default({ type: '相对' })
+        .default({ 类型: '相对' })
         .superRefine((data, context) => {
-        if (data.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+        if (data.类型 === '聊天中' && (data.深度 === undefined || data.顺序 === undefined)) {
             context.addIssue({
                 code: 'custom',
                 path: ['插入位置'],
