@@ -6,6 +6,7 @@ export const zh_to_en_map = {
   启用: 'enabled',
   插入位置: 'position',
   相对: 'relative',
+  聊天中: 'in_chat',
   角色: 'role',
   系统: 'system',
   用户: 'user',
@@ -70,10 +71,22 @@ const Prompt_normal = z
     启用: z.boolean(),
 
     插入位置: z
-      .union([z.literal('相对'), z.number()])
-      .default('相对')
+      .object({
+        type: z.enum(['相对', '聊天中']).optional().default('相对'),
+        depth: z.number().optional(),
+        order: z.number().optional(),
+      })
       .optional()
-      .describe('插入位置: `相对`则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
+      .superRefine((data, context) => {
+        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+          context.addIssue({
+            code: 'custom',
+            path: ['插入位置'],
+            message: '当插入位置设置为`聊天中`时, 必须设置`深度`和`顺序`',
+          });
+        }
+      })
+      .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
 
     角色: z.enum(['系统', '用户', 'AI']).default('系统').optional(),
     内容: z.string().optional().describe('内嵌的提示词内容'),
@@ -134,11 +147,24 @@ const Prompt_placeholder = z
       `),
     ),
     启用: z.boolean(),
+
     插入位置: z
-      .union([z.literal('相对'), z.number()])
-      .default('相对')
+      .object({
+        type: z.enum(['相对', '聊天中']).optional().default('相对'),
+        depth: z.number().optional(),
+        order: z.number().optional(),
+      })
       .optional()
-      .describe('插入位置: `相对`则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
+      .superRefine((data, context) => {
+        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+          context.addIssue({
+            code: 'custom',
+            path: ['插入位置'],
+            message: '当插入位置设置为`聊天中`时, 必须设置`深度`和`顺序`',
+          });
+        }
+      })
+      .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
 
     角色: z.enum(['系统', '用户', 'AI']).optional(),
     内容: z.never().optional(),

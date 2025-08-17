@@ -55392,9 +55392,16 @@ const prompt_unrolable_placeholder_ids = ['dialogue_examples', 'chat_history'];
 const prompt_placeholder_ids = [...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
 const Prompt = object({
     name: schemas_string(),
-    id: schemas_string(),
+    id: schemas_string()
+        .transform(id => _.get(_.merge({}, ...prompt_placeholder_ids.map(id => ({ [_.camelCase(id)]: id }))), id, id)),
     enabled: schemas_boolean(),
-    position: union([literal('relative'), schemas_number()]).default('relative'),
+    position: object({
+        type: schemas_enum(['relative', 'in_chat']).default('relative'),
+        depth: schemas_number(),
+        order: schemas_number(),
+    })
+        .partial()
+        .optional(),
     role: schemas_enum(['system', 'user', 'assistant']),
     content: schemas_string().optional(),
     extra: record(schemas_string(), any()).optional(),
@@ -55403,7 +55410,7 @@ const Prompt = object({
     if (_.includes(prompt_placeholder_ids, data.id)) {
         _.unset(data, 'name');
         _.unset(data, 'content');
-        if (data.position === 'relative') {
+        if (data.position?.type === 'relative') {
             _.unset(data, 'position');
         }
         if (_.includes(prompt_unrolable_placeholder_ids, data.id) || data.role === 'system') {
@@ -55590,10 +55597,22 @@ const Prompt_normal = object({
     name: schemas_string(),
     id: never().optional(),
     enabled: schemas_boolean(),
-    position: union([literal('relative'), schemas_number()])
-        .default('relative')
+    position: object({
+        type: schemas_enum(['relative', 'in_chat']).optional().default('relative'),
+        depth: schemas_number().optional(),
+        order: schemas_number().optional(),
+    })
         .optional()
-        .describe('插入位置: `relative` 则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
+        .superRefine((data, context) => {
+        if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
+            context.addIssue({
+                code: 'custom',
+                path: ['position'],
+                message: '当插入位置设置为`in_chat`时, 必须设置`depth`和`order`',
+            });
+        }
+    })
+        .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
     role: schemas_enum(['system', 'user', 'assistant']).default('system').optional(),
     content: schemas_string().optional().describe('内嵌的提示词内容'),
     file: schemas_string().optional().describe('外链的提示词文件路径'),
@@ -55644,10 +55663,22 @@ const Prompt_placeholder = object({
         - chat_history: 聊天记录
       `)),
     enabled: schemas_boolean(),
-    position: union([literal('relative'), schemas_number()])
-        .default('relative')
+    position: object({
+        type: schemas_enum(['relative', 'in_chat']).optional().default('relative'),
+        depth: schemas_number().optional(),
+        order: schemas_number().optional(),
+    })
         .optional()
-        .describe('插入位置: `relative` 则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
+        .superRefine((data, context) => {
+        if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
+            context.addIssue({
+                code: 'custom',
+                path: ['position'],
+                message: '当插入位置设置为`in_chat`时, 必须设置`depth`和`order`',
+            });
+        }
+    })
+        .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
     role: schemas_enum(['system', 'user', 'assistant']).optional(),
     content: never().optional(),
     file: never().optional(),
@@ -55774,6 +55805,7 @@ const preset_zh_zh_to_en_map = {
     启用: 'enabled',
     插入位置: 'position',
     相对: 'relative',
+    聊天中: 'in_chat',
     角色: 'role',
     系统: 'system',
     用户: 'user',
@@ -55830,10 +55862,22 @@ const preset_zh_Prompt_normal = object({
     名称: schemas_string(),
     id: never().optional(),
     启用: schemas_boolean(),
-    插入位置: union([literal('相对'), schemas_number()])
-        .default('相对')
+    插入位置: object({
+        type: schemas_enum(['相对', '聊天中']).optional().default('相对'),
+        depth: schemas_number().optional(),
+        order: schemas_number().optional(),
+    })
         .optional()
-        .describe('插入位置: `相对`则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
+        .superRefine((data, context) => {
+        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+            context.addIssue({
+                code: 'custom',
+                path: ['插入位置'],
+                message: '当插入位置设置为`聊天中`时, 必须设置`深度`和`顺序`',
+            });
+        }
+    })
+        .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
     角色: schemas_enum(['系统', '用户', 'AI']).default('系统').optional(),
     内容: schemas_string().optional().describe('内嵌的提示词内容'),
     文件: schemas_string().optional().describe('外链的提示词文件路径'),
@@ -55884,10 +55928,22 @@ const preset_zh_Prompt_placeholder = object({
         - 聊天记录: chat_history
       `)),
     启用: schemas_boolean(),
-    插入位置: union([literal('相对'), schemas_number()])
-        .default('相对')
+    插入位置: object({
+        type: schemas_enum(['相对', '聊天中']).optional().default('相对'),
+        depth: schemas_number().optional(),
+        order: schemas_number().optional(),
+    })
         .optional()
-        .describe('插入位置: `相对`则按提示词相对位置插入, 填写数字则插入到聊天记录中的对应深度'),
+        .superRefine((data, context) => {
+        if (data?.type === '聊天中' && (data.depth === undefined || data.order === undefined)) {
+            context.addIssue({
+                code: 'custom',
+                path: ['插入位置'],
+                message: '当插入位置设置为`聊天中`时, 必须设置`深度`和`顺序`',
+            });
+        }
+    })
+        .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
     角色: schemas_enum(['系统', '用户', 'AI']).optional(),
     内容: never().optional(),
     文件: never().optional(),
