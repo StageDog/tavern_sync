@@ -111,6 +111,9 @@ export default [
     ],
   }),
   (_env: any, argv: any): webpack.Configuration => ({
+    experiments: {
+      outputModule: true,
+    },
     devtool: argv.mode === 'production' ? false : 'source-map',
     entry: './src/server/index.ts',
     target: 'node',
@@ -121,6 +124,9 @@ export default [
         }`;
       },
       filename: `tavern_sync.js`,
+      library: {
+        type: 'module',
+      },
     },
     module: {
       rules: [
@@ -178,6 +184,9 @@ export default [
     },
   }),
   (_env: any, argv: any): webpack.Configuration => ({
+    experiments: {
+      outputModule: true,
+    },
     devtool: argv.mode === 'production' ? false : 'source-map',
     entry: './src/type/index.ts',
     target: 'node',
@@ -188,6 +197,9 @@ export default [
         }`;
       },
       filename: `schema.js`,
+      library: {
+        type: 'module',
+      },
     },
     module: {
       rules: [
