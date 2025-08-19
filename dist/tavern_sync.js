@@ -55559,7 +55559,7 @@ const preset_Preset = object({
     prompts: array(preset_Prompt),
     prompts_unused: array(preset_Prompt)
         .transform(prompts => prompts.filter(prompt => !lodash_default().includes(['Main Prompt', 'Auxiliary Prompt', 'Post-History Instructions', 'Enhance Definitions'], prompt.name))),
-    extensions: record(schemas_string(), any()),
+    extensions: record(schemas_string(), any()).optional(),
 })
     .transform(data => {
     if (data.settings.reply_count === 1) {
