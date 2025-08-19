@@ -3,7 +3,8 @@
   "type": "object",
   "properties": {
     "user名称": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^\\S+$"
     },
     "配置": {
       "type": "object",

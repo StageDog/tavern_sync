@@ -53139,7 +53139,7 @@ const Config = object({
     file: schemas_string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
 });
 const Settings = object({
-    user_name: schemas_string(),
+    user_name: schemas_string().regex(/^\S+$/),
     configs: record(schemas_string(), Config),
 });
 
@@ -53164,7 +53164,7 @@ const settings_zh_Config = object({
     本地文件路径: schemas_string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
 });
 const settings_zh_Settings = object({
-    user名称: schemas_string(),
+    user名称: schemas_string().regex(/^\S+$/),
     配置: record(schemas_string(), settings_zh_Config),
 });
 
@@ -56736,12 +56736,27 @@ function add_update_command() {
 ;// ./src/server/command/watch.ts
 
 
+
+
+
 function add_watch_command() {
     const command = new Command('watch').description('监听本地内容的变化并实时推送到酒馆');
-    add_configs_to_command(command);
+    const settings = get_settings();
+    command.addArgument(new Argument('[config]', '配置名称, 不填则监听所有配置').choices(Object.keys(settings.configs)).argParser(value => {
+        if (!(value in settings.configs)) {
+            exit_on_error(`配置 '${value}' 不存在, ${beauingfy_configs()}`);
+        }
+    }));
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
-    command.action(async (syncer, options) => {
-        await syncer.watch({ should_force: options.force });
+    command.action(async (config, options) => {
+        if (config) {
+            await create_syncer(config, settings.configs[config]).watch({ should_force: options.force });
+        }
+        else {
+            for (const config of Object.keys(settings.configs)) {
+                await create_syncer(config, settings.configs[config]).watch({ should_force: options.force });
+            }
+        }
     });
     return command;
 }

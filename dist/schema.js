@@ -23180,7 +23180,7 @@ const Config = object({
     file: schemas_string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
 });
 const Settings = object({
-    user_name: schemas_string(),
+    user_name: schemas_string().regex(/^\S+$/),
     configs: record(schemas_string(), Config),
 });
 
@@ -23205,7 +23205,7 @@ const settings_zh_Config = object({
     本地文件路径: schemas_string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
 });
 const settings_zh_Settings = object({
-    user名称: schemas_string(),
+    user名称: schemas_string().regex(/^\S+$/),
     配置: record(schemas_string(), settings_zh_Config),
 });
 

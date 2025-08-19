@@ -3,7 +3,8 @@
   "type": "object",
   "properties": {
     "user_name": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^\\S+$"
     },
     "configs": {
       "type": "object",

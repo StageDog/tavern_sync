@@ -25,6 +25,6 @@ export const Config = z.object({
 
 export type Settings = z.infer<typeof Settings>;
 export const Settings = z.object({
-  user名称: z.string(),
+  user名称: z.string().regex(/^\S+$/),
   配置: z.record(z.string(), Config),
 });
