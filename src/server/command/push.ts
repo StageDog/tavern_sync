@@ -1,4 +1,5 @@
 import { add_configs_to_command } from '@server/component/argument';
+import { check_update_silently } from '@server/component/check_update';
 import { Syncer_interface } from '@server/syncer/interface';
 
 import { Command } from 'commander';
@@ -14,7 +15,9 @@ export function add_push_command(): Command {
   );
 
   command.action(async (syncer: Syncer_interface, options: { force: boolean }) => {
+    const timeout_id = check_update_silently();
     await syncer.push({ should_force: options.force });
+    clearTimeout(timeout_id);
   });
   return command;
 }

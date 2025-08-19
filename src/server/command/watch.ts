@@ -1,4 +1,5 @@
 import { beauingfy_configs } from '@server/component/beauingfy_configs';
+import { check_update_silently } from '@server/component/check_update';
 import { get_settings } from '@server/settings';
 import { create_syncer } from '@server/syncer/factory';
 import { exit_on_error } from '@server/util/exit_on_error';
@@ -23,6 +24,7 @@ export function add_watch_command(): Command {
   );
 
   command.action(async (config: string, options: { force: boolean }) => {
+    const timeout_id = check_update_silently();
     if (config) {
       await create_syncer(config, settings.configs[config]).watch({ should_force: options.force });
     } else {
@@ -30,6 +32,7 @@ export function add_watch_command(): Command {
         await create_syncer(config, settings.configs[config]).watch({ should_force: options.force });
       }
     }
+    clearTimeout(timeout_id);
   });
   return command;
 }

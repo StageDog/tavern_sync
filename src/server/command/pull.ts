@@ -1,4 +1,5 @@
 import { add_configs_to_command } from '@server/component/argument';
+import { check_update_silently } from '@server/component/check_update';
 import { Syncer_interface } from '@server/syncer/interface';
 
 import { Command } from 'commander';
@@ -21,7 +22,9 @@ export function add_pull_command(): Command {
 
   command.action(
     async (syncer: Syncer_interface, options: { language: 'zh' | 'en'; inline: boolean; force: boolean }) => {
+      const timeout_id = check_update_silently();
       await syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force });
+      clearTimeout(timeout_id);
     },
   );
   return command;
