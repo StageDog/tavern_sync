@@ -56014,7 +56014,7 @@ class Preset_syncer extends Syncer_interface {
         const handle_placeholder_id = (prompts) => {
             prompts.forEach(prompt => {
                 if (lodash_default().includes(prompt_placeholder_ids, prompt.id)) {
-                    lodash_default().set(prompt, 'id', lodash_default().snakeCase(prompt.id));
+                    lodash_default().set(prompt, 'id', lodash_default().camelCase(prompt.id));
                 }
             });
         };
