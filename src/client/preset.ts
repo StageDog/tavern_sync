@@ -16,7 +16,6 @@ export function register_preset() {
     console.info(`[TavernSync] 收到提取预设 '${data.name}' 的请求`);
     try {
       const preset = getPreset(getLoadedPresetName() === data.name ? 'in_use' : data.name);
-      console.info(preset);
       callback(preset);
     } catch (err) {
       const error = err as Error;
