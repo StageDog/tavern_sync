@@ -86,7 +86,7 @@ export const Preset = z
             !_.includes(
               ['Main Prompt', 'Auxiliary Prompt', 'Post-History Instructions', 'Enhance Definitions'],
               prompt.name,
-            ),
+            ) && !_.includes(prompt_placeholder_ids, prompt.id),
         ),
       ),
 
