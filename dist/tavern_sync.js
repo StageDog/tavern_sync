@@ -53207,8 +53207,7 @@ function get_settings() {
 
 
 function beauingfy_configs() {
-    return `
-可用的配置有:
+    return `可用的配置有:
 ${Object.entries(get_settings().configs)
         .map(([name, value]) => `- (${_.invert(zh_to_en_map)[value.type]}) ${name}`)
         .join('\n')}`;
@@ -55047,7 +55046,12 @@ async function close_server() {
 ;// ./src/server/util/exit_on_error.ts
 
 function exit_on_error(error) {
-    console.error(error);
+    if (error instanceof Error) {
+        console.error(error.message);
+    }
+    else {
+        console.error(error);
+    }
     (0,external_node_process_.exit)(1);
 }
 
@@ -56659,7 +56663,74 @@ function add_configs_to_command(command) {
     return command;
 }
 
+;// ./src/server/component/check_update.ts
+var check_update_filename = __webpack_fileURLToPath__(import.meta.url);
+
+
+
+
+async function download_latest() {
+    const urls = [
+        'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync.js',
+        'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
+        'https://fastly.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
+        'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
+    ];
+    const erorr_data = {};
+    const controller = new AbortController();
+    const timeout_id = lodash_default().delay(() => controller.abort(), 5000);
+    const fetches = urls.map(async (url) => {
+        try {
+            const response = await fetch(url, { signal: controller.signal });
+            if (response.ok) {
+                return { url, content: await response.text(), error: null };
+            }
+            else {
+                return { url, content: null, error: `HTTP ${response.status} ${response.statusText}` };
+            }
+        }
+        catch (error) {
+            return { url, content: null, error: error.message };
+        }
+    });
+    const results = await Promise.all(fetches);
+    const [success_results, failed_results] = lodash_default().partition(results, result => result.content !== null);
+    clearTimeout(timeout_id);
+    for (const result of failed_results) {
+        lodash_default().set(erorr_data, [result.url], result.error);
+    }
+    if (success_results.length > 0) {
+        return lodash_default().sortBy(success_results, result => urls.indexOf(result.url))[0].content;
+    }
+    throw Error(dist.stringify({ 无法获取最新版脚本: erorr_data }));
+}
+async function check_update() {
+    const current_content = (0,external_node_fs_.readFileSync)(check_update_filename, 'utf8');
+    const remote_content = await download_latest();
+    if (current_content === remote_content) {
+        return null;
+    }
+    return remote_content;
+}
+function check_update_silently() {
+    let timeout_id;
+    const timeout_promise = new Promise(resolve => {
+        timeout_id = lodash_default().delay(() => resolve(null), 7000);
+    });
+    Promise.race([check_update(), timeout_promise]).then(result => {
+        if (result !== null) {
+            console.info(dist_dedent(`
+          ******************************************************
+          发现新版本，请运行 \`node tavern_sync.js update\` 更新
+          ******************************************************
+        `));
+        }
+    });
+    return timeout_id;
+}
+
 ;// ./src/server/command/pull.ts
+
 
 
 function add_pull_command() {
@@ -56669,7 +56740,9 @@ function add_pull_command() {
     command.option('-i, --inline', '内嵌提示词: 如果酒馆中有新增条目, 则该条目的提示词内容应该内嵌在配置文件中, 而不是拆成外链提示词文件', false);
     command.option('-f, --force', '强制拉取: 如果酒馆中的条目名称或数量与本地中的不一致, 将会覆盖本地文件中的内容', false);
     command.action(async (syncer, options) => {
+        const timeout_id = check_update_silently();
         await syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force });
+        clearTimeout(timeout_id);
     });
     return command;
 }
@@ -56677,12 +56750,15 @@ function add_pull_command() {
 ;// ./src/server/command/push.ts
 
 
+
 function add_push_command() {
     const command = new Command('push').description('将本地内容推送到酒馆');
     add_configs_to_command(command);
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
     command.action(async (syncer, options) => {
+        const timeout_id = check_update_silently();
         await syncer.push({ should_force: options.force });
+        clearTimeout(timeout_id);
     });
     return command;
 }
@@ -56693,63 +56769,37 @@ var update_filename = __webpack_fileURLToPath__(import.meta.url);
 
 
 
-async function download_latest() {
-    const urls = [
-        'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync.js',
-        'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
-        'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
-    ];
-    const erorr_data = {};
-    for (const url of urls) {
-        try {
-            const response = await fetch(url);
-            if (response.ok) {
-                return await response.text();
-            }
-            else {
-                _.set(erorr_data, url, `HTTP ${response.status} ${response.statusText}`);
-            }
-        }
-        catch (error) {
-            _.set(erorr_data, url, error.message);
-        }
-    }
-    exit_on_error(dist.stringify({ 无法获取最新版脚本: erorr_data }));
-}
 function add_update_command() {
     const command = new Command('update').description('检查并更新本同步脚本');
     command.action(async () => {
         console.info('正在检查更新...');
         try {
-            const current_content = (0,external_node_fs_.readFileSync)(update_filename, 'utf8');
-            const remote_content = await download_latest();
-            if (current_content === remote_content) {
+            const result = await check_update();
+            if (result === null) {
                 console.info('当前版本已是最新版本，无需更新');
                 return;
             }
-            console.info('发现新版本，正在更新...');
             const backup_path = `${update_filename}.backup`;
             try {
-                const currentContent = (0,external_node_fs_.readFileSync)(update_filename, 'utf8');
-                (0,external_node_fs_.writeFileSync)(backup_path, currentContent);
+                const current_content = (0,external_node_fs_.readFileSync)(update_filename, 'utf8');
+                (0,external_node_fs_.writeFileSync)(backup_path, current_content);
                 console.info(`已备份当前版本到: ${backup_path}`);
             }
             catch (error) {
                 console.warn('无法创建备份文件，继续更新过程');
             }
-            (0,external_node_fs_.writeFileSync)(update_filename, remote_content);
+            (0,external_node_fs_.writeFileSync)(update_filename, result);
             console.info('更新成功! 请重新启动脚本以使用新版本');
         }
-        catch (err) {
-            const error = err;
-            console.error('更新失败: ', error.message);
-            process.exit(1);
+        catch (error) {
+            exit_on_error(error);
         }
     });
     return command;
 }
 
 ;// ./src/server/command/watch.ts
+
 
 
 
@@ -56765,6 +56815,7 @@ function add_watch_command() {
     }));
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
     command.action(async (config, options) => {
+        const timeout_id = check_update_silently();
         if (config) {
             await create_syncer(config, settings.configs[config]).watch({ should_force: options.force });
         }
@@ -56773,6 +56824,7 @@ function add_watch_command() {
                 await create_syncer(config, settings.configs[config]).watch({ should_force: options.force });
             }
         }
+        clearTimeout(timeout_id);
     });
     return command;
 }
