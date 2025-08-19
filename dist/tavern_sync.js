@@ -55558,7 +55558,7 @@ const preset_Preset = object({
     }),
     prompts: array(preset_Prompt),
     prompts_unused: array(preset_Prompt)
-        .transform(prompts => prompts.filter(prompt => !lodash_default().includes(['Main Prompt', 'Auxiliary Prompt', 'Post-History Instructions', 'Enhance Definitions'], prompt.name))),
+        .transform(prompts => prompts.filter(prompt => !lodash_default().includes(['Main Prompt', 'Auxiliary Prompt', 'Post-History Instructions', 'Enhance Definitions'], prompt.name) && !lodash_default().includes(prompt_placeholder_ids, prompt.id))),
     extensions: record(schemas_string(), any()).optional(),
 })
     .transform(data => {
