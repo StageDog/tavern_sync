@@ -56692,13 +56692,29 @@ var update_filename = __webpack_fileURLToPath__(import.meta.url);
 
 
 
+
 async function download_latest() {
-    const url = 'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js';
-    const response = await fetch(url);
-    if (!response.ok) {
-        exit_on_error(`无法获取远程文件: HTTP ${response.status} ${response.statusText}`);
+    const urls = [
+        'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync.js',
+        'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
+        'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
+    ];
+    const erorr_data = {};
+    for (const url of urls) {
+        try {
+            const response = await fetch(url);
+            if (response.ok) {
+                return await response.text();
+            }
+            else {
+                _.set(erorr_data, url, `HTTP ${response.status} ${response.statusText}`);
+            }
+        }
+        catch (error) {
+            _.set(erorr_data, url, error.message);
+        }
     }
-    return response.text();
+    exit_on_error(dist.stringify({ 无法获取最新版脚本: erorr_data }));
 }
 function add_update_command() {
     const command = new Command('update').description('检查并更新本同步脚本');
