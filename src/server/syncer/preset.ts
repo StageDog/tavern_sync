@@ -160,7 +160,7 @@ export class Preset_syncer extends Syncer_interface {
     const handle_placeholder_id = (prompts: Preset_en['prompts']) => {
       prompts.forEach(prompt => {
         if (_.includes(prompt_placeholder_ids, prompt.id)) {
-          _.set(prompt, 'id', _.snakeCase(prompt.id));
+          _.set(prompt, 'id', _.camelCase(prompt.id));
         }
       });
     };
