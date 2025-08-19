@@ -90,7 +90,7 @@ export const Preset = z
         ),
       ),
 
-    extensions: z.record(z.string(), z.any()),
+    extensions: z.record(z.string(), z.any()).optional(),
   })
   .transform(data => {
     if (data.settings.reply_count === 1) {
