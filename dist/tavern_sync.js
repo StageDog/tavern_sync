@@ -55101,7 +55101,11 @@ class Syncer_interface {
         if (!(0,external_node_fs_.existsSync)(this.file)) {
             return `配置文件 '${this.file}' 不存在`;
         }
-        const data = dist.parse((0,external_node_fs_.readFileSync)(this.file, 'utf-8'));
+        const content = (0,external_node_fs_.readFileSync)(this.file, 'utf-8');
+        if (!/\S/.test(content)) {
+            return `配置文件 '${this.file}' 为空`;
+        }
+        const data = dist.parse(content);
         return this.is_zh(data) ? translate(this.zh_type.parse(data), this.zh_to_en_map) : this.en_type.parse(data);
     }
     check_safe(local_data, tavern_data) {
