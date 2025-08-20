@@ -53,10 +53,14 @@ export async function check_update(): Promise<string | null> {
   return remote_content;
 }
 
-export function check_update_silently(): number {
-  let timeout_id: number;
+export function check_update_silently(): () => void {
+  let timeout_resolve: () => void;
   const timeout_promise = new Promise<null>(resolve => {
-    timeout_id = _.delay(() => resolve(null), 7000);
+    const timeout_id = _.delay(() => resolve(null), 7000);
+    timeout_resolve = () => {
+      clearTimeout(timeout_id);
+      resolve(null);
+    };
   });
 
   Promise.race([check_update(), timeout_promise]).then(result => {
@@ -71,5 +75,5 @@ export function check_update_silently(): number {
     }
   });
 
-  return timeout_id!;
+  return timeout_resolve!;
 }

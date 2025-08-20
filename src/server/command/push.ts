@@ -15,9 +15,9 @@ export function add_push_command(): Command {
   );
 
   command.action(async (syncers: Syncer_interface[], options: { force: boolean }) => {
-    const timeout_id = check_update_silently();
+    const stop_check = check_update_silently();
     await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force })));
-    clearTimeout(timeout_id);
+    stop_check();
   });
   return command;
 }

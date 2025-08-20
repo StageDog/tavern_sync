@@ -22,13 +22,13 @@ export function add_pull_command(): Command {
 
   command.action(
     async (syncers: Syncer_interface[], options: { language: 'zh' | 'en'; inline: boolean; force: boolean }) => {
-      const timeout_id = check_update_silently();
+      const stop_check = check_update_silently();
       await Promise.all(
         syncers.map(syncer =>
           syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force }),
         ),
       );
-      clearTimeout(timeout_id);
+      stop_check();
     },
   );
   return command;
