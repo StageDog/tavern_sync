@@ -75,7 +75,11 @@ export abstract class Syncer_interface {
     if (!existsSync(this.file)) {
       return `配置文件 '${this.file}' 不存在`;
     }
-    const data = YAML.parse(readFileSync(this.file, 'utf-8'));
+    const content = readFileSync(this.file, 'utf-8');
+    if (!/\S/.test(content)) {
+      return `配置文件 '${this.file}' 为空`;
+    }
+    const data = YAML.parse(content);
     return this.is_zh(data) ? translate(this.zh_type.parse(data), this.zh_to_en_map) : this.en_type.parse(data);
   }
 
