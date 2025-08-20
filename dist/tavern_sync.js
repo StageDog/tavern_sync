@@ -53207,7 +53207,7 @@ function get_settings() {
 
 
 function beauingfy_configs() {
-    return `可用的配置有:
+    return `可用的配置有: (使用 'all' 或 '所有' 来选择所有配置)
 ${Object.entries(get_settings().configs)
         .map(([name, value]) => `- (${_.invert(zh_to_en_map)[value.type]}) ${name}`)
         .join('\n')}`;
@@ -56646,7 +56646,7 @@ function create_syncer(config_name, config) {
     return new Preset_syncer(config_name, config.name, config.file);
 }
 
-;// ./src/server/component/argument.ts
+;// ./src/server/component/add_configs_to_command.ts
 
 
 
@@ -56654,11 +56654,16 @@ function create_syncer(config_name, config) {
 
 function add_configs_to_command(command) {
     const settings = get_settings();
-    command.addArgument(new Argument('<config>', '配置名称').choices(Object.keys(settings.configs)).argParser(value => {
+    command.addArgument(new Argument('<config>', `配置名称, 填入 'all' 或 '所有' 则选择所有配置`)
+        .choices(Object.keys(settings.configs))
+        .argParser(value => {
+        if (['all', '所有'].includes(value)) {
+            return Object.keys(settings.configs).map(config => create_syncer(config, settings.configs[config]));
+        }
         if (!(value in settings.configs)) {
             exit_on_error(`配置 '${value}' 不存在, ${beauingfy_configs()}`);
         }
-        return create_syncer(value, settings.configs[value]);
+        return [create_syncer(value, settings.configs[value])];
     }));
     return command;
 }
@@ -56739,9 +56744,9 @@ function add_pull_command() {
     command.option('-l, --language <language>', '要使用的语言', 'zh');
     command.option('-i, --inline', '内嵌提示词: 如果酒馆中有新增条目, 则该条目的提示词内容应该内嵌在配置文件中, 而不是拆成外链提示词文件', false);
     command.option('-f, --force', '强制拉取: 如果酒馆中的条目名称或数量与本地中的不一致, 将会覆盖本地文件中的内容', false);
-    command.action(async (syncer, options) => {
+    command.action(async (syncers, options) => {
         const timeout_id = check_update_silently();
-        await syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force });
+        await Promise.all(syncers.map(syncer => syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force })));
         clearTimeout(timeout_id);
     });
     return command;
@@ -56755,9 +56760,9 @@ function add_push_command() {
     const command = new Command('push').description('将本地内容推送到酒馆');
     add_configs_to_command(command);
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
-    command.action(async (syncer, options) => {
+    command.action(async (syncers, options) => {
         const timeout_id = check_update_silently();
-        await syncer.push({ should_force: options.force });
+        await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force })));
         clearTimeout(timeout_id);
     });
     return command;
@@ -56802,28 +56807,13 @@ function add_update_command() {
 
 
 
-
-
-
 function add_watch_command() {
     const command = new Command('watch').description('监听本地内容的变化并实时推送到酒馆');
-    const settings = get_settings();
-    command.addArgument(new Argument('[config]', '配置名称, 不填则监听所有配置').choices(Object.keys(settings.configs)).argParser(value => {
-        if (!(value in settings.configs)) {
-            exit_on_error(`配置 '${value}' 不存在, ${beauingfy_configs()}`);
-        }
-    }));
+    add_configs_to_command(command);
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
-    command.action(async (config, options) => {
+    command.action(async (syncers, options) => {
         const timeout_id = check_update_silently();
-        if (config) {
-            await create_syncer(config, settings.configs[config]).watch({ should_force: options.force });
-        }
-        else {
-            for (const config of Object.keys(settings.configs)) {
-                await create_syncer(config, settings.configs[config]).watch({ should_force: options.force });
-            }
-        }
+        await Promise.all(syncers.map(syncer => syncer.watch({ should_force: options.force })));
         clearTimeout(timeout_id);
     });
     return command;
