@@ -56718,9 +56718,13 @@ async function check_update() {
     return remote_content;
 }
 function check_update_silently() {
-    let timeout_id;
+    let timeout_resolve;
     const timeout_promise = new Promise(resolve => {
-        timeout_id = lodash_default().delay(() => resolve(null), 7000);
+        const timeout_id = lodash_default().delay(() => resolve(null), 7000);
+        timeout_resolve = () => {
+            clearTimeout(timeout_id);
+            resolve(null);
+        };
     });
     Promise.race([check_update(), timeout_promise]).then(result => {
         if (result !== null) {
@@ -56731,7 +56735,7 @@ function check_update_silently() {
         `));
         }
     });
-    return timeout_id;
+    return timeout_resolve;
 }
 
 ;// ./src/server/command/pull.ts
@@ -56745,9 +56749,9 @@ function add_pull_command() {
     command.option('-i, --inline', '内嵌提示词: 如果酒馆中有新增条目, 则该条目的提示词内容应该内嵌在配置文件中, 而不是拆成外链提示词文件', false);
     command.option('-f, --force', '强制拉取: 如果酒馆中的条目名称或数量与本地中的不一致, 将会覆盖本地文件中的内容', false);
     command.action(async (syncers, options) => {
-        const timeout_id = check_update_silently();
+        const stop_check = check_update_silently();
         await Promise.all(syncers.map(syncer => syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force })));
-        clearTimeout(timeout_id);
+        stop_check();
     });
     return command;
 }
@@ -56761,9 +56765,9 @@ function add_push_command() {
     add_configs_to_command(command);
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
     command.action(async (syncers, options) => {
-        const timeout_id = check_update_silently();
+        const stop_check = check_update_silently();
         await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force })));
-        clearTimeout(timeout_id);
+        stop_check();
     });
     return command;
 }
@@ -56812,9 +56816,9 @@ function add_watch_command() {
     add_configs_to_command(command);
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
     command.action(async (syncers, options) => {
-        const timeout_id = check_update_silently();
+        const stop_check = check_update_silently();
         await Promise.all(syncers.map(syncer => syncer.watch({ should_force: options.force })));
-        clearTimeout(timeout_id);
+        stop_check();
     });
     return command;
 }
