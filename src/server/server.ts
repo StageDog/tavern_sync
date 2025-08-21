@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { exit } from 'node:process';
 import { Server, Socket } from 'socket.io';
 
 const port = 6620;
@@ -9,7 +10,9 @@ export async function wait_socket(): Promise<Socket> {
   if (!io) {
     const server = createServer();
     server.listen(port, () => {
-      console.info(`酒馆同步脚本服务器正运行在端口: ${port}, 请打开酒馆网页, 等待脚本连接... (如果等待时间超过 10 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`);
+      console.info(
+        `酒馆同步脚本服务器正运行在端口: ${port}, 请打开酒馆网页, 等待脚本连接... (如果等待时间超过 10 秒, 请刷新酒馆网页或检查酒馆助手脚本库里的脚本是否开启)`,
+      );
     });
 
     io = new Server(server, {
@@ -45,4 +48,5 @@ export async function wait_socket(): Promise<Socket> {
 
 export async function close_server() {
   await io?.close();
+  exit(0);
 }

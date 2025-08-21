@@ -7,7 +7,11 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/dist/index.js",
+      "program": "${workspaceFolder}/dist/tavern_sync.js",
+      "args": [
+        "pull",
+        "恩赐之主"
+      ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "internalConsoleOptions": "neverOpen"

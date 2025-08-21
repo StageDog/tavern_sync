@@ -1,6 +1,6 @@
 import { is_collection_file } from '@server/component/collection_file';
 import { watch_on } from '@server/component/watch_on';
-import { close_server, wait_socket } from '@server/server';
+import { wait_socket } from '@server/server';
 import { exit_on_error } from '@server/util/exit_on_error';
 import { translate } from '@server/util/translate';
 import { write_file_recursively } from '@server/util/write_file_recursively';
@@ -163,7 +163,6 @@ ${this.do_beautify_config(tavern_data, language)}`;
       write_file_recursively(this.dir, path, content);
     });
     console.info(`成功将${this.type_zh} '${this.name}' 拉取到本地文件 '${this.file}' 中`);
-    close_server();
   }
 
   protected abstract do_push(local_data: Record<string, any>): {
@@ -211,7 +210,6 @@ ${this.do_beautify_config(tavern_data, language)}`;
       exit_on_error(error.message);
     }
     console.info(`成功将${this.type_zh} '${this.name}' 在 '${this.file}' 中的本地内容推送到酒馆`);
-    close_server();
   }
 
   protected abstract do_watch(local_data: Record<string, any>): string[];

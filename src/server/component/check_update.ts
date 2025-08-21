@@ -13,12 +13,9 @@ async function download_latest(): Promise<string> {
 
   const erorr_data: Record<string, string> = {};
 
-  const controller = new AbortController();
-  const timeout_id = _.delay(() => controller.abort(), 5000);
-
   const fetches = urls.map(async url => {
     try {
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
       if (response.ok) {
         return { url, content: await response.text(), error: null };
       } else {
@@ -31,7 +28,6 @@ async function download_latest(): Promise<string> {
 
   const results = await Promise.all(fetches);
   const [success_results, failed_results] = _.partition(results, result => result.content !== null);
-  clearTimeout(timeout_id);
 
   for (const result of failed_results) {
     _.set(erorr_data, [result.url], result.error);
@@ -53,17 +49,8 @@ export async function check_update(): Promise<string | null> {
   return remote_content;
 }
 
-export function check_update_silently(): () => void {
-  let timeout_resolve: () => void;
-  const timeout_promise = new Promise<null>(resolve => {
-    const timeout_id = _.delay(() => resolve(null), 7000);
-    timeout_resolve = () => {
-      clearTimeout(timeout_id);
-      resolve(null);
-    };
-  });
-
-  Promise.race([check_update(), timeout_promise]).then(result => {
+export async function check_update_silently(): Promise<void> {
+  return check_update().then(result => {
     if (result !== null) {
       console.info(
         dedent(`
@@ -74,6 +61,4 @@ export function check_update_silently(): () => void {
       );
     }
   });
-
-  return timeout_resolve!;
 }
