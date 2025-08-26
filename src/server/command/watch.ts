@@ -1,6 +1,5 @@
 import { add_configs_to_command } from '@server/component/add_configs_to_command';
 import { check_update_silently } from '@server/component/check_update';
-import { close_server } from '@server/server';
 import { Syncer_interface } from '@server/syncer/interface';
 
 import { Command } from 'commander';
@@ -18,7 +17,6 @@ export function add_watch_command(): Command {
   command.action(async (syncers: Syncer_interface[], options: { force: boolean }) => {
     check_update_silently();
     await Promise.all(syncers.map(syncer => syncer.watch({ should_force: options.force })));
-    close_server();
   });
   return command;
 }
