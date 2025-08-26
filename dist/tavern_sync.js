@@ -57233,7 +57233,6 @@ function add_update_command() {
 
 
 
-
 function add_watch_command() {
     const command = new Command('watch').description('监听本地内容的变化并实时推送到酒馆');
     add_configs_to_command(command);
@@ -57241,7 +57240,6 @@ function add_watch_command() {
     command.action(async (syncers, options) => {
         check_update_silently();
         await Promise.all(syncers.map(syncer => syncer.watch({ should_force: options.force })));
-        close_server();
     });
     return command;
 }
