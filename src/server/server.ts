@@ -16,6 +16,7 @@ export async function wait_socket(): Promise<Socket> {
     });
 
     io = new Server(server, {
+      maxHttpBufferSize: 1e11,
       cors: {
         origin: '*',
       },
