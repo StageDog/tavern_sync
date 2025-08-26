@@ -47794,7 +47794,7 @@ function write_file_recursively(base, file, data) {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/core.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/core.js
 /** A special constant with type `never` */
 const NEVER = Object.freeze({
     status: "aborted",
@@ -47863,7 +47863,7 @@ function config(newConfig) {
     return globalConfig;
 }
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/regexes.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/regexes.js
 const cuid = /^[cC][^\s-]{8,}$/;
 const cuid2 = /^[0-9a-z]+$/;
 const ulid = /^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$/;
@@ -47992,7 +47992,7 @@ const sha512_hex = /^[0-9a-fA-F]{128}$/;
 const sha512_base64 = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64(86, "==")));
 const sha512_base64url = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64url(86)));
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/util.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/util.js
 // functions
 function assertEqual(val) {
     return val;
@@ -48593,7 +48593,7 @@ class Class {
     constructor(..._args) { }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/checks.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/checks.js
 // import { $ZodType } from "./schemas.js";
 
 
@@ -49164,7 +49164,7 @@ const $ZodCheckOverwrite = /*@__PURE__*/ $constructor("$ZodCheckOverwrite", (ins
     };
 });
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/doc.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/doc.js
 class Doc {
     constructor(args = []) {
         this.content = [];
@@ -49201,7 +49201,7 @@ class Doc {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/errors.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/errors.js
 
 
 const initializer = (inst, def) => {
@@ -49393,7 +49393,7 @@ function prettifyError(error) {
     return lines.join("\n");
 }
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/parse.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/parse.js
 
 
 
@@ -49488,14 +49488,14 @@ const _safeDecodeAsync = (_Err) => async (schema, value, _ctx) => {
 };
 const safeDecodeAsync = /* @__PURE__*/ _safeDecodeAsync($ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/versions.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/versions.js
 const version = {
     major: 4,
     minor: 1,
-    patch: 0,
+    patch: 3,
 };
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/schemas.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/schemas.js
 
 
 
@@ -51433,7 +51433,7 @@ function handleRefineResult(result, payload, input, inst) {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/registries.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/registries.js
 const $output = Symbol("ZodOutput");
 const $input = Symbol("ZodInput");
 class $ZodRegistry {
@@ -51487,7 +51487,7 @@ function registry() {
 }
 const globalRegistry = /*@__PURE__*/ registry();
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/core/api.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/api.js
 
 
 
@@ -52410,7 +52410,7 @@ function _stringFormat(Class, format, fnOrRegex, _params = {}) {
     return inst;
 }
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/classic/iso.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/iso.js
 
 
 const ZodISODateTime = /*@__PURE__*/ $constructor("ZodISODateTime", (inst, def) => {
@@ -52442,7 +52442,7 @@ function iso_duration(params) {
     return _isoDuration(ZodISODuration, params);
 }
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/classic/errors.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/errors.js
 
 
 
@@ -52486,30 +52486,30 @@ const errors_initializer = (inst, issues) => {
     // });
 };
 const ZodError = $constructor("ZodError", errors_initializer);
-const errors_ZodRealError = $constructor("ZodError", errors_initializer, {
+const ZodRealError = $constructor("ZodError", errors_initializer, {
     Parent: Error,
 });
 // /** @deprecated Use `z.core.$ZodErrorMapCtx` instead. */
 // export type ErrorMapCtx = core.$ZodErrorMapCtx;
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/classic/parse.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/parse.js
 
 
-const classic_parse_parse = /* @__PURE__ */ _parse(errors_ZodRealError);
-const classic_parse_parseAsync = /* @__PURE__ */ _parseAsync(errors_ZodRealError);
-const parse_safeParse = /* @__PURE__ */ _safeParse(errors_ZodRealError);
-const parse_safeParseAsync = /* @__PURE__ */ _safeParseAsync(errors_ZodRealError);
+const classic_parse_parse = /* @__PURE__ */ _parse(ZodRealError);
+const classic_parse_parseAsync = /* @__PURE__ */ _parseAsync(ZodRealError);
+const parse_safeParse = /* @__PURE__ */ _safeParse(ZodRealError);
+const parse_safeParseAsync = /* @__PURE__ */ _safeParseAsync(ZodRealError);
 // Codec functions
-const parse_encode = /* @__PURE__ */ (/* unused pure expression or super */ null && (core._encode(ZodRealError)));
-const parse_decode = /* @__PURE__ */ (/* unused pure expression or super */ null && (core._decode(ZodRealError)));
-const parse_encodeAsync = /* @__PURE__ */ (/* unused pure expression or super */ null && (core._encodeAsync(ZodRealError)));
-const parse_decodeAsync = /* @__PURE__ */ (/* unused pure expression or super */ null && (core._decodeAsync(ZodRealError)));
-const parse_safeEncode = /* @__PURE__ */ (/* unused pure expression or super */ null && (core._safeEncode(ZodRealError)));
-const parse_safeDecode = /* @__PURE__ */ (/* unused pure expression or super */ null && (core._safeDecode(ZodRealError)));
-const parse_safeEncodeAsync = /* @__PURE__ */ (/* unused pure expression or super */ null && (core._safeEncodeAsync(ZodRealError)));
-const parse_safeDecodeAsync = /* @__PURE__ */ (/* unused pure expression or super */ null && (core._safeDecodeAsync(ZodRealError)));
+const parse_encode = /* @__PURE__ */ _encode(ZodRealError);
+const parse_decode = /* @__PURE__ */ _decode(ZodRealError);
+const parse_encodeAsync = /* @__PURE__ */ _encodeAsync(ZodRealError);
+const parse_decodeAsync = /* @__PURE__ */ _decodeAsync(ZodRealError);
+const parse_safeEncode = /* @__PURE__ */ _safeEncode(ZodRealError);
+const parse_safeDecode = /* @__PURE__ */ _safeDecode(ZodRealError);
+const parse_safeEncodeAsync = /* @__PURE__ */ _safeEncodeAsync(ZodRealError);
+const parse_safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/classic/schemas.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/schemas.js
 
 
 
@@ -52544,6 +52544,15 @@ const ZodType = /*@__PURE__*/ $constructor("ZodType", (inst, def) => {
     inst.parseAsync = async (data, params) => classic_parse_parseAsync(inst, data, params, { callee: inst.parseAsync });
     inst.safeParseAsync = async (data, params) => parse_safeParseAsync(inst, data, params);
     inst.spa = inst.safeParseAsync;
+    // encoding/decoding
+    inst.encode = (data, params) => parse_encode(inst, data, params);
+    inst.decode = (data, params) => parse_decode(inst, data, params);
+    inst.encodeAsync = async (data, params) => parse_encodeAsync(inst, data, params);
+    inst.decodeAsync = async (data, params) => parse_decodeAsync(inst, data, params);
+    inst.safeEncode = (data, params) => parse_safeEncode(inst, data, params);
+    inst.safeDecode = (data, params) => parse_safeDecode(inst, data, params);
+    inst.safeEncodeAsync = async (data, params) => parse_safeEncodeAsync(inst, data, params);
+    inst.safeDecodeAsync = async (data, params) => parse_safeDecodeAsync(inst, data, params);
     // refinements
     inst.refine = (check, params) => inst.check(refine(check, params));
     inst.superRefine = (refinement) => inst.check(superRefine(refinement));
@@ -55928,16 +55937,6 @@ const Preset = object({
                 message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
             });
         }
-        const disabled_ids = lodash_default()(data)
-            .filter(prompt => lodash_default().includes(prompt_placeholder_ids, prompt.id) && prompt.enabled === false)
-            .map(prompt => lodash_default().get(prompt, 'id'))
-            .value();
-        if (disabled_ids.length > 0) {
-            context.addIssue({
-                code: 'custom',
-                message: `占位符提示词不应该不使用: ${disabled_ids.join(', ')}`,
-            });
-        }
     })
         .describe('提示词列表里已经添加的提示词'),
     prompts_unused: array(Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
@@ -56331,16 +56330,6 @@ const preset_zh_Preset = object({
             context.addIssue({
                 code: 'custom',
                 message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
-            });
-        }
-        const disabled_ids = lodash_default()(data)
-            .filter(prompt => lodash_default().includes(preset_zh_prompt_placeholder_ids, prompt.id) && prompt.启用 === false)
-            .map(prompt => lodash_default().get(prompt, 'id'))
-            .value();
-        if (disabled_ids.length > 0) {
-            context.addIssue({
-                code: 'custom',
-                message: `占位符提示词不应该不使用: ${disabled_ids.join(', ')}`,
             });
         }
     })
@@ -57257,7 +57246,7 @@ function add_watch_command() {
     return command;
 }
 
-;// ./node_modules/.pnpm/zod@4.1.0/node_modules/zod/v4/locales/zh-CN.js
+;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/locales/zh-CN.js
 
 const error = () => {
     const Sizable = {

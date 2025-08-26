@@ -238,17 +238,6 @@ export const Preset = z.object({
           message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
         });
       }
-
-      const disabled_ids = _(data)
-        .filter(prompt => _.includes(prompt_placeholder_ids, prompt.id) && prompt.enabled === false)
-        .map(prompt => _.get(prompt, 'id'))
-        .value();
-      if (disabled_ids.length > 0) {
-        context.addIssue({
-          code: 'custom',
-          message: `占位符提示词不应该不使用: ${disabled_ids.join(', ')}`,
-        });
-      }
     })
     .describe('提示词列表里已经添加的提示词'),
   prompts_unused: z.array(Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
