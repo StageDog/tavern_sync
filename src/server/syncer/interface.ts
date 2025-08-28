@@ -79,7 +79,7 @@ export abstract class Syncer_interface {
     if (!/\S/.test(content)) {
       return `配置文件 '${this.file}' 为空`;
     }
-    const data = YAML.parse(content);
+    const data = YAML.parse(content, { merge: true });
     return this.is_zh(data) ? translate(this.zh_type.parse(data), this.zh_to_en_map) : this.en_type.parse(data);
   }
 

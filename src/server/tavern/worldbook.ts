@@ -95,4 +95,7 @@ export type Worldbook = z.infer<typeof Worldbook>;
 export const Worldbook = z
   .array(Worldbook_entry)
   .min(1)
-  .transform(entries => ({ entries }));
+  .transform(entries => ({
+    anchors: {},
+    entries,
+  }));
