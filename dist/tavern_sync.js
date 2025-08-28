@@ -47794,7 +47794,7 @@ function write_file_recursively(base, file, data) {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/core.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/core.js
 /** A special constant with type `never` */
 const NEVER = Object.freeze({
     status: "aborted",
@@ -47863,7 +47863,7 @@ function config(newConfig) {
     return globalConfig;
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/regexes.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/regexes.js
 const cuid = /^[cC][^\s-]{8,}$/;
 const cuid2 = /^[0-9a-z]+$/;
 const ulid = /^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$/;
@@ -47992,7 +47992,7 @@ const sha512_hex = /^[0-9a-fA-F]{128}$/;
 const sha512_base64 = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64(86, "==")));
 const sha512_base64url = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64url(86)));
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/util.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/util.js
 // functions
 function assertEqual(val) {
     return val;
@@ -48593,7 +48593,7 @@ class Class {
     constructor(..._args) { }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/checks.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/checks.js
 // import { $ZodType } from "./schemas.js";
 
 
@@ -49164,7 +49164,7 @@ const $ZodCheckOverwrite = /*@__PURE__*/ $constructor("$ZodCheckOverwrite", (ins
     };
 });
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/doc.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/doc.js
 class Doc {
     constructor(args = []) {
         this.content = [];
@@ -49201,7 +49201,7 @@ class Doc {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/errors.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/errors.js
 
 
 const initializer = (inst, def) => {
@@ -49393,7 +49393,7 @@ function prettifyError(error) {
     return lines.join("\n");
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/parse.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/parse.js
 
 
 
@@ -49488,14 +49488,14 @@ const _safeDecodeAsync = (_Err) => async (schema, value, _ctx) => {
 };
 const safeDecodeAsync = /* @__PURE__*/ _safeDecodeAsync($ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/versions.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/versions.js
 const version = {
     major: 4,
     minor: 1,
-    patch: 3,
+    patch: 4,
 };
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/schemas.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/schemas.js
 
 
 
@@ -50118,7 +50118,7 @@ const $ZodNever = /*@__PURE__*/ $constructor("$ZodNever", (inst, def) => {
         return payload;
     };
 });
-const $ZodVoid = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodVoid", (inst, def) => {
+const $ZodVoid = /*@__PURE__*/ $constructor("$ZodVoid", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, _ctx) => {
         const input = payload.value;
@@ -50132,7 +50132,7 @@ const $ZodVoid = /*@__PURE__*/ (/* unused pure expression or super */ null && (c
         });
         return payload;
     };
-})));
+});
 const $ZodDate = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodDate", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, _ctx) => {
@@ -51433,7 +51433,7 @@ function handleRefineResult(result, payload, input, inst) {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/registries.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/registries.js
 const $output = Symbol("ZodOutput");
 const $input = Symbol("ZodInput");
 class $ZodRegistry {
@@ -51487,7 +51487,7 @@ function registry() {
 }
 const globalRegistry = /*@__PURE__*/ registry();
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/api.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/api.js
 
 
 
@@ -51889,7 +51889,7 @@ function _never(Class, params) {
 function _void(Class, params) {
     return new Class({
         type: "void",
-        ...util.normalizeParams(params),
+        ...normalizeParams(params),
     });
 }
 function _date(Class, params) {
@@ -52410,7 +52410,7 @@ function _stringFormat(Class, format, fnOrRegex, _params = {}) {
     return inst;
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/iso.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/classic/iso.js
 
 
 const ZodISODateTime = /*@__PURE__*/ $constructor("ZodISODateTime", (inst, def) => {
@@ -52442,7 +52442,7 @@ function iso_duration(params) {
     return _isoDuration(ZodISODuration, params);
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/errors.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/classic/errors.js
 
 
 
@@ -52492,7 +52492,7 @@ const ZodRealError = $constructor("ZodError", errors_initializer, {
 // /** @deprecated Use `z.core.$ZodErrorMapCtx` instead. */
 // export type ErrorMapCtx = core.$ZodErrorMapCtx;
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/parse.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/classic/parse.js
 
 
 const classic_parse_parse = /* @__PURE__ */ _parse(ZodRealError);
@@ -52509,7 +52509,7 @@ const parse_safeDecode = /* @__PURE__ */ _safeDecode(ZodRealError);
 const parse_safeEncodeAsync = /* @__PURE__ */ _safeEncodeAsync(ZodRealError);
 const parse_safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/schemas.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/classic/schemas.js
 
 
 
@@ -52988,12 +52988,12 @@ const ZodNever = /*@__PURE__*/ $constructor("ZodNever", (inst, def) => {
 function never(params) {
     return _never(ZodNever, params);
 }
-const ZodVoid = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodVoid", (inst, def) => {
-    core.$ZodVoid.init(inst, def);
+const ZodVoid = /*@__PURE__*/ $constructor("ZodVoid", (inst, def) => {
+    $ZodVoid.init(inst, def);
     ZodType.init(inst, def);
-})));
+});
 function schemas_void(params) {
-    return core._void(ZodVoid, params);
+    return _void(ZodVoid, params);
 }
 
 const ZodDate = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodDate", (inst, def) => {
@@ -55556,7 +55556,7 @@ class Syncer_interface {
         if (!/\S/.test(content)) {
             return `配置文件 '${this.file}' 为空`;
         }
-        const data = dist.parse(content);
+        const data = dist.parse(content, { merge: true });
         return this.is_zh(data) ? translate(this.zh_type.parse(data), this.zh_to_en_map) : this.en_type.parse(data);
     }
     check_safe(local_data, tavern_data) {
@@ -55917,6 +55917,7 @@ const Preset = object({
             .optional()
             .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
     }),
+    anchors: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
     prompts: array(Prompt)
         .superRefine((data, context) => {
         const duplicate_ids = lodash_default()(data)
@@ -55942,6 +55943,10 @@ const Preset = object({
         .describe('提示词列表里已经添加的提示词'),
     prompts_unused: array(Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
     extensions: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设绑定额外数据'),
+})
+    .transform(data => {
+    lodash_default().unset(data, 'anchors');
+    return data;
 });
 
 ;// ./src/server/tavern/preset.ts
@@ -56003,6 +56008,7 @@ const preset_Preset = object({
         character_name_prefix: schemas_enum(['none', 'default', 'content', 'completion']),
         wrap_user_messages_in_quotes: schemas_boolean(),
     }),
+    anchors: schemas_void().transform(() => ({})),
     prompts: array(preset_Prompt),
     prompts_unused: array(preset_Prompt)
         .transform(prompts => prompts.filter(prompt => !lodash_default().includes(['Main Prompt', 'Auxiliary Prompt', 'Post-History Instructions', 'Enhance Definitions'], prompt.name) && !lodash_default().includes(prompt_placeholder_ids, prompt.id))),
@@ -56136,6 +56142,7 @@ const preset_zh_zh_to_en_map = {
     默认: 'default',
     补全对象: 'completion',
     用引号包裹用户消息: 'wrap_user_messages_in_quotes',
+    锚点: 'anchors',
     提示词: 'prompts',
     未添加的提示词: 'prompts_unused',
     扩展字段: 'extensions',
@@ -56312,6 +56319,7 @@ const preset_zh_Preset = object({
             .optional()
             .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
     }),
+    锚点: record(schemas_string(), any()).optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
     提示词: array(preset_zh_Prompt)
         .superRefine((data, context) => {
         const duplicate_ids = lodash_default()(data)
@@ -56336,7 +56344,11 @@ const preset_zh_Preset = object({
     })
         .describe('提示词列表里已经添加的提示词'),
     未添加的提示词: array(preset_zh_Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
-    扩展字段: record(schemas_string(), any()).optional().describe('扩展字段: 用于为预设绑定额外数据'),
+    扩展字段: any().optional().describe('扩展字段: 用于为预设绑定额外数据'),
+})
+    .transform(data => {
+    lodash_default().unset(data, '锚点');
+    return data;
 });
 
 ;// ./src/server/syncer/preset.ts
@@ -56601,7 +56613,10 @@ const Worldbook_entry = object({
 });
 const Worldbook = array(Worldbook_entry)
     .min(1)
-    .transform(entries => ({ entries }));
+    .transform(entries => ({
+    anchors: {},
+    entries,
+}));
 
 ;// ./src/type/worldbook.en.ts
 
@@ -56747,12 +56762,20 @@ const worldbook_en_Worldbook_entry = object({
         }));
     }
 });
-const worldbook_en_Worldbook = object({ entries: array(worldbook_en_Worldbook_entry).min(1) });
+const worldbook_en_Worldbook = object({
+    anchors: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
+    entries: array(worldbook_en_Worldbook_entry).min(1),
+})
+    .transform(data => {
+    _.unset(data, 'anchors');
+    return data;
+});
 
 ;// ./src/type/worldbook.zh.ts
 
 
 const worldbook_zh_zh_to_en_map = {
+    锚点: 'anchors',
     条目: 'entries',
     名称: 'name',
     启用: 'enabled',
@@ -56929,7 +56952,14 @@ const worldbook_zh_Worldbook_entry = object({
         }));
     }
 });
-const worldbook_zh_Worldbook = object({ 条目: array(worldbook_zh_Worldbook_entry).min(1) });
+const worldbook_zh_Worldbook = object({
+    锚点: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
+    条目: array(worldbook_zh_Worldbook_entry).min(1),
+})
+    .transform(data => {
+    _.unset(data, '锚点');
+    return data;
+});
 
 ;// ./src/server/syncer/worldbook.ts
 
@@ -57245,7 +57275,7 @@ function add_watch_command() {
     return command;
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/locales/zh-CN.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/locales/zh-CN.js
 
 const error = () => {
     const Sizable = {

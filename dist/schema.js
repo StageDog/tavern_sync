@@ -17354,7 +17354,7 @@ function createDedent(options) {
 // EXTERNAL MODULE: ./node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/lodash.js
 var lodash = __webpack_require__(935);
 var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/core.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/core.js
 /** A special constant with type `never` */
 const NEVER = Object.freeze({
     status: "aborted",
@@ -17423,7 +17423,7 @@ function config(newConfig) {
     return globalConfig;
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/regexes.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/regexes.js
 const cuid = /^[cC][^\s-]{8,}$/;
 const cuid2 = /^[0-9a-z]+$/;
 const ulid = /^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$/;
@@ -17552,7 +17552,7 @@ const sha512_hex = /^[0-9a-fA-F]{128}$/;
 const sha512_base64 = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64(86, "==")));
 const sha512_base64url = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64url(86)));
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/util.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/util.js
 // functions
 function assertEqual(val) {
     return val;
@@ -18153,7 +18153,7 @@ class Class {
     constructor(..._args) { }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/checks.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/checks.js
 // import { $ZodType } from "./schemas.js";
 
 
@@ -18724,7 +18724,7 @@ const $ZodCheckOverwrite = /*@__PURE__*/ $constructor("$ZodCheckOverwrite", (ins
     };
 });
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/doc.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/doc.js
 class Doc {
     constructor(args = []) {
         this.content = [];
@@ -18761,7 +18761,7 @@ class Doc {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/errors.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/errors.js
 
 
 const initializer = (inst, def) => {
@@ -18953,7 +18953,7 @@ function prettifyError(error) {
     return lines.join("\n");
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/parse.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/parse.js
 
 
 
@@ -19048,14 +19048,14 @@ const _safeDecodeAsync = (_Err) => async (schema, value, _ctx) => {
 };
 const safeDecodeAsync = /* @__PURE__*/ _safeDecodeAsync($ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/versions.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/versions.js
 const version = {
     major: 4,
     minor: 1,
-    patch: 3,
+    patch: 4,
 };
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/schemas.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/schemas.js
 
 
 
@@ -20993,7 +20993,7 @@ function handleRefineResult(result, payload, input, inst) {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/registries.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/registries.js
 const $output = Symbol("ZodOutput");
 const $input = Symbol("ZodInput");
 class $ZodRegistry {
@@ -21047,7 +21047,7 @@ function registry() {
 }
 const globalRegistry = /*@__PURE__*/ registry();
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/api.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/api.js
 
 
 
@@ -21970,7 +21970,7 @@ function _stringFormat(Class, format, fnOrRegex, _params = {}) {
     return inst;
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/iso.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/classic/iso.js
 
 
 const ZodISODateTime = /*@__PURE__*/ $constructor("ZodISODateTime", (inst, def) => {
@@ -22002,7 +22002,7 @@ function iso_duration(params) {
     return _isoDuration(ZodISODuration, params);
 }
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/errors.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/classic/errors.js
 
 
 
@@ -22052,7 +22052,7 @@ const ZodRealError = $constructor("ZodError", errors_initializer, {
 // /** @deprecated Use `z.core.$ZodErrorMapCtx` instead. */
 // export type ErrorMapCtx = core.$ZodErrorMapCtx;
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/parse.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/classic/parse.js
 
 
 const classic_parse_parse = /* @__PURE__ */ _parse(ZodRealError);
@@ -22069,7 +22069,7 @@ const parse_safeDecode = /* @__PURE__ */ _safeDecode(ZodRealError);
 const parse_safeEncodeAsync = /* @__PURE__ */ _safeEncodeAsync(ZodRealError);
 const parse_safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/classic/schemas.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/classic/schemas.js
 
 
 
@@ -23294,6 +23294,7 @@ const Preset = object({
             .optional()
             .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
     }),
+    anchors: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
     prompts: array(Prompt)
         .superRefine((data, context) => {
         const duplicate_ids = lodash_default()(data)
@@ -23319,6 +23320,10 @@ const Preset = object({
         .describe('提示词列表里已经添加的提示词'),
     prompts_unused: array(Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
     extensions: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设绑定额外数据'),
+})
+    .transform(data => {
+    lodash_default().unset(data, 'anchors');
+    return data;
 });
 
 ;// ./src/type/preset.zh.ts
@@ -23379,6 +23384,7 @@ const zh_to_en_map = {
     默认: 'default',
     补全对象: 'completion',
     用引号包裹用户消息: 'wrap_user_messages_in_quotes',
+    锚点: 'anchors',
     提示词: 'prompts',
     未添加的提示词: 'prompts_unused',
     扩展字段: 'extensions',
@@ -23555,6 +23561,7 @@ const preset_zh_Preset = object({
             .optional()
             .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
     }),
+    锚点: record(schemas_string(), any()).optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
     提示词: array(preset_zh_Prompt)
         .superRefine((data, context) => {
         const duplicate_ids = lodash_default()(data)
@@ -23579,7 +23586,11 @@ const preset_zh_Preset = object({
     })
         .describe('提示词列表里已经添加的提示词'),
     未添加的提示词: array(preset_zh_Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
-    扩展字段: record(schemas_string(), any()).optional().describe('扩展字段: 用于为预设绑定额外数据'),
+    扩展字段: any().optional().describe('扩展字段: 用于为预设绑定额外数据'),
+})
+    .transform(data => {
+    lodash_default().unset(data, '锚点');
+    return data;
 });
 
 ;// ./src/type/settings.en.ts
@@ -23764,12 +23775,20 @@ const Worldbook_entry = object({
         }));
     }
 });
-const Worldbook = object({ entries: array(Worldbook_entry).min(1) });
+const Worldbook = object({
+    anchors: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
+    entries: array(Worldbook_entry).min(1),
+})
+    .transform(data => {
+    _.unset(data, 'anchors');
+    return data;
+});
 
 ;// ./src/type/worldbook.zh.ts
 
 
 const worldbook_zh_zh_to_en_map = {
+    锚点: 'anchors',
     条目: 'entries',
     名称: 'name',
     启用: 'enabled',
@@ -23946,13 +23965,20 @@ const worldbook_zh_Worldbook_entry = object({
         }));
     }
 });
-const worldbook_zh_Worldbook = object({ 条目: array(worldbook_zh_Worldbook_entry).min(1) });
+const worldbook_zh_Worldbook = object({
+    锚点: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
+    条目: array(worldbook_zh_Worldbook_entry).min(1),
+})
+    .transform(data => {
+    _.unset(data, '锚点');
+    return data;
+});
 
 ;// external "node:fs"
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// external "node:path"
 const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
-;// ./node_modules/.pnpm/zod@4.1.3/node_modules/zod/v4/core/to-json-schema.js
+;// ./node_modules/.pnpm/zod@4.1.4/node_modules/zod/v4/core/to-json-schema.js
 
 
 class JSONSchemaGenerator {
@@ -24109,7 +24135,13 @@ class JSONSchemaGenerator {
                         break;
                     }
                     case "null": {
-                        _json.type = "null";
+                        if (this.target === "openapi-3.0") {
+                            _json.type = "string";
+                            _json.nullable = true;
+                            _json.enum = [null];
+                        }
+                        else
+                            _json.type = "null";
                         break;
                     }
                     case "any": {
@@ -24201,21 +24233,7 @@ class JSONSchemaGenerator {
                             ...params,
                             path: [...params.path, "anyOf", i],
                         }));
-                        if (this.target === "openapi-3.0") {
-                            const nonNull = options.filter((x) => x.type !== "null");
-                            const hasNull = nonNull.length !== options.length;
-                            if (nonNull.length === 1) {
-                                Object.assign(json, nonNull[0]);
-                            }
-                            else {
-                                json.anyOf = nonNull;
-                            }
-                            if (hasNull)
-                                json.nullable = true;
-                        }
-                        else {
-                            json.anyOf = options;
-                        }
+                        json.anyOf = options;
                         break;
                     }
                     case "intersection": {
@@ -24259,7 +24277,7 @@ class JSONSchemaGenerator {
                         }
                         else if (this.target === "openapi-3.0") {
                             json.items = {
-                                anyOf: [...prefixItems],
+                                anyOf: prefixItems,
                             };
                             if (rest) {
                                 json.items.anyOf.push(rest);
@@ -24412,9 +24430,8 @@ class JSONSchemaGenerator {
                     case "nullable": {
                         const inner = this.process(def.innerType, params);
                         if (this.target === "openapi-3.0") {
-                            Object.assign(_json, inner);
-                            _json.nullable = true;
                             result.ref = def.innerType;
+                            _json.nullable = true;
                         }
                         else {
                             _json.anyOf = [inner, { type: "null" }];
