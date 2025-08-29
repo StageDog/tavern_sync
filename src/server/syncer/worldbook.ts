@@ -73,11 +73,11 @@ export class Worldbook_syncer extends Syncer_interface {
 
         const glob_files = glob_file(this.dir, file);
         if (glob_files.length === 0) {
-          file_to_write = file.replace(/(?:\.(?:yaml|md)$|$)/, detect_extension(entry.content!));
-          file_to_set = file.replace(/\.(?:yaml|md)$/, '');
+          file_to_write = file.replace(/\.[^\\/]+$|$/, detect_extension(entry.content!));
+          file_to_set = file.replace(/\.[^\\/]+$/, '');
         } else if (glob_files.length === 1) {
           file_to_write = glob_files[0];
-          file_to_set = relative(this.dir, glob_files[0]);
+            file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
         } else {
           file_to_write = file;
           file_to_set = file;
