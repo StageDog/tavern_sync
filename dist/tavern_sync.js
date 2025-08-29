@@ -53703,17 +53703,6 @@ function parse_collection_file(content) {
         .value();
 }
 
-;// ./src/server/component/extract_file_content.ts
-
-
-function extract_file_content(base, file) {
-    const resolved_path = (0,external_node_path_.resolve)(base, file);
-    if (!(0,external_node_fs_.existsSync)(resolved_path)) {
-        return null;
-    }
-    return (0,external_node_fs_.readFileSync)(resolved_path, 'utf-8');
-}
-
 ;// ./src/server/component/replace_raw_string.ts
 function replace_raw_string(text) {
     return text?.replaceAll(/\s*# :(?=.*$)/gm, '');
@@ -56059,6 +56048,19 @@ function detect_extension(content) {
     return '.md';
 }
 
+;// ./src/server/util/extract_file_content.ts
+
+function extract_file_content(path) {
+    return (0,external_node_fs_.readFileSync)(path, 'utf-8');
+}
+
+;// ./src/server/util/glob_file.ts
+
+
+function glob_file(base, file) {
+    return (0,external_node_fs_.globSync)((0,external_node_path_.resolve)(base, file) + '{.*,}');
+}
+
 ;// ./src/server/util/is_parent.ts
 
 function is_parent(parent_path, possible_child_path) {
@@ -56360,6 +56362,7 @@ const preset_zh_Preset = strictObject({
 
 
 
+
 class Preset_syncer extends Syncer_interface {
     constructor(config_name, name, file) {
         super('preset', lodash_default().invert(zh_to_en_map)['preset'], config_name, name, file, Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, preset_Preset);
@@ -56382,44 +56385,45 @@ class Preset_syncer extends Syncer_interface {
     }
     // TODO: 拆分 component
     do_pull(local_data, tavern_data, { language, should_split }) {
-        const get_prompts_state = (prompts, used) => {
-            return prompts
-                .filter(prompt => !lodash_default().has(prompt, 'id'))
-                .map(prompt => should_split
-                ? {
-                    name: prompt.name,
-                    file: (0,external_node_path_.join)(sanitize_filename(this.config_name), used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name) + detect_extension(prompt.content)),
-                }
-                : { name: prompt.name, content: prompt.content });
-        };
-        const prompts_state = local_data === null
-            ? [
-                ...get_prompts_state(tavern_data.prompts, { used: true }),
-                ...get_prompts_state(tavern_data.prompts_unused, { used: false }),
-            ]
-            : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !lodash_default().has(prompt, 'id'));
         let files = [];
-        const convert_prompts = (prompts, { used }) => {
-            prompts.forEach(prompt => {
-                if (lodash_default().has(prompt, 'id')) {
-                    return;
+        const prompts_state = local_data === null
+            ? []
+            : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !lodash_default().has(prompt, 'id'));
+        const convert_prompts = (prompts, { used }) => prompts.forEach(prompt => {
+            if (lodash_default().has(prompt, 'id')) {
+                return;
+            }
+            const handle_file = (prompt, file) => {
+                let file_to_write = '';
+                let file_to_set = '';
+                const glob_files = glob_file(this.dir, file);
+                if (glob_files.length === 0) {
+                    file_to_write = file.replace(/(?:\.[^\\/]+$|$)/, detect_extension(prompt.content));
+                    file_to_set = file.replace(/\.[^\\/]+$/, '');
                 }
-                const handle_file = (prompt, file_path) => {
-                    files.push({ name: prompt.name, path: file_path, content: prompt.content });
-                    lodash_default().unset(prompt, 'content');
-                    lodash_default().set(prompt, 'file', file_path);
-                };
-                const state = prompts_state.find(state => state.name === prompt.name);
-                if (state === undefined && should_split) {
-                    const file_path = (0,external_node_path_.join)(sanitize_filename(this.config_name), used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name) + detect_extension(prompt.content));
-                    handle_file(prompt, file_path);
-                    return;
+                else if (glob_files.length === 1) {
+                    file_to_write = glob_files[0];
+                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
                 }
-                if (state?.file !== undefined) {
-                    handle_file(prompt, state.file);
+                else {
+                    file_to_write = file;
+                    file_to_set = file;
                 }
-            });
-        };
+                files.push({ name: prompt.name, path: file_to_write, content: prompt.content });
+                lodash_default().unset(prompt, 'content');
+                lodash_default().set(prompt, 'file', file_to_set);
+            };
+            const state = prompts_state.find(state => state.name === prompt.name);
+            if (state === undefined && should_split) {
+                const file = (0,external_node_path_.join)(sanitize_filename(this.config_name), used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name));
+                handle_file(prompt, file);
+                return;
+            }
+            if (state?.file !== undefined) {
+                handle_file(prompt, state.file);
+                return;
+            }
+        });
         convert_prompts(tavern_data.prompts, { used: true });
         convert_prompts(tavern_data.prompts_unused, { used: false });
         return { result_data: tavern_data, files };
@@ -56450,6 +56454,7 @@ class Preset_syncer extends Syncer_interface {
     do_push(local_data) {
         let error_data = {
             未能找到以下外链提示词文件: [],
+            通过补全文件后缀找到了多个文件: [],
             未能从合集文件中找到以下条目: [],
         };
         const handle_placeholder_id = (prompts) => {
@@ -56466,11 +56471,15 @@ class Preset_syncer extends Syncer_interface {
                 if (!lodash_default().has(prompt, 'file') || prompt.file === undefined) {
                     return;
                 }
-                const content = extract_file_content(this.dir, prompt.file);
-                if (content === null) {
+                const paths = glob_file(this.dir, prompt.file);
+                if (paths.length === 0) {
                     error_data.未能找到以下外链提示词文件.push(`${source}条目 '${index}' 的 '${prompt.file}'`);
                     return;
                 }
+                if (paths.length > 1) {
+                    error_data.通过补全文件后缀找到了多个文件.push(`${source}条目 '${index}' 的 '${prompt.file}'`);
+                }
+                const content = extract_file_content(paths[0]);
                 if (is_collection_file(prompt.file)) {
                     const collection_file = parse_collection_file(content);
                     const collection_entry = collection_file.find(value => value.name === prompt.name);
@@ -56961,6 +56970,7 @@ const worldbook_zh_Worldbook = strictObject({
 
 
 
+
 class Worldbook_syncer extends Syncer_interface {
     constructor(config_name, name, file) {
         super('worldbook', _.invert(zh_to_en_map)['worldbook'], config_name, name, file, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
@@ -56976,28 +56986,38 @@ class Worldbook_syncer extends Syncer_interface {
     }
     // TODO: 拆分 component
     do_pull(local_data, tavern_data, { should_split }) {
-        const entries_state = local_data === null
-            ? tavern_data.entries.map(entry => should_split
-                ? {
-                    name: entry.name,
-                    file: (0,external_node_path_.join)(sanitize_filename(this.config_name), sanitize_filename(entry.name) + detect_extension(entry.content)),
-                }
-                : { name: entry.name, content: entry.content })
-            : local_data.entries;
         let files = [];
+        const entries_state = local_data === null ? [] : local_data.entries;
         tavern_data.entries.forEach(entry => {
-            const handle_file = (entry, file_path) => {
-                files.push({ name: entry.name, path: file_path, content: entry.content });
+            const handle_file = (entry, file) => {
+                let file_to_write = '';
+                let file_to_set = '';
+                const glob_files = glob_file(this.dir, file);
+                if (glob_files.length === 0) {
+                    file_to_write = file.replace(/(?:\.(?:yaml|md)$|$)/, detect_extension(entry.content));
+                    file_to_set = file.replace(/\.(?:yaml|md)$/, '');
+                }
+                else if (glob_files.length === 1) {
+                    file_to_write = glob_files[0];
+                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]);
+                }
+                else {
+                    file_to_write = file;
+                    file_to_set = file;
+                }
+                files.push({
+                    name: entry.name,
+                    path: file_to_write,
+                    content: entry.content,
+                });
                 _.unset(entry, 'content');
-                _.set(entry, 'file', file_path);
+                _.set(entry, 'file', file_to_set);
             };
             const state = entries_state.find(state => state.name === entry.name);
             if (state === undefined && should_split) {
-                const file_path = (0,external_node_path_.join)(sanitize_filename(this.config_name), sanitize_filename(entry.name)) + detect_extension(entry.content);
-                handle_file(entry, file_path);
-                return;
+                handle_file(entry, (0,external_node_path_.join)(sanitize_filename(this.config_name), sanitize_filename(entry.name)));
             }
-            if (state?.file !== undefined) {
+            else if (state?.file !== undefined) {
                 handle_file(entry, state.file);
             }
         });
@@ -57030,17 +57050,23 @@ class Worldbook_syncer extends Syncer_interface {
     do_push(local_data) {
         let error_data = {
             未能找到以下外链提示词文件: [],
+            通过补全文件后缀找到了多个文件: [],
             未能从合集文件中找到以下条目: [],
         };
         local_data.entries.forEach((entry, index) => {
             if (entry.file === undefined) {
                 return;
             }
-            const content = extract_file_content(this.dir, entry.file);
-            if (content === null) {
+            const paths = glob_file(this.dir, entry.file);
+            if (paths.length === 0) {
                 error_data.未能找到以下外链提示词文件.push(`第 '${index}' 条目 '${entry.name}': '${entry.file}'`);
                 return;
             }
+            if (paths.length > 1) {
+                error_data.通过补全文件后缀找到了多个文件.push(`第 '${index}' 条目 '${entry.name}': '${entry.file}'`);
+                return;
+            }
+            const content = extract_file_content(paths[0]);
             if (is_collection_file(entry.file)) {
                 const collection_file = parse_collection_file(content);
                 const collection_entry = collection_file.find(value => value.name === entry.name);
