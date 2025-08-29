@@ -61,13 +61,13 @@ export function is_zh(data: Record<string, any>): boolean {
 
 type Worldbook_entry = z.infer<typeof Worldbook_entry>;
 const Worldbook_entry = z
-  .object({
+  .strictObject({
     名称: z.string(),
     uid: z.number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
     启用: z.boolean(),
 
     激活策略: z
-      .object({
+      .strictObject({
         类型: z.enum(['蓝灯', '绿灯', '向量化']).describe(
           dedent(`
           激活策略类型:
@@ -82,7 +82,7 @@ const Worldbook_entry = z
           .optional()
           .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
         次要关键字: z
-          .object({
+          .strictObject({
             逻辑: z.enum(['与任意', '与所有', '非所有', '非任意']).describe(
               dedent(`
               次要关键字逻辑:
@@ -115,7 +115,7 @@ const Worldbook_entry = z
       .describe('激活策略: 条目应该何时激活'),
 
     插入位置: z
-      .object({
+      .strictObject({
         类型: z.enum([
           '角色定义之前',
           '角色定义之后',
@@ -167,7 +167,7 @@ const Worldbook_entry = z
     激活概率: z.number().min(0).max(100).optional(),
 
     递归: z
-      .object({
+      .strictObject({
         不可被其他条目激活: z.boolean().describe('禁止其他条目递归激活本条目'),
         不可激活其他条目: z.boolean().describe('禁止本条目递归激活其他条目'),
         延迟递归: z.number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
@@ -177,7 +177,7 @@ const Worldbook_entry = z
       .describe('递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目'),
 
     特殊效果: z
-      .object({
+      .strictObject({
         黏性: z
           .number()
           .min(1)
@@ -216,7 +216,7 @@ const Worldbook_entry = z
   });
 
 export type Worldbook = z.infer<typeof Worldbook>;
-export const Worldbook = z.object({
+export const Worldbook = z.strictObject({
   锚点: z.any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
   条目: z.array(Worldbook_entry).min(1),
 });

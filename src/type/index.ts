@@ -12,7 +12,7 @@ import * as z from 'zod';
 function write_json_schema(name: string, schema: z.ZodType) {
   writeFileSync(
     join(__dirname, 'schema', `${name}.json`),
-    JSON.stringify(z.toJSONSchema(schema, { unrepresentable: 'any' }), null, 2),
+    JSON.stringify(z.toJSONSchema(schema, { io: 'input' }), null, 2),
   );
 }
 
