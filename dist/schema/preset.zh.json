@@ -175,10 +175,154 @@
       "items": {
         "anyOf": [
           {
-            "description": "手动在预设中添加的提示词"
+            "description": "手动在预设中添加的提示词",
+            "type": "object",
+            "properties": {
+              "名称": {
+                "type": "string"
+              },
+              "id": {
+                "not": {}
+              },
+              "启用": {
+                "type": "boolean"
+              },
+              "插入位置": {
+                "description": "插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度",
+                "default": {
+                  "类型": "相对"
+                },
+                "type": "object",
+                "properties": {
+                  "类型": {
+                    "type": "string",
+                    "enum": [
+                      "相对",
+                      "聊天中"
+                    ]
+                  },
+                  "深度": {
+                    "type": "number"
+                  },
+                  "顺序": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "类型"
+                ],
+                "additionalProperties": false
+              },
+              "角色": {
+                "default": "系统",
+                "type": "string",
+                "enum": [
+                  "系统",
+                  "用户",
+                  "AI"
+                ]
+              },
+              "内容": {
+                "description": "内嵌的提示词内容",
+                "type": "string"
+              },
+              "文件": {
+                "description": "外链的提示词文件路径",
+                "type": "string"
+              },
+              "额外字段": {
+                "description": "额外字段: 用于为预设提示词绑定额外数据",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "名称",
+              "启用"
+            ],
+            "additionalProperties": false
           },
           {
-            "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词"
+            "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词",
+            "type": "object",
+            "properties": {
+              "名称": {
+                "not": {}
+              },
+              "id": {
+                "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词\n- 角色定义之前: world_info_before\n- 玩家描述: persona_description. 创建 user 时填写的提示词\n- 角色描述: char_description. 角色卡侧边栏中填写的提示词\n- 角色性格: char_personality. 角色卡高级定义中的提示词, 一般没人用了\n- 情景: scenario. 角色卡高级定义中的提示词, 一般没人用了\n- 角色定义之后: world_info_after\n- 对话示例: dialogue_examples. 角色卡高级定义中的提示词, 一般没人用了\n- 聊天记录: chat_history",
+                "type": "string",
+                "enum": [
+                  "角色定义之前",
+                  "玩家描述",
+                  "角色描述",
+                  "角色性格",
+                  "情景",
+                  "角色定义之后",
+                  "对话示例",
+                  "聊天记录"
+                ]
+              },
+              "启用": {
+                "type": "boolean"
+              },
+              "插入位置": {
+                "description": "插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度",
+                "default": {
+                  "类型": "相对"
+                },
+                "type": "object",
+                "properties": {
+                  "类型": {
+                    "type": "string",
+                    "enum": [
+                      "相对",
+                      "聊天中"
+                    ]
+                  },
+                  "深度": {
+                    "type": "number"
+                  },
+                  "顺序": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "类型"
+                ],
+                "additionalProperties": false
+              },
+              "角色": {
+                "type": "string",
+                "enum": [
+                  "系统",
+                  "用户",
+                  "AI"
+                ]
+              },
+              "内容": {
+                "not": {}
+              },
+              "文件": {
+                "not": {}
+              },
+              "额外字段": {
+                "description": "额外字段: 用于为预设提示词绑定额外数据",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "启用"
+            ],
+            "additionalProperties": false
           }
         ]
       }
@@ -189,10 +333,154 @@
       "items": {
         "anyOf": [
           {
-            "description": "手动在预设中添加的提示词"
+            "description": "手动在预设中添加的提示词",
+            "type": "object",
+            "properties": {
+              "名称": {
+                "type": "string"
+              },
+              "id": {
+                "not": {}
+              },
+              "启用": {
+                "type": "boolean"
+              },
+              "插入位置": {
+                "description": "插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度",
+                "default": {
+                  "类型": "相对"
+                },
+                "type": "object",
+                "properties": {
+                  "类型": {
+                    "type": "string",
+                    "enum": [
+                      "相对",
+                      "聊天中"
+                    ]
+                  },
+                  "深度": {
+                    "type": "number"
+                  },
+                  "顺序": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "类型"
+                ],
+                "additionalProperties": false
+              },
+              "角色": {
+                "default": "系统",
+                "type": "string",
+                "enum": [
+                  "系统",
+                  "用户",
+                  "AI"
+                ]
+              },
+              "内容": {
+                "description": "内嵌的提示词内容",
+                "type": "string"
+              },
+              "文件": {
+                "description": "外链的提示词文件路径",
+                "type": "string"
+              },
+              "额外字段": {
+                "description": "额外字段: 用于为预设提示词绑定额外数据",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "名称",
+              "启用"
+            ],
+            "additionalProperties": false
           },
           {
-            "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词"
+            "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词",
+            "type": "object",
+            "properties": {
+              "名称": {
+                "not": {}
+              },
+              "id": {
+                "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词\n- 角色定义之前: world_info_before\n- 玩家描述: persona_description. 创建 user 时填写的提示词\n- 角色描述: char_description. 角色卡侧边栏中填写的提示词\n- 角色性格: char_personality. 角色卡高级定义中的提示词, 一般没人用了\n- 情景: scenario. 角色卡高级定义中的提示词, 一般没人用了\n- 角色定义之后: world_info_after\n- 对话示例: dialogue_examples. 角色卡高级定义中的提示词, 一般没人用了\n- 聊天记录: chat_history",
+                "type": "string",
+                "enum": [
+                  "角色定义之前",
+                  "玩家描述",
+                  "角色描述",
+                  "角色性格",
+                  "情景",
+                  "角色定义之后",
+                  "对话示例",
+                  "聊天记录"
+                ]
+              },
+              "启用": {
+                "type": "boolean"
+              },
+              "插入位置": {
+                "description": "插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度",
+                "default": {
+                  "类型": "相对"
+                },
+                "type": "object",
+                "properties": {
+                  "类型": {
+                    "type": "string",
+                    "enum": [
+                      "相对",
+                      "聊天中"
+                    ]
+                  },
+                  "深度": {
+                    "type": "number"
+                  },
+                  "顺序": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "类型"
+                ],
+                "additionalProperties": false
+              },
+              "角色": {
+                "type": "string",
+                "enum": [
+                  "系统",
+                  "用户",
+                  "AI"
+                ]
+              },
+              "内容": {
+                "not": {}
+              },
+              "文件": {
+                "not": {}
+              },
+              "额外字段": {
+                "description": "额外字段: 用于为预设提示词绑定额外数据",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "启用"
+            ],
+            "additionalProperties": false
           }
         ]
       }

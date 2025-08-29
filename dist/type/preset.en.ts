@@ -3,13 +3,13 @@ import _ from 'lodash';
 import * as z from 'zod';
 
 const Prompt_normal = z
-  .object({
+  .strictObject({
     name: z.string(),
     id: z.never().optional(),
     enabled: z.boolean(),
 
     position: z
-      .object({
+      .strictObject({
         type: z.enum(['relative', 'in_chat']),
         depth: z.number().optional(),
         order: z.number().optional(),
@@ -70,7 +70,7 @@ export const prompt_rolable_placeholder_ids = <const>[
 export const prompt_unrolable_placeholder_ids = <const>['dialogue_examples', 'chat_history'];
 export const prompt_placeholder_ids = <const>[...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
 const Prompt_placeholder = z
-  .object({
+  .strictObject({
     name: z.never().optional(),
     id: z.enum(prompt_placeholder_ids).describe(
       dedent(`
@@ -88,7 +88,7 @@ const Prompt_placeholder = z
     enabled: z.boolean(),
 
     position: z
-      .object({
+      .strictObject({
         type: z.enum(['relative', 'in_chat']),
         depth: z.number().optional(),
         order: z.number().optional(),
@@ -106,7 +106,7 @@ const Prompt_placeholder = z
       })
       .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
 
-    role: z.enum(['system', 'user', 'assistant']).optional(),
+    role: z.enum(['system', 'user', 'assistant']).default('system').optional(),
     content: z.never().optional(),
     file: z.never().optional(),
 
@@ -142,8 +142,8 @@ const Prompt_placeholder = z
 const Prompt = z.union([Prompt_normal, Prompt_placeholder]);
 
 export type Preset = z.infer<typeof Preset>;
-export const Preset = z.object({
-  settings: z.object({
+export const Preset = z.strictObject({
+  settings: z.strictObject({
     max_context: z
       .number()
       .min(0)

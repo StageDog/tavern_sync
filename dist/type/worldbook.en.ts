@@ -3,13 +3,13 @@ import * as z from 'zod';
 
 type Worldbook_entry = z.infer<typeof Worldbook_entry>;
 const Worldbook_entry = z
-  .object({
+  .strictObject({
     name: z.string(),
     uid: z.number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
     enabled: z.boolean(),
 
     strategy: z
-      .object({
+      .strictObject({
         type: z.enum(['constant', 'selective', 'vectorized']).describe(
           dedent(`
           激活策略类型:
@@ -24,7 +24,7 @@ const Worldbook_entry = z
           .optional()
           .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
         keys_secondary: z
-          .object({
+          .strictObject({
             logic: z.enum(['and_any', 'and_all', 'not_all', 'not_any']).describe(
               dedent(`
               次要关键字逻辑:
@@ -57,7 +57,7 @@ const Worldbook_entry = z
       .describe('激活策略: 条目应该何时激活'),
 
     position: z
-      .object({
+      .strictObject({
         type: z
           .enum([
             'before_character_definition',
@@ -125,7 +125,7 @@ const Worldbook_entry = z
     probability: z.number().min(0).max(100).optional(),
 
     recursion: z
-      .object({
+      .strictObject({
         prevent_incoming: z.boolean().describe('禁止其他条目递归激活本条目'),
         prevent_outgoing: z.boolean().describe('禁止本条目递归激活其他条目'),
         delay_until: z.number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
@@ -135,7 +135,7 @@ const Worldbook_entry = z
       .describe('递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目'),
 
     effect: z
-      .object({
+      .strictObject({
         sticky: z
           .number()
           .min(1)
@@ -174,7 +174,7 @@ const Worldbook_entry = z
   });
 
 export type Worldbook = z.infer<typeof Worldbook>;
-export const Worldbook = z.object({
+export const Worldbook = z.strictObject({
   anchors: z.any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
   entries: z.array(Worldbook_entry).min(1),
 });

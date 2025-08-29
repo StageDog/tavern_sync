@@ -70,13 +70,13 @@ export function is_zh(data: Record<string, any>): boolean {
 }
 
 const Prompt_normal = z
-  .object({
+  .strictObject({
     名称: z.string(),
     id: z.never().optional(),
     启用: z.boolean(),
 
     插入位置: z
-      .object({
+      .strictObject({
         类型: z.enum(['相对', '聊天中']),
         深度: z.number().optional(),
         顺序: z.number().optional(),
@@ -137,7 +137,7 @@ const prompt_rolable_placeholder_ids = <const>[
 const prompt_unrolable_placeholder_ids = <const>['对话示例', '聊天记录'];
 export const prompt_placeholder_ids = <const>[...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
 const Prompt_placeholder = z
-  .object({
+  .strictObject({
     名称: z.never().optional(),
     id: z.enum(prompt_placeholder_ids).describe(
       dedent(`
@@ -155,7 +155,7 @@ const Prompt_placeholder = z
     启用: z.boolean(),
 
     插入位置: z
-      .object({
+      .strictObject({
         类型: z.enum(['相对', '聊天中']),
         深度: z.number().optional(),
         顺序: z.number().optional(),
@@ -209,8 +209,8 @@ const Prompt_placeholder = z
 const Prompt = z.union([Prompt_normal, Prompt_placeholder]);
 
 export type Preset = z.infer<typeof Preset>;
-export const Preset = z.object({
-  设置: z.object({
+export const Preset = z.strictObject({
+  设置: z.strictObject({
     上下文长度: z
       .number()
       .min(0)

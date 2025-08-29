@@ -22612,10 +22612,10 @@ function object(shape, params) {
     const def = {
         type: "object",
         get shape() {
-            assignProp(this, "shape", shape ? objectClone(shape) : {});
+            util.assignProp(this, "shape", shape ? util.objectClone(shape) : {});
             return this.shape;
         },
-        ...normalizeParams(params),
+        ...util.normalizeParams(params),
     };
     return new ZodObject(def);
 }
@@ -22624,11 +22624,11 @@ function strictObject(shape, params) {
     return new ZodObject({
         type: "object",
         get shape() {
-            util.assignProp(this, "shape", util.objectClone(shape));
+            assignProp(this, "shape", objectClone(shape));
             return this.shape;
         },
         catchall: never(),
-        ...util.normalizeParams(params),
+        ...normalizeParams(params),
     });
 }
 // looseObject
@@ -23125,11 +23125,11 @@ function preprocess(fn, schema) {
 
 
 
-const Prompt_normal = object({
+const Prompt_normal = strictObject({
     name: schemas_string(),
     id: never().optional(),
     enabled: schemas_boolean(),
-    position: object({
+    position: strictObject({
         type: schemas_enum(['relative', 'in_chat']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
@@ -23182,7 +23182,7 @@ const prompt_rolable_placeholder_ids = [
 ];
 const prompt_unrolable_placeholder_ids = ['dialogue_examples', 'chat_history'];
 const prompt_placeholder_ids = [...prompt_rolable_placeholder_ids, ...prompt_unrolable_placeholder_ids];
-const Prompt_placeholder = object({
+const Prompt_placeholder = strictObject({
     name: never().optional(),
     id: schemas_enum(prompt_placeholder_ids).describe(dist_dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
@@ -23196,7 +23196,7 @@ const Prompt_placeholder = object({
         - chat_history: 聊天记录
       `)),
     enabled: schemas_boolean(),
-    position: object({
+    position: strictObject({
         type: schemas_enum(['relative', 'in_chat']),
         depth: schemas_number().optional(),
         order: schemas_number().optional(),
@@ -23213,7 +23213,7 @@ const Prompt_placeholder = object({
         }
     })
         .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
-    role: schemas_enum(['system', 'user', 'assistant']).optional(),
+    role: schemas_enum(['system', 'user', 'assistant']).default('system').optional(),
     content: never().optional(),
     file: never().optional(),
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
@@ -23243,8 +23243,8 @@ const Prompt_placeholder = object({
 }))
     .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
 const Prompt = union([Prompt_normal, Prompt_placeholder]);
-const Preset = object({
-    settings: object({
+const Preset = strictObject({
+    settings: strictObject({
         max_context: schemas_number()
             .min(0)
             .max(2000000)
@@ -23388,11 +23388,11 @@ const zh_to_en_map = {
 function is_zh(data) {
     return _.has(data, '提示词');
 }
-const preset_zh_Prompt_normal = object({
+const preset_zh_Prompt_normal = strictObject({
     名称: schemas_string(),
     id: never().optional(),
     启用: schemas_boolean(),
-    插入位置: object({
+    插入位置: strictObject({
         类型: schemas_enum(['相对', '聊天中']),
         深度: schemas_number().optional(),
         顺序: schemas_number().optional(),
@@ -23445,7 +23445,7 @@ const preset_zh_prompt_rolable_placeholder_ids = [
 ];
 const preset_zh_prompt_unrolable_placeholder_ids = ['对话示例', '聊天记录'];
 const preset_zh_prompt_placeholder_ids = [...preset_zh_prompt_rolable_placeholder_ids, ...preset_zh_prompt_unrolable_placeholder_ids];
-const preset_zh_Prompt_placeholder = object({
+const preset_zh_Prompt_placeholder = strictObject({
     名称: never().optional(),
     id: schemas_enum(preset_zh_prompt_placeholder_ids).describe(dist_dedent(`
         预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词
@@ -23459,7 +23459,7 @@ const preset_zh_Prompt_placeholder = object({
         - 聊天记录: chat_history
       `)),
     启用: schemas_boolean(),
-    插入位置: object({
+    插入位置: strictObject({
         类型: schemas_enum(['相对', '聊天中']),
         深度: schemas_number().optional(),
         顺序: schemas_number().optional(),
@@ -23506,8 +23506,8 @@ const preset_zh_Prompt_placeholder = object({
 }))
     .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
 const preset_zh_Prompt = union([preset_zh_Prompt_normal, preset_zh_Prompt_placeholder]);
-const preset_zh_Preset = object({
-    设置: object({
+const preset_zh_Preset = strictObject({
+    设置: strictObject({
         上下文长度: schemas_number()
             .min(0)
             .max(2000000)
@@ -23588,12 +23588,12 @@ const preset_zh_Preset = object({
 ;// ./src/type/settings.en.ts
 
 const Config_type = schemas_enum(['worldbook', 'preset']);
-const Config = object({
+const Config = strictObject({
     type: Config_type,
     name: schemas_string(),
     file: schemas_string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
 });
-const Settings = object({
+const Settings = strictObject({
     user_name: schemas_string().regex(/^\S+$/),
     configs: record(schemas_string(), Config),
 });
@@ -23613,12 +23613,12 @@ function settings_zh_is_zh(data) {
     return _.has(data, '配置');
 }
 const settings_zh_Config_type = schemas_enum(['世界书', '预设']);
-const settings_zh_Config = object({
+const settings_zh_Config = strictObject({
     类型: settings_zh_Config_type,
     酒馆中的名称: schemas_string(),
     本地文件路径: schemas_string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
 });
-const settings_zh_Settings = object({
+const settings_zh_Settings = strictObject({
     user名称: schemas_string().regex(/^\S+$/),
     配置: record(schemas_string(), settings_zh_Config),
 });
@@ -23626,11 +23626,11 @@ const settings_zh_Settings = object({
 ;// ./src/type/worldbook.en.ts
 
 
-const Worldbook_entry = object({
+const Worldbook_entry = strictObject({
     name: schemas_string(),
     uid: schemas_number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
     enabled: schemas_boolean(),
-    strategy: object({
+    strategy: strictObject({
         type: schemas_enum(['constant', 'selective', 'vectorized']).describe(dist_dedent(`
           激活策略类型:
           - constant: 常量🔵, 俗称蓝灯. 只需要满足 "启用"、"激活概率%" 等别的要求即可.
@@ -23641,7 +23641,7 @@ const Worldbook_entry = object({
             .min(1)
             .optional()
             .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
-        keys_secondary: object({
+        keys_secondary: strictObject({
             logic: schemas_enum(['and_any', 'and_all', 'not_all', 'not_any']).describe(dist_dedent(`
               次要关键字逻辑:
               - and_any: 次要关键字中任意一个关键字能在欲扫描文本中匹配到
@@ -23667,7 +23667,7 @@ const Worldbook_entry = object({
         }
     })
         .describe('激活策略: 条目应该何时激活'),
-    position: object({
+    position: strictObject({
         type: schemas_enum([
             'before_character_definition',
             'after_character_definition',
@@ -23729,7 +23729,7 @@ const Worldbook_entry = object({
         }
     }),
     probability: schemas_number().min(0).max(100).optional(),
-    recursion: object({
+    recursion: strictObject({
         prevent_incoming: schemas_boolean().describe('禁止其他条目递归激活本条目'),
         prevent_outgoing: schemas_boolean().describe('禁止本条目递归激活其他条目'),
         delay_until: schemas_number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
@@ -23737,7 +23737,7 @@ const Worldbook_entry = object({
         .partial()
         .optional()
         .describe('递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目'),
-    effect: object({
+    effect: strictObject({
         sticky: schemas_number()
             .min(1)
             .nullable()
@@ -23767,7 +23767,7 @@ const Worldbook_entry = object({
         }));
     }
 });
-const Worldbook = object({
+const Worldbook = strictObject({
     anchors: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
     entries: array(Worldbook_entry).min(1),
 });
@@ -23824,11 +23824,11 @@ const worldbook_zh_zh_to_en_map = {
 function worldbook_zh_is_zh(data) {
     return _.has(data, '条目');
 }
-const worldbook_zh_Worldbook_entry = object({
+const worldbook_zh_Worldbook_entry = strictObject({
     名称: schemas_string(),
     uid: schemas_number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
     启用: schemas_boolean(),
-    激活策略: object({
+    激活策略: strictObject({
         类型: schemas_enum(['蓝灯', '绿灯', '向量化']).describe(dist_dedent(`
           激活策略类型:
           - 蓝灯: 常量🔵 (constant). 只需要满足 "启用"、"激活概率%" 等别的要求即可.
@@ -23839,7 +23839,7 @@ const worldbook_zh_Worldbook_entry = object({
             .min(1)
             .optional()
             .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
-        次要关键字: object({
+        次要关键字: strictObject({
             逻辑: schemas_enum(['与任意', '与所有', '非所有', '非任意']).describe(dist_dedent(`
               次要关键字逻辑:
               - 与任意 (and_any): 次要关键字中任意一个关键字能在欲扫描文本中匹配到
@@ -23865,7 +23865,7 @@ const worldbook_zh_Worldbook_entry = object({
         }
     })
         .describe('激活策略: 条目应该何时激活'),
-    插入位置: object({
+    插入位置: strictObject({
         类型: schemas_enum([
             '角色定义之前',
             '角色定义之后',
@@ -23915,7 +23915,7 @@ const worldbook_zh_Worldbook_entry = object({
         }
     }),
     激活概率: schemas_number().min(0).max(100).optional(),
-    递归: object({
+    递归: strictObject({
         不可被其他条目激活: schemas_boolean().describe('禁止其他条目递归激活本条目'),
         不可激活其他条目: schemas_boolean().describe('禁止本条目递归激活其他条目'),
         延迟递归: schemas_number().min(1).nullable().describe('延迟到第 n 级递归检查时才能激活本条目'),
@@ -23923,7 +23923,7 @@ const worldbook_zh_Worldbook_entry = object({
         .partial()
         .optional()
         .describe('递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目'),
-    特殊效果: object({
+    特殊效果: strictObject({
         黏性: schemas_number()
             .min(1)
             .nullable()
@@ -23953,7 +23953,7 @@ const worldbook_zh_Worldbook_entry = object({
         }));
     }
 });
-const worldbook_zh_Worldbook = object({
+const worldbook_zh_Worldbook = strictObject({
     锚点: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
     条目: array(worldbook_zh_Worldbook_entry).min(1),
 });
@@ -24891,7 +24891,7 @@ var type_dirname = __webpack_fileURLToPath__(import.meta.url + "/..").slice(0, -
 
 
 function write_json_schema(name, schema) {
-    (0,external_node_fs_namespaceObject.writeFileSync)((0,external_node_path_namespaceObject.join)(type_dirname, 'schema', `${name}.json`), JSON.stringify(toJSONSchema(schema, { unrepresentable: 'any' }), null, 2));
+    (0,external_node_fs_namespaceObject.writeFileSync)((0,external_node_path_namespaceObject.join)(type_dirname, 'schema', `${name}.json`), JSON.stringify(toJSONSchema(schema, { io: 'input' }), null, 2));
 }
 (0,external_node_fs_namespaceObject.mkdirSync)((0,external_node_path_namespaceObject.join)(type_dirname, 'schema'), { recursive: true });
 write_json_schema('preset.en', Preset);
