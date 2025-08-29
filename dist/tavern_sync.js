@@ -56069,7 +56069,7 @@ function glob_file(base, file) {
 
 function is_parent(parent_path, possible_child_path) {
     const result = (0,external_path_.relative)(parent_path, possible_child_path);
-    return result && !result.startsWith('..') && !(0,external_path_.isAbsolute)(result);
+    return Boolean(result) && !result.startsWith('..') && !(0,external_path_.isAbsolute)(result);
 }
 
 ;// ./src/server/util/sanitize_filename.ts
