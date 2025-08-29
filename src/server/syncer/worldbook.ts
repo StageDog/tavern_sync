@@ -1,22 +1,23 @@
 import { is_collection_file, parse_collection_file } from '@server/component/collection_file';
-import { extract_file_content } from '@server/component/extract_file_content';
 import { replace_raw_string } from '@server/component/replace_raw_string';
 import { replace_user_name } from '@server/component/replace_user_name';
 import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Worldbook as Worldbook_tavern } from '@server/tavern/worldbook';
 import { detect_extension } from '@server/util/detect_extension';
+import { extract_file_content } from '@server/util/extract_file_content';
+import { glob_file } from '@server/util/glob_file';
 import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { translate } from '@server/util/translate';
 import { zh_to_en_map } from '@type/settings.zh';
 import { Worldbook as Worldbook_en } from '@type/worldbook.en';
 import {
-  Worldbook as Worldbook_zh,
   is_zh as worldbook_is_zh,
+  Worldbook as Worldbook_zh,
   zh_to_en_map as worldbook_zh_to_en_map,
 } from '@type/worldbook.zh';
 
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Worldbook_syncer extends Syncer_interface {
@@ -61,36 +62,40 @@ export class Worldbook_syncer extends Syncer_interface {
       content: string;
     }[];
   } {
-    const entries_state: { name: string; content?: string; file?: string }[] =
-      local_data === null
-        ? tavern_data.entries.map(entry =>
-            should_split
-              ? {
-                  name: entry.name,
-                  file: join(
-                    sanitize_filename(this.config_name),
-                    sanitize_filename(entry.name) + detect_extension(entry.content!),
-                  ),
-                }
-              : { name: entry.name, content: entry.content },
-          )
-        : local_data.entries;
     let files: { name: string; path: string; content: string }[] = [];
+
+    const entries_state: { name: string; content?: string; file?: string }[] =
+      local_data === null ? [] : local_data.entries;
     tavern_data.entries.forEach(entry => {
-      const handle_file = (entry: Worldbook_tavern['entries'][number], file_path: string) => {
-        files.push({ name: entry.name, path: file_path, content: entry.content });
+      const handle_file = (entry: Worldbook_tavern['entries'][number], file: string) => {
+        let file_to_write = '';
+        let file_to_set = '';
+
+        const glob_files = glob_file(this.dir, file);
+        if (glob_files.length === 0) {
+          file_to_write = file.replace(/(?:\.(?:yaml|md)$|$)/, detect_extension(entry.content!));
+          file_to_set = file.replace(/\.(?:yaml|md)$/, '');
+        } else if (glob_files.length === 1) {
+          file_to_write = glob_files[0];
+          file_to_set = relative(this.dir, glob_files[0]);
+        } else {
+          file_to_write = file;
+          file_to_set = file;
+        }
+
+        files.push({
+          name: entry.name,
+          path: file_to_write,
+          content: entry.content,
+        });
         _.unset(entry, 'content');
-        _.set(entry, 'file', file_path);
+        _.set(entry, 'file', file_to_set);
       };
 
       const state = entries_state.find(state => state.name === entry.name);
       if (state === undefined && should_split) {
-        const file_path =
-          join(sanitize_filename(this.config_name), sanitize_filename(entry.name)) + detect_extension(entry.content!);
-        handle_file(entry, file_path);
-        return;
-      }
-      if (state?.file !== undefined) {
+        handle_file(entry, join(sanitize_filename(this.config_name), sanitize_filename(entry.name)));
+      } else if (state?.file !== undefined) {
         handle_file(entry, state.file);
       }
     });
@@ -130,6 +135,7 @@ export class Worldbook_syncer extends Syncer_interface {
   protected do_push(local_data: Worldbook_en): { result_data: Record<string, any>; error_data: Record<string, any> } {
     let error_data = {
       未能找到以下外链提示词文件: [] as string[],
+      通过补全文件后缀找到了多个文件: [] as string[],
       未能从合集文件中找到以下条目: [] as string[],
     };
 
@@ -138,11 +144,16 @@ export class Worldbook_syncer extends Syncer_interface {
         return;
       }
 
-      const content = extract_file_content(this.dir, entry.file!);
-      if (content === null) {
+      const paths = glob_file(this.dir, entry.file);
+      if (paths.length === 0) {
         error_data.未能找到以下外链提示词文件.push(`第 '${index}' 条目 '${entry.name}': '${entry.file}'`);
         return;
       }
+      if (paths.length > 1) {
+        error_data.通过补全文件后缀找到了多个文件.push(`第 '${index}' 条目 '${entry.name}': '${entry.file}'`);
+        return;
+      }
+      const content = extract_file_content(paths[0]);
       if (is_collection_file(entry.file!)) {
         const collection_file = parse_collection_file(content);
         const collection_entry = collection_file.find(value => value.name === entry.name);

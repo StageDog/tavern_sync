@@ -1,19 +1,20 @@
 import { is_collection_file, parse_collection_file } from '@server/component/collection_file';
-import { extract_file_content } from '@server/component/extract_file_content';
 import { replace_raw_string } from '@server/component/replace_raw_string';
 import { replace_user_name } from '@server/component/replace_user_name';
 import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Preset as Preset_tavern } from '@server/tavern/preset';
 import { detect_extension } from '@server/util/detect_extension';
+import { extract_file_content } from '@server/util/extract_file_content';
+import { glob_file } from '@server/util/glob_file';
 import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { translate } from '@server/util/translate';
 import { Preset as Preset_en, prompt_placeholder_ids } from '@type/preset.en';
-import { Preset as Preset_zh, is_zh as preset_is_zh, zh_to_en_map as preset_zh_to_en_map } from '@type/preset.zh';
+import { is_zh as preset_is_zh, Preset as Preset_zh, zh_to_en_map as preset_zh_to_en_map } from '@type/preset.zh';
 import { zh_to_en_map } from '@type/settings.zh';
 
 import _ from 'lodash';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Preset_syncer extends Syncer_interface {
@@ -65,59 +66,54 @@ export class Preset_syncer extends Syncer_interface {
       content: string;
     }[];
   } {
-    const get_prompts_state = (prompts: Preset_tavern['prompts'], used: { used: boolean }) => {
-      return prompts
-        .filter(prompt => !_.has(prompt, 'id'))
-        .map(prompt =>
-          should_split
-            ? {
-                name: prompt.name,
-                file: join(
-                  sanitize_filename(this.config_name),
-                  used ? '' : language === 'zh' ? '未使用' : 'unused',
-                  sanitize_filename(prompt.name) + detect_extension(prompt.content!),
-                ),
-              }
-            : { name: prompt.name, content: prompt.content },
-        );
-    };
-    const prompts_state: { name: string; content?: string; file?: string }[] =
-      local_data === null
-        ? [
-            ...get_prompts_state(tavern_data.prompts, { used: true }),
-            ...get_prompts_state(tavern_data.prompts_unused, { used: false }),
-          ]
-        : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !_.has(prompt, 'id'));
-
     let files: { name: string; path: string; content: string }[] = [];
 
-    const convert_prompts = (prompts: Preset_tavern['prompts'], { used }: { used: boolean }) => {
+    const prompts_state: { name: string; content?: string; file?: string }[] =
+      local_data === null
+        ? []
+        : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !_.has(prompt, 'id'));
+    const convert_prompts = (prompts: Preset_tavern['prompts'], { used }: { used: boolean }) =>
       prompts.forEach(prompt => {
         if (_.has(prompt, 'id')) {
           return;
         }
 
-        const handle_file = (prompt: Preset_tavern['prompts'][number], file_path: string) => {
-          files.push({ name: prompt.name, path: file_path, content: prompt.content! });
+        const handle_file = (prompt: Preset_tavern['prompts'][number], file: string) => {
+          let file_to_write = '';
+          let file_to_set = '';
+
+          const glob_files = glob_file(this.dir, file);
+          if (glob_files.length === 0) {
+            file_to_write = file.replace(/(?:\.[^\\/]+$|$)/, detect_extension(prompt.content!));
+            file_to_set = file.replace(/\.[^\\/]+$/, '');
+          } else if (glob_files.length === 1) {
+            file_to_write = glob_files[0];
+            file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
+          } else {
+            file_to_write = file;
+            file_to_set = file;
+          }
+
+          files.push({ name: prompt.name, path: file_to_write, content: prompt.content! });
           _.unset(prompt, 'content');
-          _.set(prompt, 'file', file_path);
+          _.set(prompt, 'file', file_to_set);
         };
 
         const state = prompts_state.find(state => state.name === prompt.name);
         if (state === undefined && should_split) {
-          const file_path = join(
+          const file = join(
             sanitize_filename(this.config_name),
             used ? '' : language === 'zh' ? '未使用' : 'unused',
-            sanitize_filename(prompt.name) + detect_extension(prompt.content!),
+            sanitize_filename(prompt.name),
           );
-          handle_file(prompt, file_path);
+          handle_file(prompt, file);
           return;
         }
         if (state?.file !== undefined) {
           handle_file(prompt, state.file);
+          return;
         }
       });
-    };
     convert_prompts(tavern_data.prompts, { used: true });
     convert_prompts(tavern_data.prompts_unused, { used: false });
     return { result_data: tavern_data, files };
@@ -154,6 +150,7 @@ export class Preset_syncer extends Syncer_interface {
   protected do_push(local_data: Preset_en): { result_data: Record<string, any>; error_data: Record<string, any> } {
     let error_data = {
       未能找到以下外链提示词文件: [] as string[],
+      通过补全文件后缀找到了多个文件: [] as string[],
       未能从合集文件中找到以下条目: [] as string[],
     };
 
@@ -173,11 +170,15 @@ export class Preset_syncer extends Syncer_interface {
           return;
         }
 
-        const content = extract_file_content(this.dir, prompt.file);
-        if (content === null) {
+        const paths = glob_file(this.dir, prompt.file);
+        if (paths.length === 0) {
           error_data.未能找到以下外链提示词文件.push(`${source}条目 '${index}' 的 '${prompt.file}'`);
           return;
         }
+        if (paths.length > 1) {
+          error_data.通过补全文件后缀找到了多个文件.push(`${source}条目 '${index}' 的 '${prompt.file}'`);
+        }
+        const content = extract_file_content(paths[0]);
         if (is_collection_file(prompt.file!)) {
           const collection_file = parse_collection_file(content);
           const collection_entry = collection_file.find(value => value.name === prompt.name);
