@@ -56402,7 +56402,7 @@ class Preset_syncer extends Syncer_interface {
                 let file_to_set = '';
                 const glob_files = glob_file(this.dir, file);
                 if (glob_files.length === 0) {
-                    file_to_write = file.replace(/(?:\.[^\\/]+$|$)/, detect_extension(prompt.content));
+                    file_to_write = file.replace(/\.[^\\/]+$|$/, detect_extension(prompt.content));
                     file_to_set = file.replace(/\.[^\\/]+$/, '');
                 }
                 else if (glob_files.length === 1) {
@@ -56998,12 +56998,12 @@ class Worldbook_syncer extends Syncer_interface {
                 let file_to_set = '';
                 const glob_files = glob_file(this.dir, file);
                 if (glob_files.length === 0) {
-                    file_to_write = file.replace(/(?:\.(?:yaml|md)$|$)/, detect_extension(entry.content));
-                    file_to_set = file.replace(/\.(?:yaml|md)$/, '');
+                    file_to_write = file.replace(/\.[^\\/]+$|$/, detect_extension(entry.content));
+                    file_to_set = file.replace(/\.[^\\/]+$/, '');
                 }
                 else if (glob_files.length === 1) {
                     file_to_write = glob_files[0];
-                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]);
+                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
                 }
                 else {
                     file_to_write = file;
