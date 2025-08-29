@@ -142,114 +142,107 @@ const Prompt_placeholder = z
 const Prompt = z.union([Prompt_normal, Prompt_placeholder]);
 
 export type Preset = z.infer<typeof Preset>;
-export const Preset = z
-  .object({
-    settings: z.object({
-      max_context: z
-        .number()
-        .min(0)
-        .max(2000000)
-        .describe(
-          '最大上下文 token 数. 酒馆计算出的上下文 token 数虚高, 容易在上下文 token 数没有达到限制时就报错, 因此建议调到最大 2000000',
-        ),
-      max_completion_tokens: z.number().min(0).describe('最大回复 token 数'),
-      reply_count: z.number().min(1).default(1).optional().describe('每次生成几个回复'),
+export const Preset = z.object({
+  settings: z.object({
+    max_context: z
+      .number()
+      .min(0)
+      .max(2000000)
+      .describe(
+        '最大上下文 token 数. 酒馆计算出的上下文 token 数虚高, 容易在上下文 token 数没有达到限制时就报错, 因此建议调到最大 2000000',
+      ),
+    max_completion_tokens: z.number().min(0).describe('最大回复 token 数'),
+    reply_count: z.number().min(1).default(1).optional().describe('每次生成几个回复'),
 
-      should_stream: z.boolean().describe('是否流式传输'),
+    should_stream: z.boolean().describe('是否流式传输'),
 
-      temperature: z.number().min(0).max(2).describe('温度'),
-      frequency_penalty: z.number().min(-2).max(2).describe('频率惩罚'),
-      presence_penalty: z.number().min(-2).max(2).describe('存在惩罚'),
-      top_p: z.number().min(0).max(1),
-      repetition_penalty: z.number().min(1).max(2).default(1).optional().describe('重复惩罚'),
-      min_p: z.number().min(0).max(1).default(0).optional(),
-      top_k: z.number().min(0).max(500).default(0).optional(),
-      top_a: z.number().min(0).max(1).default(0).optional(),
+    temperature: z.number().min(0).max(2).describe('温度'),
+    frequency_penalty: z.number().min(-2).max(2).describe('频率惩罚'),
+    presence_penalty: z.number().min(-2).max(2).describe('存在惩罚'),
+    top_p: z.number().min(0).max(1),
+    repetition_penalty: z.number().min(1).max(2).default(1).optional().describe('重复惩罚'),
+    min_p: z.number().min(0).max(1).default(0).optional(),
+    top_k: z.number().min(0).max(500).default(0).optional(),
+    top_a: z.number().min(0).max(1).default(0).optional(),
 
-      seed: z.number().default(-1).optional().describe('种子, -1 表示随机'),
+    seed: z.number().default(-1).optional().describe('种子, -1 表示随机'),
 
-      squash_system_messages: z.boolean().describe('压缩系统消息: 将连续的系统消息合并为一条消息'),
+    squash_system_messages: z.boolean().describe('压缩系统消息: 将连续的系统消息合并为一条消息'),
 
-      reasoning_effort: z
-        .enum(['auto', 'min', 'low', 'medium', 'high', 'max'])
-        .describe(
-          '推理强度, 即内置思维链的投入程度. 例如, 如果酒馆直连 gemini-2.5-flash, 则 `min` 将会不使用内置思维链',
-        ),
-      request_thoughts: z
-        .boolean()
-        .default(true)
-        .optional()
-        .describe(
-          '请求思维链: 允许模型返回内置思维链的思考过程; 注意这只影响内置思维链显不显示, 不决定模型是否使用内置思维链',
-        ),
-      request_images: z.boolean().default(true).optional().describe('请求图片: 允许模型在回复中返回图片'),
-      enable_function_calling: z
-        .boolean()
-        .default(true)
-        .optional()
-        .describe('启用函数调用: 允许模型使用函数调用功能; 比如 cursor 借此在回复中读写文件、运行命令'),
-      enable_web_search: z.boolean().default(true).optional().describe('启用网络搜索: 允许模型使用网络搜索功能'),
+    reasoning_effort: z
+      .enum(['auto', 'min', 'low', 'medium', 'high', 'max'])
+      .describe('推理强度, 即内置思维链的投入程度. 例如, 如果酒馆直连 gemini-2.5-flash, 则 `min` 将会不使用内置思维链'),
+    request_thoughts: z
+      .boolean()
+      .default(true)
+      .optional()
+      .describe(
+        '请求思维链: 允许模型返回内置思维链的思考过程; 注意这只影响内置思维链显不显示, 不决定模型是否使用内置思维链',
+      ),
+    request_images: z.boolean().default(true).optional().describe('请求图片: 允许模型在回复中返回图片'),
+    enable_function_calling: z
+      .boolean()
+      .default(true)
+      .optional()
+      .describe('启用函数调用: 允许模型使用函数调用功能; 比如 cursor 借此在回复中读写文件、运行命令'),
+    enable_web_search: z.boolean().default(true).optional().describe('启用网络搜索: 允许模型使用网络搜索功能'),
 
-      allow_sending_images: z
-        .enum(['disabled', 'auto', 'low', 'high'])
-        .default('auto')
-        .optional()
-        .describe('是否允许发送图片作为提示词'),
-      allow_sending_videos: z.boolean().default(true).optional().describe('是否允许发送视频作为提示词'),
+    allow_sending_images: z
+      .enum(['disabled', 'auto', 'low', 'high'])
+      .default('auto')
+      .optional()
+      .describe('是否允许发送图片作为提示词'),
+    allow_sending_videos: z.boolean().default(true).optional().describe('是否允许发送视频作为提示词'),
 
-      character_name_prefix: z
-        .enum(['none', 'default', 'content', 'completion'])
-        .default('none')
-        .optional()
-        .describe(
-          dedent(`
+    character_name_prefix: z
+      .enum(['none', 'default', 'content', 'completion'])
+      .default('none')
+      .optional()
+      .describe(
+        dedent(`
         角色名称前缀: 是否要为消息添加角色名称前缀, 以及怎么添加
         - none: 不添加
         - default: 为与角色卡不同名的消息添加角色名称前缀, 添加到 \`content\` 字段开头 (即发送的消息内容是 \`角色名: 消息内容\`)
         - content: 为所有消息添加角色名称前缀, 添加到 \`content\` 字段开头 (即发送的消息内容是 \`角色名: 消息内容\`)
         - completion: 在发送给模型时, 将角色名称写入到 \`name\` 字段; 仅支持字母数字和下划线, 不适用于 Claude、Google 等模型
       `),
-        ),
+      ),
 
-      wrap_user_messages_in_quotes: z
-        .boolean()
-        .default(false)
-        .optional()
-        .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
-    }),
+    wrap_user_messages_in_quotes: z
+      .boolean()
+      .default(false)
+      .optional()
+      .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
+  }),
 
-    anchors: z.any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
+  anchors: z.any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
 
-    prompts: z
-      .array(Prompt)
-      .superRefine((data, context) => {
-        const duplicate_ids = _(data)
-          .filter(prompt => _.includes(prompt_placeholder_ids, prompt.id))
-          .groupBy('id')
-          .filter(group => group.length > 1)
-          .keys()
-          .value();
-        if (duplicate_ids.length > 0) {
-          context.addIssue({
-            code: 'custom',
-            message: `提示词列表中出现了重复的占位符提示词 id: ${duplicate_ids.join(', ')}`,
-          });
-        }
+  prompts: z
+    .array(Prompt)
+    .superRefine((data, context) => {
+      const duplicate_ids = _(data)
+        .filter(prompt => _.includes(prompt_placeholder_ids, prompt.id))
+        .groupBy('id')
+        .filter(group => group.length > 1)
+        .keys()
+        .value();
+      if (duplicate_ids.length > 0) {
+        context.addIssue({
+          code: 'custom',
+          message: `提示词列表中出现了重复的占位符提示词 id: ${duplicate_ids.join(', ')}`,
+        });
+      }
 
-        const unused_ids = _.reject(prompt_placeholder_ids, id => data.some(prompt => _.get(prompt, 'id') === id));
-        if (unused_ids.length > 0) {
-          context.addIssue({
-            code: 'custom',
-            message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
-          });
-        }
-      })
-      .describe('提示词列表里已经添加的提示词'),
-    prompts_unused: z.array(Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
+      const unused_ids = _.reject(prompt_placeholder_ids, id => data.some(prompt => _.get(prompt, 'id') === id));
+      if (unused_ids.length > 0) {
+        context.addIssue({
+          code: 'custom',
+          message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
+        });
+      }
+    })
+    .describe('提示词列表里已经添加的提示词'),
+  prompts_unused: z.array(Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
 
-    extensions: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设绑定额外数据'),
-  })
-  .transform(data => {
-    _.unset(data, 'anchors');
-    return data;
-  });
+  extensions: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设绑定额外数据'),
+});
