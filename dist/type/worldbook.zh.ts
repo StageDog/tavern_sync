@@ -216,12 +216,7 @@ const Worldbook_entry = z
   });
 
 export type Worldbook = z.infer<typeof Worldbook>;
-export const Worldbook = z
-  .object({
-    锚点: z.any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
-    条目: z.array(Worldbook_entry).min(1),
-  })
-  .transform(data => {
-    _.unset(data, '锚点');
-    return data;
-  });
+export const Worldbook = z.object({
+  锚点: z.any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
+  条目: z.array(Worldbook_entry).min(1),
+});
