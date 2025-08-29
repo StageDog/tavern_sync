@@ -7,7 +7,10 @@ export type Config = z.infer<typeof Config>;
 export const Config = z.strictObject({
   type: Config_type,
   name: z.string(),
-  file: z.string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
+  file: z
+    .string()
+    .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
+    .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml')),
 });
 
 export type Settings = z.infer<typeof Settings>;

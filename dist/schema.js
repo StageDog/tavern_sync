@@ -23591,7 +23591,9 @@ const Config_type = schemas_enum(['worldbook', 'preset']);
 const Config = strictObject({
     type: Config_type,
     name: schemas_string(),
-    file: schemas_string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
+    file: schemas_string()
+        .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
+        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml')),
 });
 const Settings = strictObject({
     user_name: schemas_string().regex(/^\S+$/),
@@ -23616,7 +23618,9 @@ const settings_zh_Config_type = schemas_enum(['世界书', '预设']);
 const settings_zh_Config = strictObject({
     类型: settings_zh_Config_type,
     酒馆中的名称: schemas_string(),
-    本地文件路径: schemas_string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
+    本地文件路径: schemas_string()
+        .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
+        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml')),
 });
 const settings_zh_Settings = strictObject({
     user名称: schemas_string().regex(/^\S+$/),

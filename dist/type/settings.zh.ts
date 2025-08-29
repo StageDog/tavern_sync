@@ -20,7 +20,10 @@ export type Config = z.infer<typeof Config>;
 export const Config = z.strictObject({
   类型: Config_type,
   酒馆中的名称: z.string(),
-  本地文件路径: z.string().regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)\.yaml$/),
+  本地文件路径: z
+    .string()
+    .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
+    .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml')),
 });
 
 export type Settings = z.infer<typeof Settings>;
