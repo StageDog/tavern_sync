@@ -3,12 +3,14 @@ import { replace_raw_string } from '@server/component/replace_raw_string';
 import { replace_user_name } from '@server/component/replace_user_name';
 import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Worldbook as Worldbook_tavern } from '@server/tavern/worldbook';
+import { append_yaml_endline } from '@server/util/append_yaml_endline';
 import { detect_extension } from '@server/util/detect_extension';
 import { extract_file_content } from '@server/util/extract_file_content';
 import { glob_file } from '@server/util/glob_file';
 import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { translate } from '@server/util/translate';
+import { trim_yaml_endline } from '@server/util/trim_yaml_endline';
 import { zh_to_en_map } from '@type/settings.zh';
 import { Worldbook as Worldbook_en } from '@type/worldbook.en';
 import {
@@ -16,6 +18,7 @@ import {
   Worldbook as Worldbook_zh,
   zh_to_en_map as worldbook_zh_to_en_map,
 } from '@type/worldbook.zh';
+import _ from 'lodash';
 
 import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
@@ -73,11 +76,11 @@ export class Worldbook_syncer extends Syncer_interface {
 
         const glob_files = glob_file(this.dir, file);
         if (glob_files.length === 0) {
-          file_to_write = file.replace(/\.[^\\/]+$|$/, detect_extension(entry.content!));
+          file_to_write = file.replace(/\.[^\\/]+$|$/, detect_extension(entry.content));
           file_to_set = file.replace(/\.[^\\/]+$/, '');
         } else if (glob_files.length === 1) {
           file_to_write = glob_files[0];
-            file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
+          file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
         } else {
           file_to_write = file;
           file_to_set = file;
@@ -86,7 +89,7 @@ export class Worldbook_syncer extends Syncer_interface {
         files.push({
           name: entry.name,
           path: file_to_write,
-          content: entry.content,
+          content: append_yaml_endline(entry.content),
         });
         _.unset(entry, 'content');
         _.set(entry, 'file', file_to_set);
@@ -161,11 +164,11 @@ export class Worldbook_syncer extends Syncer_interface {
           error_data.未能从合集文件中找到以下条目.push(`'${entry.file}': 第 '${index}' 条目 '${entry.name}'`);
           return;
         }
-        _.set(entry, 'content', collection_entry.content);
+        _.set(entry, 'content', trim_yaml_endline(collection_entry.content));
         _.unset(entry, 'file');
         return;
       }
-      _.set(entry, 'content', content);
+      _.set(entry, 'content', trim_yaml_endline(content));
       _.unset(entry, 'file');
     });
     local_data.entries.forEach(entry => {

@@ -3,12 +3,14 @@ import { replace_raw_string } from '@server/component/replace_raw_string';
 import { replace_user_name } from '@server/component/replace_user_name';
 import { Pull_options, Syncer_interface } from '@server/syncer/interface';
 import { Preset as Preset_tavern } from '@server/tavern/preset';
+import { append_yaml_endline } from '@server/util/append_yaml_endline';
 import { detect_extension } from '@server/util/detect_extension';
 import { extract_file_content } from '@server/util/extract_file_content';
 import { glob_file } from '@server/util/glob_file';
 import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { translate } from '@server/util/translate';
+import { trim_yaml_endline } from '@server/util/trim_yaml_endline';
 import { Preset as Preset_en, prompt_placeholder_ids } from '@type/preset.en';
 import { is_zh as preset_is_zh, Preset as Preset_zh, zh_to_en_map as preset_zh_to_en_map } from '@type/preset.zh';
 import { zh_to_en_map } from '@type/settings.zh';
@@ -94,7 +96,7 @@ export class Preset_syncer extends Syncer_interface {
             file_to_set = file;
           }
 
-          files.push({ name: prompt.name, path: file_to_write, content: prompt.content! });
+          files.push({ name: prompt.name, path: file_to_write, content: append_yaml_endline(prompt.content!) });
           _.unset(prompt, 'content');
           _.set(prompt, 'file', file_to_set);
         };
@@ -186,11 +188,11 @@ export class Preset_syncer extends Syncer_interface {
             error_data.未能从合集文件中找到以下条目.push(`'${prompt.file}': 第 '${index}' 条目 '${prompt.name}'`);
             return;
           }
-          _.set(prompt, 'content', collection_entry.content);
+          _.set(prompt, 'content', trim_yaml_endline(collection_entry.content));
           _.unset(prompt, 'file');
           return;
         }
-        _.set(prompt, 'content', content);
+        _.set(prompt, 'content', trim_yaml_endline(content));
         _.unset(prompt, 'file');
       });
     };
