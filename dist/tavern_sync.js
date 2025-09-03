@@ -47784,10 +47784,10 @@ var external_node_path_ = __webpack_require__(6760);
 ;// ./src/server/util/write_file_recursively.ts
 
 
-function write_file_recursively(base, file, data) {
+function write_file_recursively(base, file, content) {
     try {
         (0,external_node_fs_.mkdirSync)((0,external_node_path_.resolve)(base, (0,external_node_path_.dirname)(file)), { recursive: true });
-        (0,external_node_fs_.writeFileSync)((0,external_node_path_.resolve)(base, file), data);
+        (0,external_node_fs_.writeFileSync)((0,external_node_path_.resolve)(base, file), content);
     }
     catch (error) {
         throw Error(`写入文件 '${file}' 失败: ${error}`);
@@ -56043,13 +56043,19 @@ function is_yaml(content) {
     }
 }
 
+;// ./src/server/util/append_yaml_endline.ts
+
+function append_yaml_endline(content) {
+    return is_yaml(content) ? content.replace(/(\n)*$/s, '\n') : content;
+}
+
 ;// ./src/server/util/detect_extension.ts
 
 function detect_extension(content) {
     if (is_yaml(content)) {
         return '.yaml';
     }
-    return '.md';
+    return '.txt';
 }
 
 ;// ./src/server/util/extract_file_content.ts
@@ -56084,6 +56090,12 @@ function sanitize_filename(filename) {
         default:
             return filename;
     }
+}
+
+;// ./src/server/util/trim_yaml_endline.ts
+
+function trim_yaml_endline(content) {
+    return is_yaml(content) ? content.replace(/(\n)+$/s, '') : content;
 }
 
 ;// ./src/type/preset.zh.ts
@@ -56367,6 +56379,8 @@ const preset_zh_Preset = strictObject({
 
 
 
+
+
 class Preset_syncer extends Syncer_interface {
     constructor(config_name, name, file) {
         super('preset', lodash_default().invert(zh_to_en_map)['preset'], config_name, name, file, Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, preset_Preset);
@@ -56413,7 +56427,7 @@ class Preset_syncer extends Syncer_interface {
                     file_to_write = file;
                     file_to_set = file;
                 }
-                files.push({ name: prompt.name, path: file_to_write, content: prompt.content });
+                files.push({ name: prompt.name, path: file_to_write, content: append_yaml_endline(prompt.content) });
                 lodash_default().unset(prompt, 'content');
                 lodash_default().set(prompt, 'file', file_to_set);
             };
@@ -56491,11 +56505,11 @@ class Preset_syncer extends Syncer_interface {
                         error_data.未能从合集文件中找到以下条目.push(`'${prompt.file}': 第 '${index}' 条目 '${prompt.name}'`);
                         return;
                     }
-                    lodash_default().set(prompt, 'content', collection_entry.content);
+                    lodash_default().set(prompt, 'content', trim_yaml_endline(collection_entry.content));
                     lodash_default().unset(prompt, 'file');
                     return;
                 }
-                lodash_default().set(prompt, 'content', content);
+                lodash_default().set(prompt, 'content', trim_yaml_endline(content));
                 lodash_default().unset(prompt, 'file');
             });
         };
@@ -56975,17 +56989,20 @@ const worldbook_zh_Worldbook = strictObject({
 
 
 
+
+
+
 class Worldbook_syncer extends Syncer_interface {
     constructor(config_name, name, file) {
-        super('worldbook', _.invert(zh_to_en_map)['worldbook'], config_name, name, file, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
+        super('worldbook', lodash_default().invert(zh_to_en_map)['worldbook'], config_name, name, file, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
     }
     // TODO: 拆分 component
     do_check_safe(local_data, tavern_data) {
         const local_names = local_data.entries.map(entry => entry.name);
         const tavern_names = tavern_data.entries.map(entry => entry.name);
         return {
-            local_only_data: _.difference(local_names, tavern_names),
-            tavern_only_data: _.difference(tavern_names, local_names),
+            local_only_data: lodash_default().difference(local_names, tavern_names),
+            tavern_only_data: lodash_default().difference(tavern_names, local_names),
         };
     }
     // TODO: 拆分 component
@@ -57012,10 +57029,10 @@ class Worldbook_syncer extends Syncer_interface {
                 files.push({
                     name: entry.name,
                     path: file_to_write,
-                    content: entry.content,
+                    content: append_yaml_endline(entry.content),
                 });
-                _.unset(entry, 'content');
-                _.set(entry, 'file', file_to_set);
+                lodash_default().unset(entry, 'content');
+                lodash_default().set(entry, 'file', file_to_set);
             };
             const state = entries_state.find(state => state.name === entry.name);
             if (state === undefined && should_split) {
@@ -57029,7 +57046,7 @@ class Worldbook_syncer extends Syncer_interface {
     }
     // TODO: 拆分 component
     do_beautify_config(tavern_data, language) {
-        const document = new dist.Document(language === 'zh' ? translate(tavern_data, _.invert(this.zh_to_en_map)) : tavern_data);
+        const document = new dist.Document(language === 'zh' ? translate(tavern_data, lodash_default().invert(this.zh_to_en_map)) : tavern_data);
         ['条目', 'entries'].forEach(key => dist.visit(document.get(key), (key, node) => {
             if (key === null) {
                 return;
@@ -57078,26 +57095,26 @@ class Worldbook_syncer extends Syncer_interface {
                     error_data.未能从合集文件中找到以下条目.push(`'${entry.file}': 第 '${index}' 条目 '${entry.name}'`);
                     return;
                 }
-                _.set(entry, 'content', collection_entry.content);
-                _.unset(entry, 'file');
+                lodash_default().set(entry, 'content', trim_yaml_endline(collection_entry.content));
+                lodash_default().unset(entry, 'file');
                 return;
             }
-            _.set(entry, 'content', content);
-            _.unset(entry, 'file');
+            lodash_default().set(entry, 'content', trim_yaml_endline(content));
+            lodash_default().unset(entry, 'file');
         });
         local_data.entries.forEach(entry => {
-            _.set(entry, 'content', replace_user_name(entry.content));
+            lodash_default().set(entry, 'content', replace_user_name(entry.content));
         });
         local_data.entries.forEach(entry => {
-            _.set(entry, 'content', replace_raw_string(entry.content));
+            lodash_default().set(entry, 'content', replace_raw_string(entry.content));
         });
         return {
             result_data: local_data,
-            error_data: _.pickBy(error_data, value => value.length > 0),
+            error_data: lodash_default().pickBy(error_data, value => value.length > 0),
         };
     }
     do_watch(local_data) {
-        return _(_(local_data.entries)
+        return lodash_default()(lodash_default()(local_data.entries)
             .filter(entry => entry.file !== undefined)
             .map(entry => (0,external_node_path_.resolve)(this.dir, entry.file))
             .value())
