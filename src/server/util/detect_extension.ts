@@ -4,5 +4,5 @@ export function detect_extension(content: string) {
   if (is_yaml(content)) {
     return '.yaml';
   }
-  return '.md';
+  return '.txt';
 }
