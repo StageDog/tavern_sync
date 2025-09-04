@@ -53709,7 +53709,7 @@ function parse_collection_file(content) {
 
 ;// ./src/server/component/replace_raw_string.ts
 function replace_raw_string(text) {
-    return text?.replaceAll(/ *# :(?=.*$)/gm, '');
+    return text?.replaceAll(/# :(?=.*$)/gm, '');
 }
 
 ;// ./src/server/component/replace_user_name.ts
