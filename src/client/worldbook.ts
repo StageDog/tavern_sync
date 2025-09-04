@@ -5,6 +5,10 @@ import { PartialDeep } from 'type-fest';
 
 async function update_worldbook(name: string, data: PartialDeep<WorldbookEntry>[]) {
   await createOrReplaceWorldbook(name, data);
+  console.info(`[TavernSync] 已推送世界书 '${name}' 到酒馆`);
+  if (get_settings().should_notify) {
+    toastr.success(`已推送世界书 '${name}' 到酒馆`, 'TavernSync');
+  }
 }
 const update_worldbook_debounced = _.debounce(update_worldbook, get_settings().delay);
 
@@ -18,10 +22,17 @@ export function register_worldbook() {
         entry.strategy.keys = entry.strategy.keys.map(_.toString);
         entry.strategy.keys_secondary.keys = entry.strategy.keys_secondary.keys.map(_.toString);
       });
+      console.info(`[TavernSync] 已提取世界书 '${data.name}' 到本地`);
+      if (get_settings().should_notify) {
+        toastr.success(`已提取世界书 '${data.name}' 到本地`, 'TavernSync');
+      }
       callback(worldbook);
     } catch (err) {
       const error = err as Error;
       console.error(`[TavernSync] 提取世界书 '${data.name}' 失败: ${error}`);
+      if (get_settings().should_notify) {
+        toastr.success(`提取世界书 '${data.name}' 失败: ${error}`, 'TavernSync');
+      }
       callback(error.message);
     }
   });

@@ -7,6 +7,9 @@ async function update_preset(name: string, data: Preset) {
     console.info(getLoadedPresetName(), name);
     loadPreset(name);
   }
+  if (get_settings().should_notify) {
+    toastr.success(`已推送预设 '${name}' 到酒馆`, 'TavernSync');
+  }
 }
 const update_preset_debounced = _.debounce(update_preset, get_settings().delay);
 
@@ -17,9 +20,16 @@ export function register_preset() {
     try {
       const preset = getPreset(getLoadedPresetName() === data.name ? 'in_use' : data.name);
       callback(preset);
+      console.info(`[TavernSync] 已提取预设 '${data.name}' 到本地`);
+      if (get_settings().should_notify) {
+        toastr.success(`已提取预设 '${data.name}' 到本地`, 'TavernSync');
+      }
     } catch (err) {
       const error = err as Error;
       console.error(`[TavernSync] 提取预设 '${data.name}' 失败: ${error}`);
+      if (get_settings().should_notify) {
+        toastr.success(`提取预设 '${data.name}' 失败: ${error}`, 'TavernSync');
+      }
       callback(error.message);
     }
   });
