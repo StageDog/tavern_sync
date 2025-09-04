@@ -32,7 +32,7 @@
     "chokidar": "^4.0.3",
     "commander": "^13.1.0",
     "compare-versions": "^6.1.1",
-    "dedent": "^1.6.0",
+    "dedent": "^1.7.0",
     "lodash": "^4.17.21",
     "socket.io": "^4.8.1",
     "type-fest": "^4.41.0",
