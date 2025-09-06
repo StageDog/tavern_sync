@@ -9,13 +9,13 @@
     "defaults and partially supports es6-module"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.34.0",
+    "@eslint/js": "^9.35.0",
     "@types/lodash": "^4.17.20",
     "@types/node": "^22.18.1",
     "@types/toastr": "^2.1.43",
     "@typescript-eslint/parser": "^8.42.0",
     "bufferutil": "^4.0.9",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import-x": "^4.16.1",
     "terser-webpack-plugin": "^5.3.14",
