@@ -2,16 +2,16 @@ import dedent from 'dedent';
 import _ from 'lodash';
 import { readFileSync } from 'node:fs';
 import YAML from 'yaml';
-
+const urls = [
+  'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync',
+  'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync',
+  'https://fastly.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync',
+  'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync',
+].flatMap(url => [url + '.js', url + '.mjs']);
 async function download_latest(): Promise<string> {
-  const urls = [
-    'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync.js',
-    'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
-    'https://fastly.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
-    'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
-  ];
 
-  const erorr_data: Record<string, string> = {};
+
+  const error_data: Record<string, string> = {};
 
   const fetches = urls.map(async url => {
     try {
@@ -30,14 +30,14 @@ async function download_latest(): Promise<string> {
   const [success_results, failed_results] = _.partition(results, result => result.content !== null);
 
   for (const result of failed_results) {
-    _.set(erorr_data, [result.url], result.error);
+    _.set(error_data, [result.url], result.error);
   }
 
   if (success_results.length > 0) {
     return _.sortBy(success_results, result => urls.indexOf(result.url))[0].content;
   }
 
-  throw Error(YAML.stringify({ 无法获取最新版脚本: erorr_data }));
+  throw Error(YAML.stringify({ 无法获取最新版脚本: error_data }));
 }
 
 export async function check_update(): Promise<string | null> {
