@@ -3,7 +3,7 @@
     "build:dev": "webpack --mode development",
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch --progress",
-    "start": "pnpm build && node dist/tavern_sync.js --"
+    "start": "pnpm build && node dist/tavern_sync.mjs --"
   },
   "browserslist": [
     "defaults and partially supports es6-module"

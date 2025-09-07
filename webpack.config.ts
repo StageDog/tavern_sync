@@ -123,7 +123,7 @@ export default [
           info.loaders ? `?${info.loaders}` : ''
         }`;
       },
-      filename: `tavern_sync.js`,
+      filename: `tavern_sync.mjs`,
       library: {
         type: 'module',
       },
