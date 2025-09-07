@@ -57189,10 +57189,10 @@ var check_update_filename = __webpack_fileURLToPath__(import.meta.url);
 
 async function download_latest() {
     const urls = [
-        'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync.js',
-        'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
-        'https://fastly.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
-        'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.js',
+        'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync.mjs',
+        'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.mjs',
+        'https://fastly.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.mjs',
+        'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.mjs',
     ];
     const erorr_data = {};
     const fetches = urls.map(async (url) => {
