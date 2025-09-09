@@ -2,10 +2,11 @@ import { is_collection_file } from '@server/component/collection_file';
 import { watch_on } from '@server/component/watch_on';
 import { wait_socket } from '@server/server';
 import { exit_on_error } from '@server/util/exit_on_error';
+import { prettified_parse } from '@server/util/prettified_parse';
 import { translate } from '@server/util/translate';
 import { write_file_recursively } from '@server/util/write_file_recursively';
-import _ from 'lodash';
 
+import _ from 'lodash';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import YAML from 'yaml';
@@ -72,7 +73,7 @@ export abstract class Syncer_interface {
   private async get_parsed_tavern(): Promise<Record<string, any> | string> {
     const socket = await wait_socket();
     const data = await socket.emitWithAck(`pull_${this.type}`, { name: this.name });
-    return typeof data === 'string' ? data : this.tavern_type.parse(data);
+    return typeof data === 'string' ? data : prettified_parse(this.tavern_type, data);
   }
 
   private async get_parsed_local(): Promise<Record<string, any> | string> {
@@ -84,7 +85,9 @@ export abstract class Syncer_interface {
       return `配置文件 '${this.file}' 为空`;
     }
     const data = YAML.parse(content, { merge: true });
-    return this.is_zh(data) ? translate(this.zh_type.parse(data), this.zh_to_en_map) : this.en_type.parse(data);
+    return this.is_zh(data)
+      ? translate(prettified_parse(this.zh_type, data), this.zh_to_en_map)
+      : prettified_parse(this.en_type, data);
   }
 
   protected abstract do_check_safe(

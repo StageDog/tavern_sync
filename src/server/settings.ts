@@ -1,4 +1,5 @@
 import default_settings_content from '@server/settings_default.yaml?raw';
+import { prettified_parse } from '@server/util/prettified_parse';
 import { translate } from '@server/util/translate';
 import { write_file_recursively } from '@server/util/write_file_recursively';
 import { Settings as Settings_en } from '@type/settings.en';
@@ -19,11 +20,9 @@ export function get_settings(): Settings_en {
       exit(1);
     }
     const data = YAML.parse(readFileSync(config_file, 'utf8'));
-    if (is_zh(data)) {
-      settings = translate(Settings_zh.parse(data), zh_to_en_map) as Settings_en;
-    } else {
-      settings = Settings_en.parse(data);
-    }
+    settings = is_zh(data)
+      ? (translate(prettified_parse(Settings_zh, data), zh_to_en_map) as Settings_en)
+      : prettified_parse(Settings_en, data);
   }
   return settings!;
 }

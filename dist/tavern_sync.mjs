@@ -47722,6 +47722,15 @@ var __webpack_exports__ = {};
 
 ;// ./src/server/settings_default.yaml?raw
 const settings_defaultraw_namespaceObject = "# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json\n\n# 在此填入 user 名称, 提示词中如果有这个名字则会被替换成 <user> 宏\nuser名称: 青空黎\n\n# 在此填入新的\"世界书\"或\"预设\"配置\n配置:\n  # 配置名称, 可以和酒馆中的不同. 你使用脚本时需要填写配置名称来指出用哪个配置, 因此尽量配置名称尽量简单点方便填写\n  恩赐之主:\n    # 类型可以是\"世界书\"或\"预设\"\n    类型: 世界书\n\n    # 在酒馆中这个\"世界书\"或\"预设\"叫什么\n    酒馆中的名称: 恩赐之主\n\n    # 这个世界书或预设的等效配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径\n    # 如果不满足路径格式将会报错\n    # - 绝对路径: 如 Windows 中, 想将世界书提取到 C 盘\"恩赐之主\"文件夹中, 则填入 `C:/恩赐之主/恩赐之主`\n    # - 相对路径:\n    #   - 想将世界书配置文件提取到本文件相同的文件夹中, 则填入 `./恩赐之主` 或 `恩赐之主`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的子文件夹\"世界书\"中, 则填入 `./世界书/恩赐之主` 或 `世界书/恩赐之主`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的父文件夹中, 则填入 `../恩赐之主\n    本地文件路径: ./世界书/恩赐之主\n\n    # 当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中\n    # 你也可以直接删去下面一行不填, 则默认会导出到本地文件路径的同目录下\n    导出文件路径: ./世界书/恩赐之主\n";
+;// ./src/server/util/prettified_parse.ts
+function prettified_parse(schema, data) {
+    const result = schema.safeParse(data, { reportInput: true });
+    if (!result.success) {
+        throw Error(result.error.message);
+    }
+    return result.data;
+}
+
 // EXTERNAL MODULE: ./node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/lodash.js
 var lodash = __webpack_require__(2935);
 var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
@@ -53629,6 +53638,7 @@ var settings_dirname = __webpack_fileURLToPath__(import.meta.url + "/..").slice(
 
 
 
+
 let settings = null;
 function get_settings() {
     if (!settings) {
@@ -53639,12 +53649,9 @@ function get_settings() {
             (0,external_node_process_.exit)(1);
         }
         const data = dist.parse((0,external_node_fs_.readFileSync)(config_file, 'utf8'));
-        if (is_zh(data)) {
-            settings = translate(settings_zh_Settings.parse(data), zh_to_en_map);
-        }
-        else {
-            settings = Settings.parse(data);
-        }
+        settings = is_zh(data)
+            ? translate(prettified_parse(settings_zh_Settings, data), zh_to_en_map)
+            : prettified_parse(Settings, data);
     }
     return settings;
 }
@@ -55522,6 +55529,7 @@ var interface_dirname = __webpack_fileURLToPath__(import.meta.url + "/..").slice
 
 
 
+
 class Syncer_interface {
     type;
     type_zh;
@@ -55552,7 +55560,7 @@ class Syncer_interface {
     async get_parsed_tavern() {
         const socket = await wait_socket();
         const data = await socket.emitWithAck(`pull_${this.type}`, { name: this.name });
-        return typeof data === 'string' ? data : this.tavern_type.parse(data);
+        return typeof data === 'string' ? data : prettified_parse(this.tavern_type, data);
     }
     async get_parsed_local() {
         if (!(0,external_node_fs_.existsSync)(this.file)) {
@@ -55563,7 +55571,9 @@ class Syncer_interface {
             return `配置文件 '${this.file}' 为空`;
         }
         const data = dist.parse(content, { merge: true });
-        return this.is_zh(data) ? translate(this.zh_type.parse(data), this.zh_to_en_map) : this.en_type.parse(data);
+        return this.is_zh(data)
+            ? translate(prettified_parse(this.zh_type, data), this.zh_to_en_map)
+            : prettified_parse(this.en_type, data);
     }
     check_safe(local_data, tavern_data) {
         const { local_only_data, tavern_only_data } = this.do_check_safe(local_data, tavern_data);
