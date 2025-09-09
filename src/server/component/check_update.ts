@@ -55,7 +55,7 @@ export async function check_update_silently(): Promise<void> {
       console.info(
         dedent(`
           ******************************************************
-          发现新版本，请运行 \`node tavern_sync.js update\` 更新
+          发现新版本，请运行 \`node tavern_sync.mjs update\` 更新
           ******************************************************
         `),
       );

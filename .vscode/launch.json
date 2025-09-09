@@ -7,7 +7,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/dist/tavern_sync.js",
+      "program": "${workspaceFolder}/dist/tavern_sync.mjs",
       "args": [
         "pull",
         "恩赐之主"
