@@ -36,10 +36,6 @@ export class Preset_syncer extends Syncer_interface {
     );
   }
 
-  protected do_export(data: Record<string, any>): string {
-    return JSON.stringify(data, null, 4);
-  }
-
   // TODO: 拆分 component
   protected do_check_safe(
     local_data: Preset_en,

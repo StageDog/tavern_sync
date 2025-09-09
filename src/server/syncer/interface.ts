@@ -70,13 +70,13 @@ export abstract class Syncer_interface {
     this.tavern_type = tavern_type;
   }
 
-  private async get_parsed_tavern(): Promise<Record<string, any> | string> {
+  private async get_parsed_tavern({ queit = false }: { queit?: boolean } = {}): Promise<Record<string, any> | string> {
     const socket = await wait_socket();
-    const data = await socket.emitWithAck(`pull_${this.type}`, { name: this.name });
+    const data = await socket.emitWithAck(`pull_${this.type}`, { name: this.name, queit });
     return typeof data === 'string' ? data : prettified_parse(this.tavern_type, data);
   }
 
-  private async get_parsed_local(): Promise<Record<string, any> | string> {
+  private get_parsed_local(): Record<string, any> | string {
     if (!existsSync(this.file)) {
       return `配置文件 '${this.file}' 不存在`;
     }
@@ -134,7 +134,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
       exit_on_error(`拉取${this.type_zh} '${this.name}' 失败: ${tavern_data}`);
     }
 
-    const local_data: Record<string, any> | string = await this.get_parsed_local();
+    const local_data: Record<string, any> | string = this.get_parsed_local();
     if (typeof local_data !== 'string' && !should_force) {
       const { error_data } = this.check_safe(local_data, tavern_data);
       if (!_.isEmpty(error_data)) {
@@ -177,13 +177,13 @@ ${this.do_beautify_config(tavern_data, language)}`;
     error_data: Record<string, any>;
   };
   private async push_once({ should_force, should_export }: Push_options): Promise<void> {
-    const local_data = await this.get_parsed_local();
+    const local_data = this.get_parsed_local();
     if (typeof local_data === 'string') {
       throw Error(`推送${this.type_zh} '${this.name}' 失败: ${local_data}`);
     }
 
     if (!should_force) {
-      const tavern_data = await this.get_parsed_tavern();
+      const tavern_data = await this.get_parsed_tavern({ queit: true });
       if (typeof tavern_data === 'string') {
         throw Error(`推送${this.type_zh} '${this.name}' 失败: ${tavern_data}`);
       }
@@ -231,14 +231,14 @@ ${this.do_beautify_config(tavern_data, language)}`;
 
   protected abstract do_watch(local_data: Record<string, any>): string[];
   async watch(options: Watch_options) {
-    const get_watch_files_from_data = async () => {
-      const local_data = await this.get_parsed_local();
+    const get_watch_files_from_data = () => {
+      const local_data = this.get_parsed_local();
       if (typeof local_data === 'string') {
         exit_on_error(`监听${this.type_zh} '${this.name}' 失败: ${local_data}`);
       }
       return this.do_watch(local_data);
     };
-    const watcher = watch_on(await get_watch_files_from_data());
+    const watcher = watch_on(get_watch_files_from_data());
 
     await this.push_once({ ...options, should_export: false });
     console.info(`初始化推送完毕, 开始监听${this.type_zh} '${this.name}'`);

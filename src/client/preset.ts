@@ -67,20 +67,20 @@ export function register_preset() {
       ]),
     );
   });
-  socket.on('pull_preset', (data: { name: string }, callback: (data: Preset | string) => void) => {
+  socket.on('pull_preset', (data: { name: string; queit: boolean }, callback: (data: Preset | string) => void) => {
     console.info(`[TavernSync] 收到提取预设 '${data.name}' 的请求`);
     try {
       const preset = getPreset(getLoadedPresetName() === data.name ? 'in_use' : data.name);
       callback(preset);
       console.info(`[TavernSync] 已提取预设 '${data.name}' 到本地`);
-      if (get_settings().should_notify) {
+      if (get_settings().should_notify && !data.queit) {
         toastr.success(`已提取预设 '${data.name}' 到本地`, 'TavernSync');
       }
     } catch (err) {
       const error = err as Error;
       console.error(`[TavernSync] 提取预设 '${data.name}' 失败: ${error}`);
-      if (get_settings().should_notify) {
-        toastr.success(`提取预设 '${data.name}' 失败: ${error}`, 'TavernSync');
+      if (get_settings().should_notify && !data.queit) {
+        toastr.error(`提取预设 '${data.name}' 失败: ${error}`, 'TavernSync');
       }
       callback(error.message);
     }

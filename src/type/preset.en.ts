@@ -139,7 +139,24 @@ const Prompt_placeholder = z
   }))
   .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
 
-const Prompt = z.union([Prompt_normal, Prompt_placeholder]);
+const PromptLeaf = z.union([Prompt_normal, Prompt_placeholder]);
+const PromptBranch = z.object({
+  folder: z.string(),
+  get entries() {
+    return z.array(z.union([PromptLeaf, PromptBranch]));
+  },
+});
+const PromptTree = z.union([PromptLeaf, PromptBranch]);
+function is_prompt_branch(data: z.infer<typeof PromptTree>): data is z.infer<typeof PromptBranch> {
+  return _.has(data, 'folder');
+}
+function flatten_tree(data: z.infer<typeof PromptTree>): z.infer<typeof PromptLeaf>[] {
+  if (is_prompt_branch(data)) {
+    return data.entries.flatMap(flatten_tree);
+  }
+  return [data];
+}
+const PromptTrees = z.array(PromptTree).transform(data => data.flatMap(flatten_tree));
 
 export type Preset = z.infer<typeof Preset>;
 export const Preset = z.strictObject({
@@ -217,32 +234,29 @@ export const Preset = z.strictObject({
 
   anchors: z.any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
 
-  prompts: z
-    .array(Prompt)
-    .superRefine((data, context) => {
-      const duplicate_ids = _(data)
-        .filter(prompt => _.includes(prompt_placeholder_ids, prompt.id))
-        .groupBy('id')
-        .filter(group => group.length > 1)
-        .keys()
-        .value();
-      if (duplicate_ids.length > 0) {
-        context.addIssue({
-          code: 'custom',
-          message: `提示词列表中出现了重复的占位符提示词 id: ${duplicate_ids.join(', ')}`,
-        });
-      }
+  prompts: PromptTrees.superRefine((data, context) => {
+    const duplicate_ids = _(data)
+      .filter(prompt => _.includes(prompt_placeholder_ids, prompt.id))
+      .groupBy('id')
+      .filter(group => group.length > 1)
+      .keys()
+      .value();
+    if (duplicate_ids.length > 0) {
+      context.addIssue({
+        code: 'custom',
+        message: `提示词列表中出现了重复的占位符提示词 id: ${duplicate_ids.join(', ')}`,
+      });
+    }
 
-      const unused_ids = _.reject(prompt_placeholder_ids, id => data.some(prompt => _.get(prompt, 'id') === id));
-      if (unused_ids.length > 0) {
-        context.addIssue({
-          code: 'custom',
-          message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
-        });
-      }
-    })
-    .describe('提示词列表里已经添加的提示词'),
-  prompts_unused: z.array(Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
+    const unused_ids = _.reject(prompt_placeholder_ids, id => data.some(prompt => _.get(prompt, 'id') === id));
+    if (unused_ids.length > 0) {
+      context.addIssue({
+        code: 'custom',
+        message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
+      });
+    }
+  }).describe('提示词列表里已经添加的提示词'),
+  prompts_unused: PromptTrees.describe('下拉框里的, 没有添加进提示词列表的提示词'),
 
   extensions: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设绑定额外数据'),
 });

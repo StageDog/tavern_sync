@@ -47,7 +47,7 @@ export function register_worldbook() {
       const error = err as Error;
       console.error(`[TavernSync] 提取世界书 '${data.name}' 失败: ${error}`);
       if (get_settings().should_notify) {
-        toastr.success(`提取世界书 '${data.name}' 失败: ${error}`, 'TavernSync');
+        toastr.error(`提取世界书 '${data.name}' 失败: ${error}`, 'TavernSync');
       }
       callback(error.message);
     }
