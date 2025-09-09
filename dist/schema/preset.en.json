@@ -170,155 +170,162 @@
       "items": {
         "anyOf": [
           {
-            "description": "手动在预设中添加的提示词",
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "id": {
-                "not": {}
-              },
-              "enabled": {
-                "type": "boolean"
-              },
-              "position": {
-                "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
-                "default": {
-                  "type": "relative"
-                },
+            "anyOf": [
+              {
+                "description": "手动在预设中添加的提示词",
                 "type": "object",
                 "properties": {
-                  "type": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "not": {}
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "position": {
+                    "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
+                    "default": {
+                      "type": "relative"
+                    },
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "relative",
+                          "in_chat"
+                        ]
+                      },
+                      "depth": {
+                        "type": "number"
+                      },
+                      "order": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "role": {
+                    "default": "system",
                     "type": "string",
                     "enum": [
-                      "relative",
-                      "in_chat"
+                      "system",
+                      "user",
+                      "assistant"
                     ]
                   },
-                  "depth": {
-                    "type": "number"
+                  "content": {
+                    "description": "内嵌的提示词内容",
+                    "type": "string"
                   },
-                  "order": {
-                    "type": "number"
+                  "file": {
+                    "description": "外链的提示词文件路径",
+                    "type": "string"
+                  },
+                  "extra": {
+                    "description": "额外字段: 用于为预设提示词绑定额外数据",
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
                   }
                 },
                 "required": [
-                  "type"
+                  "name",
+                  "enabled"
                 ],
                 "additionalProperties": false
               },
-              "role": {
-                "default": "system",
-                "type": "string",
-                "enum": [
-                  "system",
-                  "user",
-                  "assistant"
-                ]
-              },
-              "content": {
-                "description": "内嵌的提示词内容",
-                "type": "string"
-              },
-              "file": {
-                "description": "外链的提示词文件路径",
-                "type": "string"
-              },
-              "extra": {
-                "description": "额外字段: 用于为预设提示词绑定额外数据",
+              {
+                "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词",
                 "type": "object",
-                "propertyNames": {
-                  "type": "string"
+                "properties": {
+                  "name": {
+                    "not": {}
+                  },
+                  "id": {
+                    "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词\n- world_info_before: 角色定义之前\n- persona_description: 玩家描述. 创建 user 时填写的提示词\n- char_description: 角色描述. 角色卡侧边栏中填写的提示词\n- char_personality: 角色性格. 角色卡高级定义中的提示词, 一般没人用了\n- scenario: 情景. 角色卡高级定义中的提示词, 一般没人用了\n- world_info_after: 角色定义之后\n- dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了\n- chat_history: 聊天记录",
+                    "type": "string",
+                    "enum": [
+                      "world_info_before",
+                      "persona_description",
+                      "char_description",
+                      "char_personality",
+                      "scenario",
+                      "world_info_after",
+                      "dialogue_examples",
+                      "chat_history"
+                    ]
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "position": {
+                    "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
+                    "default": {
+                      "type": "relative"
+                    },
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "relative",
+                          "in_chat"
+                        ]
+                      },
+                      "depth": {
+                        "type": "number"
+                      },
+                      "order": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "role": {
+                    "default": "system",
+                    "type": "string",
+                    "enum": [
+                      "system",
+                      "user",
+                      "assistant"
+                    ]
+                  },
+                  "content": {
+                    "not": {}
+                  },
+                  "file": {
+                    "not": {}
+                  },
+                  "extra": {
+                    "description": "额外字段: 用于为预设提示词绑定额外数据",
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
                 },
-                "additionalProperties": {}
+                "required": [
+                  "id",
+                  "enabled"
+                ],
+                "additionalProperties": false
               }
-            },
-            "required": [
-              "name",
-              "enabled"
-            ],
-            "additionalProperties": false
+            ]
           },
           {
-            "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词",
-            "type": "object",
-            "properties": {
-              "name": {
-                "not": {}
-              },
-              "id": {
-                "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词\n- world_info_before: 角色定义之前\n- persona_description: 玩家描述. 创建 user 时填写的提示词\n- char_description: 角色描述. 角色卡侧边栏中填写的提示词\n- char_personality: 角色性格. 角色卡高级定义中的提示词, 一般没人用了\n- scenario: 情景. 角色卡高级定义中的提示词, 一般没人用了\n- world_info_after: 角色定义之后\n- dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了\n- chat_history: 聊天记录",
-                "type": "string",
-                "enum": [
-                  "world_info_before",
-                  "persona_description",
-                  "char_description",
-                  "char_personality",
-                  "scenario",
-                  "world_info_after",
-                  "dialogue_examples",
-                  "chat_history"
-                ]
-              },
-              "enabled": {
-                "type": "boolean"
-              },
-              "position": {
-                "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
-                "default": {
-                  "type": "relative"
-                },
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "relative",
-                      "in_chat"
-                    ]
-                  },
-                  "depth": {
-                    "type": "number"
-                  },
-                  "order": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "type"
-                ],
-                "additionalProperties": false
-              },
-              "role": {
-                "default": "system",
-                "type": "string",
-                "enum": [
-                  "system",
-                  "user",
-                  "assistant"
-                ]
-              },
-              "content": {
-                "not": {}
-              },
-              "file": {
-                "not": {}
-              },
-              "extra": {
-                "description": "额外字段: 用于为预设提示词绑定额外数据",
-                "type": "object",
-                "propertyNames": {
-                  "type": "string"
-                },
-                "additionalProperties": {}
-              }
-            },
-            "required": [
-              "id",
-              "enabled"
-            ],
-            "additionalProperties": false
+            "$ref": "#/$defs/__schema0"
           }
         ]
       }
@@ -329,155 +336,162 @@
       "items": {
         "anyOf": [
           {
-            "description": "手动在预设中添加的提示词",
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "id": {
-                "not": {}
-              },
-              "enabled": {
-                "type": "boolean"
-              },
-              "position": {
-                "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
-                "default": {
-                  "type": "relative"
-                },
+            "anyOf": [
+              {
+                "description": "手动在预设中添加的提示词",
                 "type": "object",
                 "properties": {
-                  "type": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "not": {}
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "position": {
+                    "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
+                    "default": {
+                      "type": "relative"
+                    },
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "relative",
+                          "in_chat"
+                        ]
+                      },
+                      "depth": {
+                        "type": "number"
+                      },
+                      "order": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "role": {
+                    "default": "system",
                     "type": "string",
                     "enum": [
-                      "relative",
-                      "in_chat"
+                      "system",
+                      "user",
+                      "assistant"
                     ]
                   },
-                  "depth": {
-                    "type": "number"
+                  "content": {
+                    "description": "内嵌的提示词内容",
+                    "type": "string"
                   },
-                  "order": {
-                    "type": "number"
+                  "file": {
+                    "description": "外链的提示词文件路径",
+                    "type": "string"
+                  },
+                  "extra": {
+                    "description": "额外字段: 用于为预设提示词绑定额外数据",
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
                   }
                 },
                 "required": [
-                  "type"
+                  "name",
+                  "enabled"
                 ],
                 "additionalProperties": false
               },
-              "role": {
-                "default": "system",
-                "type": "string",
-                "enum": [
-                  "system",
-                  "user",
-                  "assistant"
-                ]
-              },
-              "content": {
-                "description": "内嵌的提示词内容",
-                "type": "string"
-              },
-              "file": {
-                "description": "外链的提示词文件路径",
-                "type": "string"
-              },
-              "extra": {
-                "description": "额外字段: 用于为预设提示词绑定额外数据",
+              {
+                "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词",
                 "type": "object",
-                "propertyNames": {
-                  "type": "string"
+                "properties": {
+                  "name": {
+                    "not": {}
+                  },
+                  "id": {
+                    "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词\n- world_info_before: 角色定义之前\n- persona_description: 玩家描述. 创建 user 时填写的提示词\n- char_description: 角色描述. 角色卡侧边栏中填写的提示词\n- char_personality: 角色性格. 角色卡高级定义中的提示词, 一般没人用了\n- scenario: 情景. 角色卡高级定义中的提示词, 一般没人用了\n- world_info_after: 角色定义之后\n- dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了\n- chat_history: 聊天记录",
+                    "type": "string",
+                    "enum": [
+                      "world_info_before",
+                      "persona_description",
+                      "char_description",
+                      "char_personality",
+                      "scenario",
+                      "world_info_after",
+                      "dialogue_examples",
+                      "chat_history"
+                    ]
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "position": {
+                    "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
+                    "default": {
+                      "type": "relative"
+                    },
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "relative",
+                          "in_chat"
+                        ]
+                      },
+                      "depth": {
+                        "type": "number"
+                      },
+                      "order": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "role": {
+                    "default": "system",
+                    "type": "string",
+                    "enum": [
+                      "system",
+                      "user",
+                      "assistant"
+                    ]
+                  },
+                  "content": {
+                    "not": {}
+                  },
+                  "file": {
+                    "not": {}
+                  },
+                  "extra": {
+                    "description": "额外字段: 用于为预设提示词绑定额外数据",
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
                 },
-                "additionalProperties": {}
+                "required": [
+                  "id",
+                  "enabled"
+                ],
+                "additionalProperties": false
               }
-            },
-            "required": [
-              "name",
-              "enabled"
-            ],
-            "additionalProperties": false
+            ]
           },
           {
-            "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词",
-            "type": "object",
-            "properties": {
-              "name": {
-                "not": {}
-              },
-              "id": {
-                "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词\n- world_info_before: 角色定义之前\n- persona_description: 玩家描述. 创建 user 时填写的提示词\n- char_description: 角色描述. 角色卡侧边栏中填写的提示词\n- char_personality: 角色性格. 角色卡高级定义中的提示词, 一般没人用了\n- scenario: 情景. 角色卡高级定义中的提示词, 一般没人用了\n- world_info_after: 角色定义之后\n- dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了\n- chat_history: 聊天记录",
-                "type": "string",
-                "enum": [
-                  "world_info_before",
-                  "persona_description",
-                  "char_description",
-                  "char_personality",
-                  "scenario",
-                  "world_info_after",
-                  "dialogue_examples",
-                  "chat_history"
-                ]
-              },
-              "enabled": {
-                "type": "boolean"
-              },
-              "position": {
-                "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
-                "default": {
-                  "type": "relative"
-                },
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "relative",
-                      "in_chat"
-                    ]
-                  },
-                  "depth": {
-                    "type": "number"
-                  },
-                  "order": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "type"
-                ],
-                "additionalProperties": false
-              },
-              "role": {
-                "default": "system",
-                "type": "string",
-                "enum": [
-                  "system",
-                  "user",
-                  "assistant"
-                ]
-              },
-              "content": {
-                "not": {}
-              },
-              "file": {
-                "not": {}
-              },
-              "extra": {
-                "description": "额外字段: 用于为预设提示词绑定额外数据",
-                "type": "object",
-                "propertyNames": {
-                  "type": "string"
-                },
-                "additionalProperties": {}
-              }
-            },
-            "required": [
-              "id",
-              "enabled"
-            ],
-            "additionalProperties": false
+            "$ref": "#/$defs/__schema0"
           }
         ]
       }
@@ -496,5 +510,184 @@
     "prompts",
     "prompts_unused"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "type": "object",
+      "properties": {
+        "folder": {
+          "type": "string"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "description": "手动在预设中添加的提示词",
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "not": {}
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "position": {
+                        "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
+                        "default": {
+                          "type": "relative"
+                        },
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "relative",
+                              "in_chat"
+                            ]
+                          },
+                          "depth": {
+                            "type": "number"
+                          },
+                          "order": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "role": {
+                        "default": "system",
+                        "type": "string",
+                        "enum": [
+                          "system",
+                          "user",
+                          "assistant"
+                        ]
+                      },
+                      "content": {
+                        "description": "内嵌的提示词内容",
+                        "type": "string"
+                      },
+                      "file": {
+                        "description": "外链的提示词文件路径",
+                        "type": "string"
+                      },
+                      "extra": {
+                        "description": "额外字段: 用于为预设提示词绑定额外数据",
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "enabled"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词",
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "not": {}
+                      },
+                      "id": {
+                        "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词\n- world_info_before: 角色定义之前\n- persona_description: 玩家描述. 创建 user 时填写的提示词\n- char_description: 角色描述. 角色卡侧边栏中填写的提示词\n- char_personality: 角色性格. 角色卡高级定义中的提示词, 一般没人用了\n- scenario: 情景. 角色卡高级定义中的提示词, 一般没人用了\n- world_info_after: 角色定义之后\n- dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了\n- chat_history: 聊天记录",
+                        "type": "string",
+                        "enum": [
+                          "world_info_before",
+                          "persona_description",
+                          "char_description",
+                          "char_personality",
+                          "scenario",
+                          "world_info_after",
+                          "dialogue_examples",
+                          "chat_history"
+                        ]
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "position": {
+                        "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
+                        "default": {
+                          "type": "relative"
+                        },
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "relative",
+                              "in_chat"
+                            ]
+                          },
+                          "depth": {
+                            "type": "number"
+                          },
+                          "order": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "role": {
+                        "default": "system",
+                        "type": "string",
+                        "enum": [
+                          "system",
+                          "user",
+                          "assistant"
+                        ]
+                      },
+                      "content": {
+                        "not": {}
+                      },
+                      "file": {
+                        "not": {}
+                      },
+                      "extra": {
+                        "description": "额外字段: 用于为预设提示词绑定额外数据",
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "enabled"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              {
+                "$ref": "#/$defs/__schema0"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "folder",
+        "entries"
+      ]
+    }
+  }
 }

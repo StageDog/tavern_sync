@@ -173,8 +173,25 @@ const Worldbook_entry = z
     }
   });
 
+const Wolrdbook_leaf = Worldbook_entry;
+const Wolrdbook_branch = z.object({
+  folder: z.string(),
+  entries: z.array(Wolrdbook_leaf),
+});
+const Wolrdbook_tree = z.union([Wolrdbook_leaf, Wolrdbook_branch]);
+function is_worldbook_branch(data: z.infer<typeof Wolrdbook_tree>): data is z.infer<typeof Wolrdbook_branch> {
+  return _.has(data, 'folder');
+}
+function flatten_tree(data: z.infer<typeof Wolrdbook_tree>): z.infer<typeof Wolrdbook_leaf>[] {
+  if (is_worldbook_branch(data)) {
+    return data.entries.flatMap(flatten_tree);
+  }
+  return [data];
+}
+const Wolrdbook_trees = z.array(Wolrdbook_tree).transform(data => data.flatMap(flatten_tree));
+
 export type Worldbook = z.infer<typeof Worldbook>;
 export const Worldbook = z.strictObject({
   anchors: z.any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
-  entries: z.array(Worldbook_entry).min(1),
+  entries: Wolrdbook_trees,
 });

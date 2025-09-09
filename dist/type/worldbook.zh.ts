@@ -54,6 +54,8 @@ export const zh_to_en_map = {
 
   内容: 'content',
   文件: 'file',
+
+  文件夹: 'folder',
 } as const;
 export function is_zh(data: Record<string, any>): boolean {
   return _.has(data, '条目');
@@ -215,8 +217,27 @@ const Worldbook_entry = z
     }
   });
 
+
+const Wolrdbook_leaf = Worldbook_entry;
+const Wolrdbook_branch = z.object({
+  文件夹: z.string(),
+  条目: z.array(Wolrdbook_leaf),
+});
+const Wolrdbook_tree = z.union([Wolrdbook_leaf, Wolrdbook_branch]);
+function is_worldbook_branch(data: z.infer<typeof Wolrdbook_tree>): data is z.infer<typeof Wolrdbook_branch> {
+  return _.has(data, '文件夹');
+}
+function flatten_tree(data: z.infer<typeof Wolrdbook_tree>): z.infer<typeof Wolrdbook_leaf>[] {
+  if (is_worldbook_branch(data)) {
+    return data.条目.flatMap(flatten_tree);
+  }
+  return [data];
+}
+const Wolrdbook_trees = z.array(Wolrdbook_tree).transform(data => data.flatMap(flatten_tree));
+
+
 export type Worldbook = z.infer<typeof Worldbook>;
 export const Worldbook = z.strictObject({
   锚点: z.any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
-  条目: z.array(Worldbook_entry).min(1),
+  条目: Wolrdbook_trees,
 });

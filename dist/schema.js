@@ -22631,10 +22631,10 @@ function object(shape, params) {
     const def = {
         type: "object",
         get shape() {
-            util.assignProp(this, "shape", shape ? util.objectClone(shape) : {});
+            assignProp(this, "shape", shape ? objectClone(shape) : {});
             return this.shape;
         },
-        ...util.normalizeParams(params),
+        ...normalizeParams(params),
     };
     return new ZodObject(def);
 }
@@ -23261,7 +23261,24 @@ const Prompt_placeholder = strictObject({
     }[data.id],
 }))
     .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
-const Prompt = union([Prompt_normal, Prompt_placeholder]);
+const PromptLeaf = union([Prompt_normal, Prompt_placeholder]);
+const PromptBranch = object({
+    folder: schemas_string(),
+    get entries() {
+        return array(union([PromptLeaf, PromptBranch]));
+    },
+});
+const PromptTree = union([PromptLeaf, PromptBranch]);
+function is_prompt_branch(data) {
+    return lodash_default().has(data, 'folder');
+}
+function flatten_tree(data) {
+    if (is_prompt_branch(data)) {
+        return data.entries.flatMap(flatten_tree);
+    }
+    return [data];
+}
+const PromptTrees = array(PromptTree).transform(data => data.flatMap(flatten_tree));
 const Preset = strictObject({
     settings: strictObject({
         max_context: schemas_number()
@@ -23314,8 +23331,7 @@ const Preset = strictObject({
             .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
     }),
     anchors: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
-    prompts: array(Prompt)
-        .superRefine((data, context) => {
+    prompts: PromptTrees.superRefine((data, context) => {
         const duplicate_ids = lodash_default()(data)
             .filter(prompt => lodash_default().includes(prompt_placeholder_ids, prompt.id))
             .groupBy('id')
@@ -23335,9 +23351,8 @@ const Preset = strictObject({
                 message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
             });
         }
-    })
-        .describe('提示词列表里已经添加的提示词'),
-    prompts_unused: array(Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
+    }).describe('提示词列表里已经添加的提示词'),
+    prompts_unused: PromptTrees.describe('下拉框里的, 没有添加进提示词列表的提示词'),
     extensions: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设绑定额外数据'),
 });
 
@@ -23369,6 +23384,8 @@ const zh_to_en_map = {
     角色定义之后: 'world_info_after',
     对话示例: 'dialogue_examples',
     聊天记录: 'chat_history',
+    文件夹: 'folder',
+    条目: 'entries',
     设置: 'settings',
     上下文长度: 'max_context',
     最大回复token数: 'max_completion_tokens',
@@ -23524,7 +23541,24 @@ const preset_zh_Prompt_placeholder = strictObject({
     }[data.id],
 }))
     .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
-const preset_zh_Prompt = union([preset_zh_Prompt_normal, preset_zh_Prompt_placeholder]);
+const preset_zh_PromptLeaf = union([preset_zh_Prompt_normal, preset_zh_Prompt_placeholder]);
+const preset_zh_PromptBranch = object({
+    文件夹: schemas_string(),
+    get 条目() {
+        return array(union([preset_zh_PromptLeaf, preset_zh_PromptBranch]));
+    },
+});
+const preset_zh_PromptTree = union([preset_zh_PromptLeaf, preset_zh_PromptBranch]);
+function preset_zh_is_prompt_branch(data) {
+    return lodash_default().has(data, '文件夹');
+}
+function preset_zh_flatten_tree(data) {
+    if (preset_zh_is_prompt_branch(data)) {
+        return data.条目.flatMap(preset_zh_flatten_tree);
+    }
+    return [data];
+}
+const preset_zh_PromptTrees = array(preset_zh_PromptTree).transform(data => data.flatMap(preset_zh_flatten_tree));
 const preset_zh_Preset = strictObject({
     设置: strictObject({
         上下文长度: schemas_number()
@@ -23577,8 +23611,7 @@ const preset_zh_Preset = strictObject({
             .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
     }),
     锚点: record(schemas_string(), any()).optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
-    提示词: array(preset_zh_Prompt)
-        .superRefine((data, context) => {
+    提示词: preset_zh_PromptTrees.superRefine((data, context) => {
         const duplicate_ids = lodash_default()(data)
             .filter(prompt => lodash_default().includes(preset_zh_prompt_placeholder_ids, prompt.id))
             .groupBy('id')
@@ -23598,9 +23631,8 @@ const preset_zh_Preset = strictObject({
                 message: `提示词列表中缺少了这些必须添加的占位符提示词 id: ${unused_ids.join(', ')}`,
             });
         }
-    })
-        .describe('提示词列表里已经添加的提示词'),
-    未添加的提示词: array(preset_zh_Prompt).describe('下拉框里的, 没有添加进提示词列表的提示词'),
+    }).describe('提示词列表里已经添加的提示词'),
+    未添加的提示词: preset_zh_PromptTrees.describe('下拉框里的, 没有添加进提示词列表的提示词'),
     扩展字段: any().optional().describe('扩展字段: 用于为预设绑定额外数据'),
 });
 
@@ -23801,9 +23833,25 @@ const Worldbook_entry = strictObject({
         }));
     }
 });
+const Wolrdbook_leaf = Worldbook_entry;
+const Wolrdbook_branch = object({
+    folder: schemas_string(),
+    entries: array(Wolrdbook_leaf),
+});
+const Wolrdbook_tree = union([Wolrdbook_leaf, Wolrdbook_branch]);
+function is_worldbook_branch(data) {
+    return _.has(data, 'folder');
+}
+function worldbook_en_flatten_tree(data) {
+    if (is_worldbook_branch(data)) {
+        return data.entries.flatMap(worldbook_en_flatten_tree);
+    }
+    return [data];
+}
+const Wolrdbook_trees = array(Wolrdbook_tree).transform(data => data.flatMap(worldbook_en_flatten_tree));
 const Worldbook = strictObject({
     anchors: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
-    entries: array(Worldbook_entry).min(1),
+    entries: Wolrdbook_trees,
 });
 
 ;// ./src/type/worldbook.zh.ts
@@ -23854,6 +23902,7 @@ const worldbook_zh_zh_to_en_map = {
     额外字段: 'extra',
     内容: 'content',
     文件: 'file',
+    文件夹: 'folder',
 };
 function worldbook_zh_is_zh(data) {
     return _.has(data, '条目');
@@ -23987,9 +24036,25 @@ const worldbook_zh_Worldbook_entry = strictObject({
         }));
     }
 });
+const worldbook_zh_Wolrdbook_leaf = worldbook_zh_Worldbook_entry;
+const worldbook_zh_Wolrdbook_branch = object({
+    文件夹: schemas_string(),
+    条目: array(worldbook_zh_Wolrdbook_leaf),
+});
+const worldbook_zh_Wolrdbook_tree = union([worldbook_zh_Wolrdbook_leaf, worldbook_zh_Wolrdbook_branch]);
+function worldbook_zh_is_worldbook_branch(data) {
+    return _.has(data, '文件夹');
+}
+function worldbook_zh_flatten_tree(data) {
+    if (worldbook_zh_is_worldbook_branch(data)) {
+        return data.条目.flatMap(worldbook_zh_flatten_tree);
+    }
+    return [data];
+}
+const worldbook_zh_Wolrdbook_trees = array(worldbook_zh_Wolrdbook_tree).transform(data => data.flatMap(worldbook_zh_flatten_tree));
 const worldbook_zh_Worldbook = strictObject({
     锚点: any().optional().describe('用于存放 YAML 锚点, 不会被实际使用'),
-    条目: array(worldbook_zh_Worldbook_entry).min(1),
+    条目: worldbook_zh_Wolrdbook_trees,
 });
 
 ;// external "node:fs"
