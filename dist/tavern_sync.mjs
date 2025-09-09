@@ -47721,7 +47721,7 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("fs");
 var __webpack_exports__ = {};
 
 ;// ./src/server/settings_default.yaml?raw
-const settings_defaultraw_namespaceObject = "# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json\n\n# 在此填入 user 名称, 提示词中如果有这个名字则会被替换成 <user> 宏\nuser名称: 青空黎\n\n# 在此填入新的\"世界书\"或\"预设\"配置\n配置:\n  # 配置名称, 可以和酒馆中的不同. 你使用脚本时需要填写配置名称来指出用哪个配置, 因此尽量配置名称尽量简单点方便填写\n  恩赐之主:\n    # 类型可以是\"世界书\"或\"预设\"\n    类型: 世界书\n\n    # 在酒馆中这个\"世界书\"或\"预设\"叫什么\n    酒馆中的名称: 恩赐之主\n\n    # 这个世界书或预设的等效配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径\n    # 如果不满足路径格式将会报错\n    # - 绝对路径: 如 Windows 中, 想将世界书提取到 C 盘\"恩赐之主\"文件夹中, 则填入 `C:/恩赐之主/恩赐之主`\n    # - 相对路径:\n    #   - 想将世界书配置文件提取到本文件相同的文件夹中, 则填入 `./恩赐之主` 或 `恩赐之主`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的子文件夹\"世界书\"中, 则填入 `./世界书/恩赐之主` 或 `世界书/恩赐之主`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的父文件夹中, 则填入 `../恩赐之主\n    本地文件路径: ./世界书/恩赐之主\n";
+const settings_defaultraw_namespaceObject = "# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json\n\n# 在此填入 user 名称, 提示词中如果有这个名字则会被替换成 <user> 宏\nuser名称: 青空黎\n\n# 在此填入新的\"世界书\"或\"预设\"配置\n配置:\n  # 配置名称, 可以和酒馆中的不同. 你使用脚本时需要填写配置名称来指出用哪个配置, 因此尽量配置名称尽量简单点方便填写\n  恩赐之主:\n    # 类型可以是\"世界书\"或\"预设\"\n    类型: 世界书\n\n    # 在酒馆中这个\"世界书\"或\"预设\"叫什么\n    酒馆中的名称: 恩赐之主\n\n    # 这个世界书或预设的等效配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径\n    # 如果不满足路径格式将会报错\n    # - 绝对路径: 如 Windows 中, 想将世界书提取到 C 盘\"恩赐之主\"文件夹中, 则填入 `C:/恩赐之主/恩赐之主`\n    # - 相对路径:\n    #   - 想将世界书配置文件提取到本文件相同的文件夹中, 则填入 `./恩赐之主` 或 `恩赐之主`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的子文件夹\"世界书\"中, 则填入 `./世界书/恩赐之主` 或 `世界书/恩赐之主`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的父文件夹中, 则填入 `../恩赐之主\n    本地文件路径: ./世界书/恩赐之主\n\n    # 当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中\n    # 你也可以直接删去下面一行不填, 则默认会导出到本地文件路径的同目录下\n    导出文件路径: ./世界书/恩赐之主\n";
 // EXTERNAL MODULE: ./node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/lodash.js
 var lodash = __webpack_require__(2935);
 var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
@@ -53573,7 +53573,8 @@ const Config = strictObject({
         .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
     export_file: schemas_string()
         .optional()
-        .describe('当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下'),
+        .transform(string => (string !== undefined && !string.endsWith('.json') ? string + '.json' : string))
+        .describe('当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文件的同目录下'),
 });
 const Settings = strictObject({
     user_name: schemas_string().regex(/^\S+$/),
@@ -53605,7 +53606,8 @@ const settings_zh_Config = strictObject({
         .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
     导出文件路径: schemas_string()
         .optional()
-        .describe('当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下'),
+        .transform(string => (string !== undefined && !string.endsWith('.json') ? string + '.json' : string))
+        .describe('当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文的同目录下'),
 });
 const settings_zh_Settings = strictObject({
     user名称: schemas_string().regex(/^\S+$/),

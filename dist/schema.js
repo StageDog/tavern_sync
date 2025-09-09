@@ -23616,7 +23616,8 @@ const Config = strictObject({
         .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
     export_file: schemas_string()
         .optional()
-        .describe('当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下'),
+        .transform(string => (string !== undefined && !string.endsWith('.json') ? string + '.json' : string))
+        .describe('当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文件的同目录下'),
 });
 const Settings = strictObject({
     user_name: schemas_string().regex(/^\S+$/),
@@ -23648,7 +23649,8 @@ const settings_zh_Config = strictObject({
         .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
     导出文件路径: schemas_string()
         .optional()
-        .describe('当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下'),
+        .transform(string => (string !== undefined && !string.endsWith('.json') ? string + '.json' : string))
+        .describe('当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文的同目录下'),
 });
 const settings_zh_Settings = strictObject({
     user名称: schemas_string().regex(/^\S+$/),
