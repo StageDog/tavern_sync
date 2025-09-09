@@ -18,19 +18,20 @@ import {
   Worldbook as Worldbook_zh,
   zh_to_en_map as worldbook_zh_to_en_map,
 } from '@type/worldbook.zh';
-import _ from 'lodash';
 
+import _ from 'lodash';
 import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Worldbook_syncer extends Syncer_interface {
-  constructor(config_name: string, name: string, file: string) {
+  constructor(config_name: string, name: string, file: string, export_file: string) {
     super(
       'worldbook',
       _.invert(zh_to_en_map)['worldbook'],
       config_name,
       name,
       file,
+      export_file,
       Worldbook_en,
       Worldbook_zh,
       worldbook_zh_to_en_map,

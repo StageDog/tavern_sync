@@ -19,6 +19,7 @@ export interface Pull_options {
 
 export interface Push_options {
   should_force: boolean;
+  should_export: boolean;
 }
 
 export interface Watch_options {
@@ -31,6 +32,7 @@ export abstract class Syncer_interface {
   config_name: string;
   name: string;
   file: string;
+  export_file: string;
   dir: string;
 
   en_type: ZodType<any>;
@@ -45,6 +47,7 @@ export abstract class Syncer_interface {
     config_name: string,
     name: string,
     file: string,
+    export_file: string,
     en_type: ZodType<any>,
     zh_type: ZodType<any>,
     zh_to_en_map: Record<string, string>,
@@ -56,6 +59,7 @@ export abstract class Syncer_interface {
     this.config_name = config_name;
     this.name = name;
     this.file = resolve(__dirname, file);
+    this.export_file = resolve(__dirname, export_file);
     this.dir = dirname(this.file);
 
     this.en_type = en_type;
@@ -169,7 +173,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
     result_data: Record<string, any>;
     error_data: Record<string, any>;
   };
-  private async push_once({ should_force }: Push_options): Promise<void> {
+  private async push_once({ should_force, should_export }: Push_options): Promise<void> {
     const local_data = await this.get_parsed_local();
     if (typeof local_data === 'string') {
       throw Error(`推送${this.type_zh} '${this.name}' 失败: ${local_data}`);
@@ -200,6 +204,16 @@ ${this.do_beautify_config(tavern_data, language)}`;
       name: this.name,
       data: result_data,
     });
+
+    if (should_export) {
+      const result = await socket.emitWithAck(`export_${this.type}`, {
+        name: this.name,
+      });
+      if (typeof result === 'string') {
+        throw Error(`导出${this.type_zh} '${this.name}' 失败: ${result}`);
+      }
+      write_file_recursively(this.dir, this.export_file, JSON.stringify(result, null, 4));
+    }
   }
 
   async push(options: Push_options) {
@@ -223,13 +237,13 @@ ${this.do_beautify_config(tavern_data, language)}`;
     };
     const watcher = watch_on(await get_watch_files_from_data());
 
-    await this.push_once(options);
+    await this.push_once({ ...options, should_export: false });
     console.info(`初始化推送完毕, 开始监听${this.type_zh} '${this.name}'`);
 
     watcher.on('all', async (_event, path) => {
       console.info(`检测到文件 '${path}' 发生变化, 进行推送...`);
       try {
-        await this.push_once(options);
+        await this.push_once({ ...options, should_export: false });
         console.info(`推送成功`);
       } catch (err) {
         const error = err as Error;

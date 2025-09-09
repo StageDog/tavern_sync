@@ -20,19 +20,24 @@ import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Preset_syncer extends Syncer_interface {
-  constructor(config_name: string, name: string, file: string) {
+  constructor(config_name: string, name: string, file: string, export_file: string) {
     super(
       'preset',
       _.invert(zh_to_en_map)['preset'],
       config_name,
       name,
       file,
+      export_file,
       Preset_en,
       Preset_zh,
       preset_zh_to_en_map,
       preset_is_zh,
       Preset_tavern,
     );
+  }
+
+  protected do_export(data: Record<string, any>): string {
+    return JSON.stringify(data, null, 4);
   }
 
   // TODO: 拆分 component

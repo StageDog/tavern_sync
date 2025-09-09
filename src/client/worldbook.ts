@@ -14,6 +14,22 @@ const update_worldbook_debounced = _.debounce(update_worldbook, get_settings().d
 
 export function register_worldbook() {
   const socket = get_socket();
+  socket.on(
+    'export_worldbook',
+    async (data: { name: string }, callback: (data: Record<string, any> | string) => void) => {
+      console.info(`[TavernSync] 收到导出世界书 '${data.name}' 的请求`);
+      await update_worldbook_debounced.flush();
+      const worldbook = await SillyTavern.loadWorldInfo(data.name);
+      if (!worldbook) {
+        if (get_settings().should_notify) {
+          toastr.error(`世界书 '${data.name}' 不存在`, 'TavernSync');
+        }
+        callback(`世界书 '${data.name}' 不存在`);
+        return;
+      }
+      callback(_.pick(worldbook, ['entries']));
+    },
+  );
   socket.on('pull_worldbook', async (data: { name: string }, callback: (data: WorldbookEntry[] | string) => void) => {
     console.info(`[TavernSync] 收到提取世界书 '${data.name}' 的请求`);
     try {
