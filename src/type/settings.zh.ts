@@ -30,8 +30,9 @@ export const Config = z.strictObject({
   导出文件路径: z
     .string()
     .optional()
+    .transform(string => (string !== undefined && !string.endsWith('.json') ? string + '.json' : string))
     .describe(
-      '当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下',
+      '当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文的同目录下',
     ),
 });
 
