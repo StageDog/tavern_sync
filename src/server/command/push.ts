@@ -16,7 +16,7 @@ export function add_push_command(): Command {
   );
   command.option(
     '-e, --export',
-    "导出结果: 将推送结果导出为 JSON 文件, 存放在 '导出文件路径 (export_file)' 所指定路径下; 如果没有填写 '导出文件路径', 则存放在与 '本地文件路径 (file)' 同目录下",
+    "导出结果: 将推送结果导出为 JSON 文件, 存放在配置文件中 '导出文件路径 (export_file)' 所指定路径下; 如果没有填写 '导出文件路径', 则存放在与 '本地文件路径 (file)' 同目录下",
     false,
   );
 
