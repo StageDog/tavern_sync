@@ -6,13 +6,19 @@ const Config_type = z.enum(['worldbook', 'preset']);
 export type Config = z.infer<typeof Config>;
 export const Config = z.strictObject({
   type: Config_type,
-  name: z.string(),
+  name: z.string().describe('世界书/预设在酒馆中的名称'),
   file: z
     .string()
     .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
-    .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml')),
+    .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
+    .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
+  export_file: z
+    .string()
+    .optional()
+    .describe(
+      '当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下',
+    ),
 });
-
 export type Settings = z.infer<typeof Settings>;
 export const Settings = z.strictObject({
   user_name: z.string().regex(/^\S+$/),

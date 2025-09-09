@@ -23609,10 +23609,14 @@ const preset_zh_Preset = strictObject({
 const Config_type = schemas_enum(['worldbook', 'preset']);
 const Config = strictObject({
     type: Config_type,
-    name: schemas_string(),
+    name: schemas_string().describe('世界书/预设在酒馆中的名称'),
     file: schemas_string()
         .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
-        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml')),
+        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
+        .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
+    export_file: schemas_string()
+        .optional()
+        .describe('当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下'),
 });
 const Settings = strictObject({
     user_name: schemas_string().regex(/^\S+$/),
@@ -23636,10 +23640,15 @@ function settings_zh_is_zh(data) {
 const settings_zh_Config_type = schemas_enum(['世界书', '预设']);
 const settings_zh_Config = strictObject({
     类型: settings_zh_Config_type,
-    酒馆中的名称: schemas_string(),
+    酒馆中的名称: schemas_string()
+        .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
     本地文件路径: schemas_string()
         .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
-        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml')),
+        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
+        .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
+    导出文件路径: schemas_string()
+        .optional()
+        .describe('当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下'),
 });
 const settings_zh_Settings = strictObject({
     user名称: schemas_string().regex(/^\S+$/),

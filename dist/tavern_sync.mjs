@@ -53566,10 +53566,14 @@ function preprocess(fn, schema) {
 const Config_type = schemas_enum(['worldbook', 'preset']);
 const Config = strictObject({
     type: Config_type,
-    name: schemas_string(),
+    name: schemas_string().describe('世界书/预设在酒馆中的名称'),
     file: schemas_string()
         .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
-        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml')),
+        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
+        .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
+    export_file: schemas_string()
+        .optional()
+        .describe('当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下'),
 });
 const Settings = strictObject({
     user_name: schemas_string().regex(/^\S+$/),
@@ -53593,10 +53597,15 @@ function is_zh(data) {
 const settings_zh_Config_type = schemas_enum(['世界书', '预设']);
 const settings_zh_Config = strictObject({
     类型: settings_zh_Config_type,
-    酒馆中的名称: schemas_string(),
+    酒馆中的名称: schemas_string()
+        .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
     本地文件路径: schemas_string()
         .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
-        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml')),
+        .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
+        .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
+    导出文件路径: schemas_string()
+        .optional()
+        .describe('当使用 `push -e` 导出能直接由酒馆界面导入的世界书/预设时, 要将导出文件存放在哪个文件中; 不填则默认导出到配置文件的同目录下'),
 });
 const settings_zh_Settings = strictObject({
     user名称: schemas_string().regex(/^\S+$/),
@@ -55517,18 +55526,20 @@ class Syncer_interface {
     config_name;
     name;
     file;
+    export_file;
     dir;
     en_type;
     zh_type;
     zh_to_en_map;
     is_zh;
     tavern_type;
-    constructor(type, type_zh, config_name, name, file, en_type, zh_type, zh_to_en_map, is_zh, tavern_type) {
+    constructor(type, type_zh, config_name, name, file, export_file, en_type, zh_type, zh_to_en_map, is_zh, tavern_type) {
         this.type = type;
         this.type_zh = type_zh;
         this.config_name = config_name;
         this.name = name;
         this.file = (0,external_node_path_.resolve)(interface_dirname, file);
+        this.export_file = (0,external_node_path_.resolve)(interface_dirname, export_file);
         this.dir = (0,external_node_path_.dirname)(this.file);
         this.en_type = en_type;
         this.zh_type = zh_type;
@@ -55607,7 +55618,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
         });
         console.info(`成功将${this.type_zh} '${this.name}' 拉取到本地文件 '${this.file}' 中`);
     }
-    async push_once({ should_force }) {
+    async push_once({ should_force, should_export }) {
         const local_data = await this.get_parsed_local();
         if (typeof local_data === 'string') {
             throw Error(`推送${this.type_zh} '${this.name}' 失败: ${local_data}`);
@@ -55632,6 +55643,15 @@ ${this.do_beautify_config(tavern_data, language)}`;
             name: this.name,
             data: result_data,
         });
+        if (should_export) {
+            const result = await socket.emitWithAck(`export_${this.type}`, {
+                name: this.name,
+            });
+            if (typeof result === 'string') {
+                throw Error(`导出${this.type_zh} '${this.name}' 失败: ${result}`);
+            }
+            write_file_recursively(this.dir, this.export_file, JSON.stringify(result, null, 4));
+        }
     }
     async push(options) {
         try {
@@ -55652,12 +55672,12 @@ ${this.do_beautify_config(tavern_data, language)}`;
             return this.do_watch(local_data);
         };
         const watcher = watch_on(await get_watch_files_from_data());
-        await this.push_once(options);
+        await this.push_once({ ...options, should_export: false });
         console.info(`初始化推送完毕, 开始监听${this.type_zh} '${this.name}'`);
         watcher.on('all', async (_event, path) => {
             console.info(`检测到文件 '${path}' 发生变化, 进行推送...`);
             try {
-                await this.push_once(options);
+                await this.push_once({ ...options, should_export: false });
                 console.info(`推送成功`);
             }
             catch (err) {
@@ -56401,8 +56421,11 @@ const preset_zh_Preset = strictObject({
 
 
 class Preset_syncer extends Syncer_interface {
-    constructor(config_name, name, file) {
-        super('preset', lodash_default().invert(zh_to_en_map)['preset'], config_name, name, file, Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, preset_Preset);
+    constructor(config_name, name, file, export_file) {
+        super('preset', lodash_default().invert(zh_to_en_map)['preset'], config_name, name, file, export_file, Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, preset_Preset);
+    }
+    do_export(data) {
+        return JSON.stringify(data, null, 4);
     }
     // TODO: 拆分 component
     do_check_safe(local_data, tavern_data) {
@@ -57012,8 +57035,8 @@ const worldbook_zh_Worldbook = strictObject({
 
 
 class Worldbook_syncer extends Syncer_interface {
-    constructor(config_name, name, file) {
-        super('worldbook', lodash_default().invert(zh_to_en_map)['worldbook'], config_name, name, file, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
+    constructor(config_name, name, file, export_file) {
+        super('worldbook', lodash_default().invert(zh_to_en_map)['worldbook'], config_name, name, file, export_file, worldbook_en_Worldbook, worldbook_zh_Worldbook, worldbook_zh_zh_to_en_map, worldbook_zh_is_zh, Worldbook);
     }
     // TODO: 拆分 component
     do_check_safe(local_data, tavern_data) {
@@ -57154,9 +57177,9 @@ class Worldbook_syncer extends Syncer_interface {
 
 function create_syncer(config_name, config) {
     if (config.type === 'worldbook') {
-        return new Worldbook_syncer(config_name, config.name, config.file);
+        return new Worldbook_syncer(config_name, config.name, config.file, config.export_file ?? `${config_name}.json`);
     }
-    return new Preset_syncer(config_name, config.name, config.file);
+    return new Preset_syncer(config_name, config.name, config.file, config.export_file ?? `${config_name}.json`);
 }
 
 ;// ./src/server/component/add_configs_to_command.ts
@@ -57267,9 +57290,10 @@ function add_push_command() {
     const command = new Command('push').description('将本地内容推送到酒馆');
     add_configs_to_command(command);
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
+    command.option('-e, --export', "导出结果: 将推送结果导出为 JSON 文件, 存放在 '导出文件路径 (export_file)' 所指定路径下; 如果没有填写 '导出文件路径', 则存放在与 '本地文件路径 (file)' 同目录下", false);
     command.action(async (syncers, options) => {
         check_update_silently();
-        await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force })));
+        await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force, should_export: options.export })));
         close_server();
     });
     return command;
