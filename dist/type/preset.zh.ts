@@ -84,8 +84,7 @@ const Prompt_normal = z
         深度: z.number().optional(),
         顺序: z.number().optional(),
       })
-      .optional()
-      .default({ 类型: '相对' })
+      .prefault({ 类型: '相对' })
       .superRefine((data, context) => {
         if (data.类型 === '聊天中' && (data.深度 === undefined || data.顺序 === undefined)) {
           context.addIssue({
@@ -97,7 +96,7 @@ const Prompt_normal = z
       })
       .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
 
-    角色: z.enum(['系统', '用户', 'AI']).default('系统').optional(),
+    角色: z.enum(['系统', '用户', 'AI']).prefault('系统'),
     内容: z.string().optional().describe('内嵌的提示词内容'),
     文件: z.string().optional().describe('外链的提示词文件路径'),
 
@@ -163,8 +162,7 @@ const Prompt_placeholder = z
         深度: z.number().optional(),
         顺序: z.number().optional(),
       })
-      .optional()
-      .default({ 类型: '相对' })
+      .prefault({ 类型: '相对' })
       .superRefine((data, context) => {
         if (data.类型 === '聊天中' && (data.深度 === undefined || data.顺序 === undefined)) {
           context.addIssue({
@@ -176,7 +174,7 @@ const Prompt_placeholder = z
       })
       .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
 
-    角色: z.enum(['系统', '用户', 'AI']).optional(),
+    角色: z.enum(['系统', '用户', 'AI']).prefault('系统'),
     内容: z.never().optional(),
     文件: z.never().optional(),
 
@@ -239,7 +237,7 @@ export const Preset = z.strictObject({
         '最大上下文 token 数. 酒馆计算出的上下文 token 数虚高, 容易在上下文 token 数没有达到限制时就报错, 因此建议调到最大 2000000',
       ),
     最大回复token数: z.number().min(0).describe('最大回复 token 数'),
-    每次回复数: z.number().min(1).default(1).optional().describe('每次生成几个回复'),
+    每次回复数: z.number().min(1).prefault(1).describe('每次生成几个回复'),
 
     流式传输: z.boolean().describe('是否流式传输'),
 
@@ -247,12 +245,12 @@ export const Preset = z.strictObject({
     频率惩罚: z.number().min(-2).max(2).describe('频率惩罚'),
     存在惩罚: z.number().min(-2).max(2).describe('存在惩罚'),
     top_p: z.number().min(0).max(1),
-    重复惩罚: z.number().min(1).max(2).default(1).optional().describe('重复惩罚'),
-    min_p: z.number().min(0).max(1).default(0).optional(),
-    top_k: z.number().min(0).max(500).default(0).optional(),
-    top_a: z.number().min(0).max(1).default(0).optional(),
+    重复惩罚: z.number().min(1).max(2).prefault(1).describe('重复惩罚'),
+    min_p: z.number().min(0).max(1).prefault(0),
+    top_k: z.number().min(0).max(500).prefault(0),
+    top_a: z.number().min(0).max(1).prefault(0),
 
-    种子: z.number().default(-1).optional().describe('种子, -1 表示随机'),
+    种子: z.number().prefault(-1).describe('种子, -1 表示随机'),
 
     压缩系统消息: z.boolean().describe('压缩系统消息: 将连续的系统消息合并为一条消息'),
 
@@ -261,30 +259,23 @@ export const Preset = z.strictObject({
       .describe('推理强度, 即内置思维链的投入程度. 例如, 如果酒馆直连 gemini-2.5-flash, 则`最小`将会不使用内置思维链'),
     请求思维链: z
       .boolean()
-      .default(true)
-      .optional()
+      .prefault(true)
       .describe(
         '请求思维链: 允许模型返回内置思维链的思考过程; 注意这只影响内置思维链显不显示, 不决定模型是否使用内置思维链',
       ),
-    请求图片: z.boolean().default(true).optional().describe('请求图片: 允许模型在回复中返回图片'),
+    请求图片: z.boolean().prefault(true).describe('请求图片: 允许模型在回复中返回图片'),
     启用函数调用: z
       .boolean()
-      .default(true)
-      .optional()
+      .prefault(true)
       .describe('启用函数调用: 允许模型使用函数调用功能; 比如 cursor 借此在回复中读写文件、运行命令'),
-    启用网络搜索: z.boolean().default(true).optional().describe('启用网络搜索: 允许模型使用网络搜索功能'),
+    启用网络搜索: z.boolean().prefault(true).describe('启用网络搜索: 允许模型使用网络搜索功能'),
 
-    允许发送图片: z
-      .enum(['禁用', '自动', '低', '高'])
-      .default('自动')
-      .optional()
-      .describe('是否允许发送图片作为提示词'),
-    允许发送视频: z.boolean().default(true).optional().describe('是否允许发送视频作为提示词'),
+    允许发送图片: z.enum(['禁用', '自动', '低', '高']).prefault('自动').describe('是否允许发送图片作为提示词'),
+    允许发送视频: z.boolean().prefault(true).describe('是否允许发送视频作为提示词'),
 
     角色名称前缀: z
       .enum(['无', '默认', '内容', '补全'])
-      .default('无')
-      .optional()
+      .prefault('无')
       .describe(
         dedent(`
         角色名称前缀: 是否要为消息添加角色名称前缀, 以及怎么添加
@@ -297,8 +288,7 @@ export const Preset = z.strictObject({
 
     用引号包裹用户消息: z
       .boolean()
-      .default(false)
-      .optional()
+      .prefault(false)
       .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
   }),
 

@@ -57,19 +57,16 @@
           "maximum": 2
         },
         "min_p": {
-          "default": 0,
           "type": "number",
           "minimum": 0,
           "maximum": 1
         },
         "top_k": {
-          "default": 0,
           "type": "number",
           "minimum": 0,
           "maximum": 500
         },
         "top_a": {
-          "default": 0,
           "type": "number",
           "minimum": 0,
           "maximum": 1
@@ -144,7 +141,6 @@
         },
         "用引号包裹用户消息": {
           "description": "用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹",
-          "default": false,
           "type": "boolean"
         }
       },
@@ -298,6 +294,7 @@
                     "additionalProperties": false
                   },
                   "角色": {
+                    "default": "系统",
                     "type": "string",
                     "enum": [
                       "系统",
@@ -463,6 +460,7 @@
                     "additionalProperties": false
                   },
                   "角色": {
+                    "default": "系统",
                     "type": "string",
                     "enum": [
                       "系统",
@@ -644,6 +642,7 @@
                         "additionalProperties": false
                       },
                       "角色": {
+                        "default": "系统",
                         "type": "string",
                         "enum": [
                           "系统",
