@@ -14,8 +14,7 @@ const Prompt_normal = z
         depth: z.number().optional(),
         order: z.number().optional(),
       })
-      .optional()
-      .default({ type: 'relative' })
+      .prefault({ type: 'relative' })
       .superRefine((data, context) => {
         if (data.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
           context.addIssue({
@@ -27,7 +26,7 @@ const Prompt_normal = z
       })
       .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
 
-    role: z.enum(['system', 'user', 'assistant']).default('system').optional(),
+    role: z.enum(['system', 'user', 'assistant']).prefault('system'),
     content: z.string().optional().describe('内嵌的提示词内容'),
     file: z.string().optional().describe('外链的提示词文件路径'),
 
@@ -93,8 +92,7 @@ const Prompt_placeholder = z
         depth: z.number().optional(),
         order: z.number().optional(),
       })
-      .optional()
-      .default({ type: 'relative' })
+      .prefault({ type: 'relative' })
       .superRefine((data, context) => {
         if (data?.type === 'in_chat' && (data.depth === undefined || data.order === undefined)) {
           context.addIssue({
@@ -106,7 +104,7 @@ const Prompt_placeholder = z
       })
       .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
 
-    role: z.enum(['system', 'user', 'assistant']).default('system').optional(),
+    role: z.enum(['system', 'user', 'assistant']).prefault('system'),
     content: z.never().optional(),
     file: z.never().optional(),
 
@@ -169,7 +167,7 @@ export const Preset = z.strictObject({
         '最大上下文 token 数. 酒馆计算出的上下文 token 数虚高, 容易在上下文 token 数没有达到限制时就报错, 因此建议调到最大 2000000',
       ),
     max_completion_tokens: z.number().min(0).describe('最大回复 token 数'),
-    reply_count: z.number().min(1).default(1).optional().describe('每次生成几个回复'),
+    reply_count: z.number().min(1).prefault(1).describe('每次生成几个回复'),
 
     should_stream: z.boolean().describe('是否流式传输'),
 
@@ -177,12 +175,12 @@ export const Preset = z.strictObject({
     frequency_penalty: z.number().min(-2).max(2).describe('频率惩罚'),
     presence_penalty: z.number().min(-2).max(2).describe('存在惩罚'),
     top_p: z.number().min(0).max(1),
-    repetition_penalty: z.number().min(1).max(2).default(1).optional().describe('重复惩罚'),
-    min_p: z.number().min(0).max(1).default(0).optional(),
-    top_k: z.number().min(0).max(500).default(0).optional(),
-    top_a: z.number().min(0).max(1).default(0).optional(),
+    repetition_penalty: z.number().min(1).max(2).prefault(1).describe('重复惩罚'),
+    min_p: z.number().min(0).max(1).prefault(0),
+    top_k: z.number().min(0).max(500).prefault(0),
+    top_a: z.number().min(0).max(1).prefault(0),
 
-    seed: z.number().default(-1).optional().describe('种子, -1 表示随机'),
+    seed: z.number().prefault(-1).describe('种子, -1 表示随机'),
 
     squash_system_messages: z.boolean().describe('压缩系统消息: 将连续的系统消息合并为一条消息'),
 
@@ -191,30 +189,26 @@ export const Preset = z.strictObject({
       .describe('推理强度, 即内置思维链的投入程度. 例如, 如果酒馆直连 gemini-2.5-flash, 则 `min` 将会不使用内置思维链'),
     request_thoughts: z
       .boolean()
-      .default(true)
-      .optional()
+      .prefault(true)
       .describe(
         '请求思维链: 允许模型返回内置思维链的思考过程; 注意这只影响内置思维链显不显示, 不决定模型是否使用内置思维链',
       ),
-    request_images: z.boolean().default(true).optional().describe('请求图片: 允许模型在回复中返回图片'),
+    request_images: z.boolean().prefault(true).describe('请求图片: 允许模型在回复中返回图片'),
     enable_function_calling: z
       .boolean()
-      .default(true)
-      .optional()
+      .prefault(true)
       .describe('启用函数调用: 允许模型使用函数调用功能; 比如 cursor 借此在回复中读写文件、运行命令'),
-    enable_web_search: z.boolean().default(true).optional().describe('启用网络搜索: 允许模型使用网络搜索功能'),
+    enable_web_search: z.boolean().prefault(true).describe('启用网络搜索: 允许模型使用网络搜索功能'),
 
     allow_sending_images: z
       .enum(['disabled', 'auto', 'low', 'high'])
-      .default('auto')
-      .optional()
+      .prefault('auto')
       .describe('是否允许发送图片作为提示词'),
-    allow_sending_videos: z.boolean().default(true).optional().describe('是否允许发送视频作为提示词'),
+    allow_sending_videos: z.boolean().prefault(true).describe('是否允许发送视频作为提示词'),
 
     character_name_prefix: z
       .enum(['none', 'default', 'content', 'completion'])
-      .default('none')
-      .optional()
+      .prefault('none')
       .describe(
         dedent(`
         角色名称前缀: 是否要为消息添加角色名称前缀, 以及怎么添加
@@ -227,8 +221,7 @@ export const Preset = z.strictObject({
 
     wrap_user_messages_in_quotes: z
       .boolean()
-      .default(false)
-      .optional()
+      .prefault(false)
       .describe('用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹'),
   }),
 
