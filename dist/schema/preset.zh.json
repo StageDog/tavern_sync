@@ -294,7 +294,6 @@
                     "additionalProperties": false
                   },
                   "角色": {
-                    "default": "系统",
                     "type": "string",
                     "enum": [
                       "系统",
@@ -460,7 +459,6 @@
                     "additionalProperties": false
                   },
                   "角色": {
-                    "default": "系统",
                     "type": "string",
                     "enum": [
                       "系统",
@@ -642,7 +640,6 @@
                         "additionalProperties": false
                       },
                       "角色": {
-                        "default": "系统",
                         "type": "string",
                         "enum": [
                           "系统",

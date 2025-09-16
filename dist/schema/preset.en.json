@@ -289,7 +289,6 @@
                     "additionalProperties": false
                   },
                   "role": {
-                    "default": "system",
                     "type": "string",
                     "enum": [
                       "system",
@@ -455,7 +454,6 @@
                     "additionalProperties": false
                   },
                   "role": {
-                    "default": "system",
                     "type": "string",
                     "enum": [
                       "system",
@@ -642,7 +640,6 @@
                         "additionalProperties": false
                       },
                       "role": {
-                        "default": "system",
                         "type": "string",
                         "enum": [
                           "system",

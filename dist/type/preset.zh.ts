@@ -174,7 +174,7 @@ const Prompt_placeholder = z
       })
       .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
 
-    角色: z.enum(['系统', '用户', 'AI']).prefault('系统'),
+    角色: z.enum(['系统', '用户', 'AI']).optional(),
     内容: z.never().optional(),
     文件: z.never().optional(),
 
