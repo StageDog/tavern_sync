@@ -104,7 +104,7 @@ const Prompt_placeholder = z
       })
       .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
 
-    role: z.enum(['system', 'user', 'assistant']).prefault('system'),
+    role: z.enum(['system', 'user', 'assistant']).optional(),
     content: z.never().optional(),
     file: z.never().optional(),
 
