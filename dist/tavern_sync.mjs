@@ -62235,7 +62235,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
         if (!should_force) {
             const tavern_data = await this.get_parsed_tavern({ queit: true });
             if (typeof tavern_data === 'string') {
-                throw Error(`推送${this.type_zh} '${this.name}' 失败: ${tavern_data}`);
+                throw Error(`推送${this.type_zh} '${this.name}' 失败: ${tavern_data}; 如果想直接创建预设, 请在命令尾部添加 '-f' 或 '--force' 选项, 如: 'node tavern_sync.mjs push 猴子打字机 -f'`);
             }
             const { error_data } = this.check_safe(local_data, tavern_data);
             if (!lodash_default().isEmpty(error_data)) {
