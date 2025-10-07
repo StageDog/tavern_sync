@@ -13,7 +13,7 @@
     "@types/lodash": "^4.17.20",
     "@types/node": "^22.18.8",
     "@types/toastr": "^2.1.43",
-    "@typescript-eslint/parser": "^8.45.0",
+    "@typescript-eslint/parser": "^8.46.0",
     "bufferutil": "^4.0.9",
     "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
@@ -37,6 +37,6 @@
     "socket.io": "^4.8.1",
     "type-fest": "^4.41.0",
     "yaml": "^2.8.1",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   }
 }
