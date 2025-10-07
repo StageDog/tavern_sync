@@ -46,6 +46,14 @@ const Worldbook_entry = z
       delay: z.number().nullable(),
     }),
 
+    group: z
+      .string()
+      .transform(group => group.split(','))
+      .default([]),
+    groupOverride: z.boolean().default(false),
+    groupWeight: z.number().default(100),
+    useGroupScoring: z.boolean().nullable().default(null),
+
     extra: z.record(z.string(), z.any()).optional(),
 
     content: z.string(),
@@ -84,6 +92,24 @@ const Worldbook_entry = z
     if (_.isEmpty(data.effect)) {
       _.unset(data, 'effect');
     }
+
+    if (data.group.length === 0) {
+      _.unset(data, 'group');
+    } else {
+      _.set(data, 'group', { labels: data.group });
+      if (data.groupOverride === true) {
+        _.set(data, 'group.use_priority', true);
+      }
+      if (data.groupWeight !== 100) {
+        _.set(data, 'group.weight', data.groupWeight);
+      }
+      if (data.useGroupScoring !== null) {
+        _.set(data, 'group.use_scoring', data.useGroupScoring);
+      }
+    }
+    _.unset(data, 'groupOverride');
+    _.unset(data, 'groupWeight');
+    _.unset(data, 'useGroupScoring');
 
     if (_.isEmpty(data.extra)) {
       _.unset(data, 'extra');

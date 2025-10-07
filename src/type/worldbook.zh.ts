@@ -50,6 +50,12 @@ export const zh_to_en_map = {
   冷却: 'cooldown',
   延迟: 'delay',
 
+  群组: 'group',
+  组标签: 'labels',
+  使用优先级: 'use_priority',
+  权重: 'weight',
+  使用评分: 'use_scoring',
+
   额外字段: 'extra',
 
   内容: 'content',
@@ -191,6 +197,21 @@ const Worldbook_entry = z
       .partial()
       .optional(),
 
+    群组: z
+      .strictObject({
+        组标签: z.array(z.string()).min(1).describe('组标签'),
+        使用优先级: z.boolean().default(false).describe('使用优先级'),
+        权重: z.number().default(100).describe('权重'),
+        使用评分: z
+          .union([z.boolean(), z.literal('same_as_global')])
+          .default('same_as_global')
+          .transform(data => (data === 'same_as_global' ? null : data))
+          .describe('使用评分'),
+      })
+      .partial()
+      .optional()
+      .describe('包含组'),
+
     额外字段: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 
     内容: z.string().optional().describe('内嵌的提示词内容'),
@@ -217,7 +238,6 @@ const Worldbook_entry = z
     }
   });
 
-
 const Wolrdbook_leaf = Worldbook_entry;
 const Wolrdbook_branch = z.object({
   文件夹: z.string(),
@@ -234,7 +254,6 @@ function flatten_tree(data: z.infer<typeof Wolrdbook_tree>): z.infer<typeof Wolr
   return [data];
 }
 const Wolrdbook_trees = z.array(Wolrdbook_tree).transform(data => data.flatMap(flatten_tree));
-
 
 export type Worldbook = z.infer<typeof Worldbook>;
 export const Worldbook = z.strictObject({
