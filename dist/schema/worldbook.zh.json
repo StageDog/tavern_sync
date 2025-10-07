@@ -202,6 +202,44 @@
                 },
                 "additionalProperties": false
               },
+              "群组": {
+                "description": "包含组",
+                "type": "object",
+                "properties": {
+                  "组标签": {
+                    "description": "组标签",
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "使用优先级": {
+                    "description": "使用优先级",
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "权重": {
+                    "description": "权重",
+                    "default": 100,
+                    "type": "number"
+                  },
+                  "使用评分": {
+                    "description": "使用评分",
+                    "default": "same_as_global",
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "string",
+                        "const": "same_as_global"
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              },
               "额外字段": {
                 "description": "额外字段: 用于为预设提示词绑定额外数据",
                 "type": "object",
@@ -422,6 +460,44 @@
                             },
                             {
                               "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "群组": {
+                      "description": "包含组",
+                      "type": "object",
+                      "properties": {
+                        "组标签": {
+                          "description": "组标签",
+                          "minItems": 1,
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "使用优先级": {
+                          "description": "使用优先级",
+                          "default": false,
+                          "type": "boolean"
+                        },
+                        "权重": {
+                          "description": "权重",
+                          "default": 100,
+                          "type": "number"
+                        },
+                        "使用评分": {
+                          "description": "使用评分",
+                          "default": "same_as_global",
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "string",
+                              "const": "same_as_global"
                             }
                           ]
                         }

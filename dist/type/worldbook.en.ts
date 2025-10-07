@@ -147,6 +147,21 @@ const Worldbook_entry = z
       .partial()
       .optional(),
 
+    group: z
+      .strictObject({
+        labels: z.array(z.string()).min(1).describe('组标签'),
+        use_priority: z.boolean().default(false).describe('使用优先级'),
+        weight: z.number().default(100).describe('权重'),
+        use_scoring: z
+          .union([z.boolean(), z.literal('same_as_global')])
+          .default('same_as_global')
+          .transform(data => (data === 'same_as_global' ? null : data))
+          .describe('使用评分'),
+      })
+      .partial()
+      .optional()
+      .describe('包含组'),
+
     extra: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 
     content: z.string().optional().describe('内嵌的提示词内容'),

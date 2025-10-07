@@ -203,6 +203,44 @@
                 },
                 "additionalProperties": false
               },
+              "group": {
+                "description": "包含组",
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "description": "组标签",
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "use_priority": {
+                    "description": "使用优先级",
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "weight": {
+                    "description": "权重",
+                    "default": 100,
+                    "type": "number"
+                  },
+                  "use_scoring": {
+                    "description": "使用评分",
+                    "default": "same_as_global",
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "string",
+                        "const": "same_as_global"
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              },
               "extra": {
                 "description": "额外字段: 用于为预设提示词绑定额外数据",
                 "type": "object",
@@ -424,6 +462,44 @@
                             },
                             {
                               "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "group": {
+                      "description": "包含组",
+                      "type": "object",
+                      "properties": {
+                        "labels": {
+                          "description": "组标签",
+                          "minItems": 1,
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "use_priority": {
+                          "description": "使用优先级",
+                          "default": false,
+                          "type": "boolean"
+                        },
+                        "weight": {
+                          "description": "权重",
+                          "default": 100,
+                          "type": "number"
+                        },
+                        "use_scoring": {
+                          "description": "使用评分",
+                          "default": "same_as_global",
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "string",
+                              "const": "same_as_global"
                             }
                           ]
                         }
