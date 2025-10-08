@@ -30810,7 +30810,7 @@ var type_dirname = __webpack_fileURLToPath__(import.meta.url + "/..").slice(0, -
 
 
 function write_json_schema(name, schema) {
-    (0,external_node_fs_namespaceObject.writeFileSync)((0,external_node_path_namespaceObject.join)(type_dirname, 'schema', `${name}.json`), JSON.stringify(toJSONSchema(schema, { io: 'input' }), null, 2));
+    (0,external_node_fs_namespaceObject.writeFileSync)((0,external_node_path_namespaceObject.join)(type_dirname, 'schema', `${name}.json`), JSON.stringify(toJSONSchema(schema, { io: 'input', reused: 'ref' }), null, 2));
 }
 (0,external_node_fs_namespaceObject.mkdirSync)((0,external_node_path_namespaceObject.join)(type_dirname, 'schema'), { recursive: true });
 write_json_schema('preset.en', Preset);
