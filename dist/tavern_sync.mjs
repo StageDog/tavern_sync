@@ -60393,7 +60393,7 @@ ${Object.entries(get_settings().configs)
 ;// ./src/server/bundle/preset.ts
 
 function fromPresetPrompt(prompt) {
-    const is_placeholder_prompt = Number.isNaN(prompt.id);
+    const is_placeholder_prompt = Number.isNaN(parseInt(prompt.id));
     const is_normal_prompt = !is_placeholder_prompt;
     let result = lodash_default()({}).set('identifier', prompt.id).set('name', prompt.name).set('enabled', prompt.enabled);
     if (!['dialogueExamples', 'chatHistory'].includes(prompt.id)) {
