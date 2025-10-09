@@ -1,8 +1,8 @@
 import dedent from 'dedent';
 import * as z from 'zod';
 
-type Worldbook_entry = z.infer<typeof Worldbook_entry>;
-const Worldbook_entry = z
+export type Worldbook_entry = z.infer<typeof Worldbook_entry>;
+export const Worldbook_entry = z
   .strictObject({
     name: z.string(),
     uid: z.number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
@@ -158,7 +158,6 @@ const Worldbook_entry = z
           .transform(data => (data === 'same_as_global' ? null : data))
           .describe('使用评分'),
       })
-      .partial()
       .optional()
       .describe('包含组'),
 
@@ -166,6 +165,15 @@ const Worldbook_entry = z
 
     content: z.string().optional().describe('内嵌的提示词内容'),
     file: z.string().optional().describe('外链的提示词文件路径'),
+  })
+  .transform(data => {
+    if (data.group !== undefined) {
+      _.set(data, 'groupOverride', data.group.use_priority);
+      _.set(data, 'groupWeight', data.group.weight);
+      _.set(data, 'useGroupScoring', data.group.use_scoring);
+      _.set(data, 'group', data.group.labels.join(','));
+    }
+    return data;
   })
   .superRefine((data, context) => {
     if (data.content === undefined && data.file === undefined) {

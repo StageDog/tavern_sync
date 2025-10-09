@@ -208,7 +208,6 @@ const Worldbook_entry = z
           .transform(data => (data === 'same_as_global' ? null : data))
           .describe('使用评分'),
       })
-      .partial()
       .optional()
       .describe('包含组'),
 
@@ -216,6 +215,15 @@ const Worldbook_entry = z
 
     内容: z.string().optional().describe('内嵌的提示词内容'),
     文件: z.string().optional().describe('外链的提示词文件路径'),
+  })
+  .transform(data => {
+    if (data.群组 !== undefined) {
+      _.set(data, 'groupOverride', data.群组.使用优先级);
+      _.set(data, 'groupWeight', data.群组.权重);
+      _.set(data, 'useGroupScoring', data.群组.使用评分);
+      _.set(data, 'group', data.群组.组标签.join(','));
+    }
+    return data;
   })
   .superRefine((data, context) => {
     if (data.内容 === undefined && data.文件 === undefined) {

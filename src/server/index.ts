@@ -1,3 +1,4 @@
+import { add_bundle_command } from '@server/command/bundle';
 import { add_list_command } from '@server/command/list';
 import { add_pull_command } from '@server/command/pull';
 import { add_push_command } from '@server/command/push';
@@ -11,6 +12,7 @@ z.config(z.locales.zhCN());
 program
   .name('世界书同步脚本')
   .addCommand(add_list_command())
+  .addCommand(add_bundle_command())
   .addCommand(add_pull_command())
   .addCommand(add_push_command())
   .addCommand(add_update_command())

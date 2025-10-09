@@ -5,7 +5,7 @@ import { Config } from '@type/settings.en';
 
 export function create_syncer(config_name: string, config: Config): Syncer_interface {
   if (config.type === 'worldbook') {
-    return new Worldbook_syncer(config_name, config.name, config.file, config.export_file ?? `${config_name}.json`);
+    return new Worldbook_syncer(config_name, config.name, config.file, config.export_file);
   }
-  return new Preset_syncer(config_name, config.name, config.file, config.export_file ?? `${config_name}.json`);
+  return new Preset_syncer(config_name, config.name, config.file, config.export_file);
 }

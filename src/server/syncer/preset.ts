@@ -1,3 +1,4 @@
+import { bundle_preset } from '@server/bundle/preset';
 import { is_collection_file, parse_collection_file } from '@server/component/collection_file';
 import { replace_raw_string } from '@server/component/replace_raw_string';
 import { replace_user_name } from '@server/component/replace_user_name';
@@ -20,7 +21,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Preset_syncer extends Syncer_interface {
-  constructor(config_name: string, name: string, file: string, export_file: string) {
+  constructor(config_name: string, name: string, file: string, export_file: string | undefined) {
     super(
       'preset',
       _.invert(zh_to_en_map)['preset'],
@@ -150,7 +151,7 @@ export class Preset_syncer extends Syncer_interface {
   }
 
   // TODO: 拆分 component
-  protected do_push(local_data: Preset_en): { result_data: Record<string, any>; error_data: Record<string, any> } {
+  protected do_push(local_data: Preset_en): { result_data: Preset_en; error_data: Record<string, any> } {
     let error_data = {
       未能找到以下外链提示词文件: [] as string[],
       通过补全文件后缀找到了多个文件: [] as string[],
@@ -239,5 +240,10 @@ export class Preset_syncer extends Syncer_interface {
         return result;
       }, [])
       .concat(this.file);
+  }
+
+  protected do_bundle(local_data: Preset_en): { result_data: Record<string, any>; error_data: Record<string, any> } {
+    const { result_data, error_data } = this.do_push(local_data);
+    return { result_data: bundle_preset(result_data), error_data };
   }
 }

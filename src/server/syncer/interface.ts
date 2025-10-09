@@ -48,7 +48,7 @@ export abstract class Syncer_interface {
     config_name: string,
     name: string,
     file: string,
-    export_file: string,
+    export_file: string | undefined,
     en_type: ZodType<any>,
     zh_type: ZodType<any>,
     zh_to_en_map: Record<string, string>,
@@ -60,8 +60,8 @@ export abstract class Syncer_interface {
     this.config_name = config_name;
     this.name = name;
     this.file = resolve(__dirname, file);
-    this.export_file = resolve(__dirname, export_file);
     this.dir = dirname(this.file);
+    this.export_file = export_file ? resolve(__dirname, export_file) : resolve(this.dir, `${this.config_name}.json`);
 
     this.en_type = en_type;
     this.zh_type = zh_type;
@@ -217,7 +217,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
       if (typeof result === 'string') {
         throw Error(`导出${this.type_zh} '${this.name}' 失败: ${result}`);
       }
-      write_file_recursively(this.dir, this.export_file, JSON.stringify(result, null, 4));
+      write_file_recursively(this.dir, this.export_file, JSON.stringify(result, null, 2));
     }
   }
 
@@ -255,5 +255,21 @@ ${this.do_beautify_config(tavern_data, language)}`;
         console.error(`${error.message}`);
       }
     });
+  }
+
+  protected abstract do_bundle(local_data: Record<string, any>): {
+    result_data: Record<string, any>;
+    error_data: Record<string, any>;
+  };
+  async bundle() {
+    const local_data = this.get_parsed_local();
+    if (typeof local_data === 'string') {
+      exit_on_error(`打包${this.type_zh} '${this.name}' 失败: ${local_data}`);
+    }
+    const { result_data, error_data } = this.do_bundle(local_data);
+    if (!_.isEmpty(error_data)) {
+      exit_on_error(YAML.stringify({ [`打包${this.type_zh} '${this.name}' 失败`]: error_data }));
+    }
+    write_file_recursively(this.dir, this.export_file, JSON.stringify(result_data, null, 2));
   }
 }
