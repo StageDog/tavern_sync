@@ -109,7 +109,7 @@ type _OriginalPlaceholderPrompt = {
 };
 
 function fromPresetPrompt(prompt: PromptLeaf): _OriginalPrompt {
-  const is_placeholder_prompt = Number.isNaN(prompt.id);
+  const is_placeholder_prompt = Number.isNaN(parseInt(prompt.id));
   const is_normal_prompt = !is_placeholder_prompt;
 
   let result = _({}).set('identifier', prompt.id).set('name', prompt.name).set('enabled', prompt.enabled);
