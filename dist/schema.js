@@ -30530,12 +30530,20 @@ const Worldbook_entry = strictObject({
             .transform(data => (data === 'same_as_global' ? null : data))
             .describe('使用评分'),
     })
-        .partial()
         .optional()
         .describe('包含组'),
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
     content: schemas_string().optional().describe('内嵌的提示词内容'),
     file: schemas_string().optional().describe('外链的提示词文件路径'),
+})
+    .transform(data => {
+    if (data.group !== undefined) {
+        _.set(data, 'groupOverride', data.group.use_priority);
+        _.set(data, 'groupWeight', data.group.weight);
+        _.set(data, 'useGroupScoring', data.group.use_scoring);
+        _.set(data, 'group', data.group.labels.join(','));
+    }
+    return data;
 })
     .superRefine((data, context) => {
     if (data.content === undefined && data.file === undefined) {
@@ -30750,12 +30758,20 @@ const worldbook_zh_Worldbook_entry = strictObject({
             .transform(data => (data === 'same_as_global' ? null : data))
             .describe('使用评分'),
     })
-        .partial()
         .optional()
         .describe('包含组'),
     额外字段: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
     内容: schemas_string().optional().describe('内嵌的提示词内容'),
     文件: schemas_string().optional().describe('外链的提示词文件路径'),
+})
+    .transform(data => {
+    if (data.群组 !== undefined) {
+        _.set(data, 'groupOverride', data.群组.使用优先级);
+        _.set(data, 'groupWeight', data.群组.权重);
+        _.set(data, 'useGroupScoring', data.群组.使用评分);
+        _.set(data, 'group', data.群组.组标签.join(','));
+    }
+    return data;
 })
     .superRefine((data, context) => {
     if (data.内容 === undefined && data.文件 === undefined) {

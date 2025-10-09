@@ -8473,6 +8473,231 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("tty");
 
 /***/ }),
 
+/***/ 2176:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+var resolveBlockScalar = __webpack_require__(140);
+var resolveFlowScalar = __webpack_require__(8113);
+var errors = __webpack_require__(6101);
+var stringifyString = __webpack_require__(9850);
+
+function resolveAsScalar(token, strict = true, onError) {
+    if (token) {
+        const _onError = (pos, code, message) => {
+            const offset = typeof pos === 'number' ? pos : Array.isArray(pos) ? pos[0] : pos.offset;
+            if (onError)
+                onError(offset, code, message);
+            else
+                throw new errors.YAMLParseError([offset, offset + 1], code, message);
+        };
+        switch (token.type) {
+            case 'scalar':
+            case 'single-quoted-scalar':
+            case 'double-quoted-scalar':
+                return resolveFlowScalar.resolveFlowScalar(token, strict, _onError);
+            case 'block-scalar':
+                return resolveBlockScalar.resolveBlockScalar({ options: { strict } }, token, _onError);
+        }
+    }
+    return null;
+}
+/**
+ * Create a new scalar token with `value`
+ *
+ * Values that represent an actual string but may be parsed as a different type should use a `type` other than `'PLAIN'`,
+ * as this function does not support any schema operations and won't check for such conflicts.
+ *
+ * @param value The string representation of the value, which will have its content properly indented.
+ * @param context.end Comments and whitespace after the end of the value, or after the block scalar header. If undefined, a newline will be added.
+ * @param context.implicitKey Being within an implicit key may affect the resolved type of the token's value.
+ * @param context.indent The indent level of the token.
+ * @param context.inFlow Is this scalar within a flow collection? This may affect the resolved type of the token's value.
+ * @param context.offset The offset position of the token.
+ * @param context.type The preferred type of the scalar token. If undefined, the previous type of the `token` will be used, defaulting to `'PLAIN'`.
+ */
+function createScalarToken(value, context) {
+    const { implicitKey = false, indent, inFlow = false, offset = -1, type = 'PLAIN' } = context;
+    const source = stringifyString.stringifyString({ type, value }, {
+        implicitKey,
+        indent: indent > 0 ? ' '.repeat(indent) : '',
+        inFlow,
+        options: { blockQuote: true, lineWidth: -1 }
+    });
+    const end = context.end ?? [
+        { type: 'newline', offset: -1, indent, source: '\n' }
+    ];
+    switch (source[0]) {
+        case '|':
+        case '>': {
+            const he = source.indexOf('\n');
+            const head = source.substring(0, he);
+            const body = source.substring(he + 1) + '\n';
+            const props = [
+                { type: 'block-scalar-header', offset, indent, source: head }
+            ];
+            if (!addEndtoBlockProps(props, end))
+                props.push({ type: 'newline', offset: -1, indent, source: '\n' });
+            return { type: 'block-scalar', offset, indent, props, source: body };
+        }
+        case '"':
+            return { type: 'double-quoted-scalar', offset, indent, source, end };
+        case "'":
+            return { type: 'single-quoted-scalar', offset, indent, source, end };
+        default:
+            return { type: 'scalar', offset, indent, source, end };
+    }
+}
+/**
+ * Set the value of `token` to the given string `value`, overwriting any previous contents and type that it may have.
+ *
+ * Best efforts are made to retain any comments previously associated with the `token`,
+ * though all contents within a collection's `items` will be overwritten.
+ *
+ * Values that represent an actual string but may be parsed as a different type should use a `type` other than `'PLAIN'`,
+ * as this function does not support any schema operations and won't check for such conflicts.
+ *
+ * @param token Any token. If it does not include an `indent` value, the value will be stringified as if it were an implicit key.
+ * @param value The string representation of the value, which will have its content properly indented.
+ * @param context.afterKey In most cases, values after a key should have an additional level of indentation.
+ * @param context.implicitKey Being within an implicit key may affect the resolved type of the token's value.
+ * @param context.inFlow Being within a flow collection may affect the resolved type of the token's value.
+ * @param context.type The preferred type of the scalar token. If undefined, the previous type of the `token` will be used, defaulting to `'PLAIN'`.
+ */
+function setScalarValue(token, value, context = {}) {
+    let { afterKey = false, implicitKey = false, inFlow = false, type } = context;
+    let indent = 'indent' in token ? token.indent : null;
+    if (afterKey && typeof indent === 'number')
+        indent += 2;
+    if (!type)
+        switch (token.type) {
+            case 'single-quoted-scalar':
+                type = 'QUOTE_SINGLE';
+                break;
+            case 'double-quoted-scalar':
+                type = 'QUOTE_DOUBLE';
+                break;
+            case 'block-scalar': {
+                const header = token.props[0];
+                if (header.type !== 'block-scalar-header')
+                    throw new Error('Invalid block scalar header');
+                type = header.source[0] === '>' ? 'BLOCK_FOLDED' : 'BLOCK_LITERAL';
+                break;
+            }
+            default:
+                type = 'PLAIN';
+        }
+    const source = stringifyString.stringifyString({ type, value }, {
+        implicitKey: implicitKey || indent === null,
+        indent: indent !== null && indent > 0 ? ' '.repeat(indent) : '',
+        inFlow,
+        options: { blockQuote: true, lineWidth: -1 }
+    });
+    switch (source[0]) {
+        case '|':
+        case '>':
+            setBlockScalarValue(token, source);
+            break;
+        case '"':
+            setFlowScalarValue(token, source, 'double-quoted-scalar');
+            break;
+        case "'":
+            setFlowScalarValue(token, source, 'single-quoted-scalar');
+            break;
+        default:
+            setFlowScalarValue(token, source, 'scalar');
+    }
+}
+function setBlockScalarValue(token, source) {
+    const he = source.indexOf('\n');
+    const head = source.substring(0, he);
+    const body = source.substring(he + 1) + '\n';
+    if (token.type === 'block-scalar') {
+        const header = token.props[0];
+        if (header.type !== 'block-scalar-header')
+            throw new Error('Invalid block scalar header');
+        header.source = head;
+        token.source = body;
+    }
+    else {
+        const { offset } = token;
+        const indent = 'indent' in token ? token.indent : -1;
+        const props = [
+            { type: 'block-scalar-header', offset, indent, source: head }
+        ];
+        if (!addEndtoBlockProps(props, 'end' in token ? token.end : undefined))
+            props.push({ type: 'newline', offset: -1, indent, source: '\n' });
+        for (const key of Object.keys(token))
+            if (key !== 'type' && key !== 'offset')
+                delete token[key];
+        Object.assign(token, { type: 'block-scalar', indent, props, source: body });
+    }
+}
+/** @returns `true` if last token is a newline */
+function addEndtoBlockProps(props, end) {
+    if (end)
+        for (const st of end)
+            switch (st.type) {
+                case 'space':
+                case 'comment':
+                    props.push(st);
+                    break;
+                case 'newline':
+                    props.push(st);
+                    return true;
+            }
+    return false;
+}
+function setFlowScalarValue(token, source, type) {
+    switch (token.type) {
+        case 'scalar':
+        case 'double-quoted-scalar':
+        case 'single-quoted-scalar':
+            token.type = type;
+            token.source = source;
+            break;
+        case 'block-scalar': {
+            const end = token.props.slice(1);
+            let oa = source.length;
+            if (token.props[0].type === 'block-scalar-header')
+                oa -= token.props[0].source.length;
+            for (const tok of end)
+                tok.offset += oa;
+            delete token.props;
+            Object.assign(token, { type, source, end });
+            break;
+        }
+        case 'block-map':
+        case 'block-seq': {
+            const offset = token.offset + source.length;
+            const nl = { type: 'newline', offset, indent: token.indent, source: '\n' };
+            delete token.items;
+            Object.assign(token, { type, source, end: [nl] });
+            break;
+        }
+        default: {
+            const indent = 'indent' in token ? token.indent : -1;
+            const end = 'end' in token && Array.isArray(token.end)
+                ? token.end.filter(st => st.type === 'space' ||
+                    st.type === 'comment' ||
+                    st.type === 'newline')
+                : [];
+            for (const key of Object.keys(token))
+                if (key !== 'type' && key !== 'offset')
+                    delete token[key];
+            Object.assign(token, { type, indent, source, end });
+        }
+    }
+}
+
+exports.createScalarToken = createScalarToken;
+exports.resolveAsScalar = resolveAsScalar;
+exports.setScalarValue = setScalarValue;
+
+
+/***/ }),
+
 /***/ 2203:
 /***/ ((module) => {
 
@@ -38188,7 +38413,7 @@ exports.JSONP = JSONP;
 
 
 
-var cstScalar = __webpack_require__(9795);
+var cstScalar = __webpack_require__(2176);
 var cstStringify = __webpack_require__(810);
 var cstVisit = __webpack_require__(1744);
 
@@ -46607,231 +46832,6 @@ exports.yeast = yeast;
 //
 for (; i < length; i++)
     map[alphabet[i]] = i;
-
-
-/***/ }),
-
-/***/ 9795:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-
-var resolveBlockScalar = __webpack_require__(140);
-var resolveFlowScalar = __webpack_require__(8113);
-var errors = __webpack_require__(6101);
-var stringifyString = __webpack_require__(9850);
-
-function resolveAsScalar(token, strict = true, onError) {
-    if (token) {
-        const _onError = (pos, code, message) => {
-            const offset = typeof pos === 'number' ? pos : Array.isArray(pos) ? pos[0] : pos.offset;
-            if (onError)
-                onError(offset, code, message);
-            else
-                throw new errors.YAMLParseError([offset, offset + 1], code, message);
-        };
-        switch (token.type) {
-            case 'scalar':
-            case 'single-quoted-scalar':
-            case 'double-quoted-scalar':
-                return resolveFlowScalar.resolveFlowScalar(token, strict, _onError);
-            case 'block-scalar':
-                return resolveBlockScalar.resolveBlockScalar({ options: { strict } }, token, _onError);
-        }
-    }
-    return null;
-}
-/**
- * Create a new scalar token with `value`
- *
- * Values that represent an actual string but may be parsed as a different type should use a `type` other than `'PLAIN'`,
- * as this function does not support any schema operations and won't check for such conflicts.
- *
- * @param value The string representation of the value, which will have its content properly indented.
- * @param context.end Comments and whitespace after the end of the value, or after the block scalar header. If undefined, a newline will be added.
- * @param context.implicitKey Being within an implicit key may affect the resolved type of the token's value.
- * @param context.indent The indent level of the token.
- * @param context.inFlow Is this scalar within a flow collection? This may affect the resolved type of the token's value.
- * @param context.offset The offset position of the token.
- * @param context.type The preferred type of the scalar token. If undefined, the previous type of the `token` will be used, defaulting to `'PLAIN'`.
- */
-function createScalarToken(value, context) {
-    const { implicitKey = false, indent, inFlow = false, offset = -1, type = 'PLAIN' } = context;
-    const source = stringifyString.stringifyString({ type, value }, {
-        implicitKey,
-        indent: indent > 0 ? ' '.repeat(indent) : '',
-        inFlow,
-        options: { blockQuote: true, lineWidth: -1 }
-    });
-    const end = context.end ?? [
-        { type: 'newline', offset: -1, indent, source: '\n' }
-    ];
-    switch (source[0]) {
-        case '|':
-        case '>': {
-            const he = source.indexOf('\n');
-            const head = source.substring(0, he);
-            const body = source.substring(he + 1) + '\n';
-            const props = [
-                { type: 'block-scalar-header', offset, indent, source: head }
-            ];
-            if (!addEndtoBlockProps(props, end))
-                props.push({ type: 'newline', offset: -1, indent, source: '\n' });
-            return { type: 'block-scalar', offset, indent, props, source: body };
-        }
-        case '"':
-            return { type: 'double-quoted-scalar', offset, indent, source, end };
-        case "'":
-            return { type: 'single-quoted-scalar', offset, indent, source, end };
-        default:
-            return { type: 'scalar', offset, indent, source, end };
-    }
-}
-/**
- * Set the value of `token` to the given string `value`, overwriting any previous contents and type that it may have.
- *
- * Best efforts are made to retain any comments previously associated with the `token`,
- * though all contents within a collection's `items` will be overwritten.
- *
- * Values that represent an actual string but may be parsed as a different type should use a `type` other than `'PLAIN'`,
- * as this function does not support any schema operations and won't check for such conflicts.
- *
- * @param token Any token. If it does not include an `indent` value, the value will be stringified as if it were an implicit key.
- * @param value The string representation of the value, which will have its content properly indented.
- * @param context.afterKey In most cases, values after a key should have an additional level of indentation.
- * @param context.implicitKey Being within an implicit key may affect the resolved type of the token's value.
- * @param context.inFlow Being within a flow collection may affect the resolved type of the token's value.
- * @param context.type The preferred type of the scalar token. If undefined, the previous type of the `token` will be used, defaulting to `'PLAIN'`.
- */
-function setScalarValue(token, value, context = {}) {
-    let { afterKey = false, implicitKey = false, inFlow = false, type } = context;
-    let indent = 'indent' in token ? token.indent : null;
-    if (afterKey && typeof indent === 'number')
-        indent += 2;
-    if (!type)
-        switch (token.type) {
-            case 'single-quoted-scalar':
-                type = 'QUOTE_SINGLE';
-                break;
-            case 'double-quoted-scalar':
-                type = 'QUOTE_DOUBLE';
-                break;
-            case 'block-scalar': {
-                const header = token.props[0];
-                if (header.type !== 'block-scalar-header')
-                    throw new Error('Invalid block scalar header');
-                type = header.source[0] === '>' ? 'BLOCK_FOLDED' : 'BLOCK_LITERAL';
-                break;
-            }
-            default:
-                type = 'PLAIN';
-        }
-    const source = stringifyString.stringifyString({ type, value }, {
-        implicitKey: implicitKey || indent === null,
-        indent: indent !== null && indent > 0 ? ' '.repeat(indent) : '',
-        inFlow,
-        options: { blockQuote: true, lineWidth: -1 }
-    });
-    switch (source[0]) {
-        case '|':
-        case '>':
-            setBlockScalarValue(token, source);
-            break;
-        case '"':
-            setFlowScalarValue(token, source, 'double-quoted-scalar');
-            break;
-        case "'":
-            setFlowScalarValue(token, source, 'single-quoted-scalar');
-            break;
-        default:
-            setFlowScalarValue(token, source, 'scalar');
-    }
-}
-function setBlockScalarValue(token, source) {
-    const he = source.indexOf('\n');
-    const head = source.substring(0, he);
-    const body = source.substring(he + 1) + '\n';
-    if (token.type === 'block-scalar') {
-        const header = token.props[0];
-        if (header.type !== 'block-scalar-header')
-            throw new Error('Invalid block scalar header');
-        header.source = head;
-        token.source = body;
-    }
-    else {
-        const { offset } = token;
-        const indent = 'indent' in token ? token.indent : -1;
-        const props = [
-            { type: 'block-scalar-header', offset, indent, source: head }
-        ];
-        if (!addEndtoBlockProps(props, 'end' in token ? token.end : undefined))
-            props.push({ type: 'newline', offset: -1, indent, source: '\n' });
-        for (const key of Object.keys(token))
-            if (key !== 'type' && key !== 'offset')
-                delete token[key];
-        Object.assign(token, { type: 'block-scalar', indent, props, source: body });
-    }
-}
-/** @returns `true` if last token is a newline */
-function addEndtoBlockProps(props, end) {
-    if (end)
-        for (const st of end)
-            switch (st.type) {
-                case 'space':
-                case 'comment':
-                    props.push(st);
-                    break;
-                case 'newline':
-                    props.push(st);
-                    return true;
-            }
-    return false;
-}
-function setFlowScalarValue(token, source, type) {
-    switch (token.type) {
-        case 'scalar':
-        case 'double-quoted-scalar':
-        case 'single-quoted-scalar':
-            token.type = type;
-            token.source = source;
-            break;
-        case 'block-scalar': {
-            const end = token.props.slice(1);
-            let oa = source.length;
-            if (token.props[0].type === 'block-scalar-header')
-                oa -= token.props[0].source.length;
-            for (const tok of end)
-                tok.offset += oa;
-            delete token.props;
-            Object.assign(token, { type, source, end });
-            break;
-        }
-        case 'block-map':
-        case 'block-seq': {
-            const offset = token.offset + source.length;
-            const nl = { type: 'newline', offset, indent: token.indent, source: '\n' };
-            delete token.items;
-            Object.assign(token, { type, source, end: [nl] });
-            break;
-        }
-        default: {
-            const indent = 'indent' in token ? token.indent : -1;
-            const end = 'end' in token && Array.isArray(token.end)
-                ? token.end.filter(st => st.type === 'space' ||
-                    st.type === 'comment' ||
-                    st.type === 'newline')
-                : [];
-            for (const key of Object.keys(token))
-                if (key !== 'type' && key !== 'offset')
-                    delete token[key];
-            Object.assign(token, { type, indent, source, end });
-        }
-    }
-}
-
-exports.createScalarToken = createScalarToken;
-exports.resolveAsScalar = resolveAsScalar;
-exports.setScalarValue = setScalarValue;
 
 
 /***/ }),
@@ -60390,35 +60390,72 @@ ${Object.entries(get_settings().configs)
         .join('\n')}`;
 }
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/commander@13.1.0/node_modules/commander/index.js
-var commander = __webpack_require__(8915);
-;// ./node_modules/.pnpm/commander@13.1.0/node_modules/commander/esm.mjs
+;// ./src/server/bundle/preset.ts
 
-
-// wrapper to provide named exports for ESM.
-const {
-  /* program */ "DM": program,
-  /* createCommand */ "gu": createCommand,
-  /* createArgument */ "er": createArgument,
-  /* createOption */ "Ww": createOption,
-  /* CommanderError */ "b7": CommanderError,
-  /* InvalidArgumentError */ "Di": InvalidArgumentError,
-  /* InvalidOptionArgumentError */ "a2": InvalidOptionArgumentError, // deprecated old name
-  /* Command */ "uB": Command,
-  /* Argument */ "ef": Argument,
-  /* Option */ "c$": Option,
-  /* Help */ "_V": Help,
-} = commander;
-
-;// ./src/server/command/list.ts
-
-
-function add_list_command() {
-    const command = new Command('list').description('列出所有可用的配置');
-    command.action(() => {
-        console.info(beauingfy_configs());
-    });
-    return command;
+function fromPresetPrompt(prompt) {
+    const is_placeholder_prompt = Number.isNaN(prompt.id);
+    const is_normal_prompt = !is_placeholder_prompt;
+    let result = lodash_default()({}).set('identifier', prompt.id).set('name', prompt.name).set('enabled', prompt.enabled);
+    if (!['dialogueExamples', 'chatHistory'].includes(prompt.id)) {
+        result = result
+            .set('injection_position', (prompt.position?.type ?? 'relative') === 'relative' ? 0 : 1)
+            .set('injection_depth', prompt.position?.depth ?? 4)
+            .set('injection_order', prompt.position?.order ?? 100);
+    }
+    result = result.set('role', prompt.role);
+    if (is_normal_prompt) {
+        result = result.set('content', prompt.content);
+    }
+    result = result.set('system_prompt', is_placeholder_prompt).set('marker', is_placeholder_prompt);
+    if (prompt.extra) {
+        result = result.set('extra', prompt.extra);
+    }
+    result = result.set('forbid_overrides', false);
+    return result.value();
+}
+function bundle_preset(preset) {
+    const prompt_used = preset.prompts.map(prompt => fromPresetPrompt(prompt));
+    const prompt_unused = preset.prompts_unused.map(prompt => fromPresetPrompt(prompt));
+    return {
+        max_context_unlocked: true,
+        openai_max_context: preset.settings.max_context,
+        openai_max_tokens: preset.settings.max_completion_tokens,
+        n: preset.settings.reply_count,
+        stream_openai: preset.settings.should_stream,
+        temperature: preset.settings.temperature,
+        frequency_penalty: preset.settings.frequency_penalty,
+        presence_penalty: preset.settings.presence_penalty,
+        top_p: preset.settings.top_p,
+        repetition_penalty: preset.settings.repetition_penalty,
+        min_p: preset.settings.min_p,
+        top_k: preset.settings.top_k,
+        top_a: preset.settings.top_a,
+        seed: preset.settings.seed,
+        squash_system_messages: preset.settings.squash_system_messages,
+        reasoning_effort: preset.settings.reasoning_effort,
+        show_thoughts: preset.settings.request_thoughts,
+        request_images: preset.settings.request_images,
+        function_calling: preset.settings.enable_function_calling,
+        enable_web_search: preset.settings.enable_web_search,
+        image_inlining: preset.settings.allow_sending_images !== 'disabled',
+        inline_image_quality: preset.settings.allow_sending_images === 'disabled' ? 'auto' : preset.settings.allow_sending_images,
+        video_inlining: preset.settings.allow_sending_videos,
+        names_behavior: {
+            none: -1,
+            default: 0,
+            content: 2,
+            completion: 1,
+        }[preset.settings.character_name_prefix],
+        wrap_in_quotes: preset.settings.wrap_user_messages_in_quotes,
+        prompts: [...prompt_used, ...prompt_unused],
+        prompt_order: [
+            {
+                character_id: 100001,
+                order: prompt_used.map(prompt => ({ identifier: prompt.identifier, enabled: prompt.enabled ?? true })),
+            },
+        ],
+        extensions: preset.extensions ?? {},
+    };
 }
 
 ;// ./src/server/component/collection_file.ts
@@ -62273,8 +62310,8 @@ class Syncer_interface {
         this.config_name = config_name;
         this.name = name;
         this.file = (0,external_node_path_.resolve)(interface_dirname, file);
-        this.export_file = (0,external_node_path_.resolve)(interface_dirname, export_file);
         this.dir = (0,external_node_path_.dirname)(this.file);
+        this.export_file = export_file ? (0,external_node_path_.resolve)(interface_dirname, export_file) : (0,external_node_path_.resolve)(this.dir, `${this.config_name}.json`);
         this.en_type = en_type;
         this.zh_type = zh_type;
         this.zh_to_en_map = zh_to_en_map;
@@ -62386,7 +62423,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
             if (typeof result === 'string') {
                 throw Error(`导出${this.type_zh} '${this.name}' 失败: ${result}`);
             }
-            write_file_recursively(this.dir, this.export_file, JSON.stringify(result, null, 4));
+            write_file_recursively(this.dir, this.export_file, JSON.stringify(result, null, 2));
         }
     }
     async push(options) {
@@ -62421,6 +62458,17 @@ ${this.do_beautify_config(tavern_data, language)}`;
                 console.error(`${error.message}`);
             }
         });
+    }
+    async bundle() {
+        const local_data = this.get_parsed_local();
+        if (typeof local_data === 'string') {
+            exit_on_error(`打包${this.type_zh} '${this.name}' 失败: ${local_data}`);
+        }
+        const { result_data, error_data } = this.do_bundle(local_data);
+        if (!lodash_default().isEmpty(error_data)) {
+            exit_on_error(dist.stringify({ [`打包${this.type_zh} '${this.name}' 失败`]: error_data }));
+        }
+        write_file_recursively(this.dir, this.export_file, JSON.stringify(result_data, null, 2));
     }
 }
 
@@ -63172,6 +63220,7 @@ const preset_zh_Preset = strictObject({
 
 
 
+
 class Preset_syncer extends Syncer_interface {
     constructor(config_name, name, file, export_file) {
         super('preset', lodash_default().invert(zh_to_en_map)['preset'], config_name, name, file, export_file, Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, preset_Preset);
@@ -63341,6 +63390,79 @@ class Preset_syncer extends Syncer_interface {
         }, [])
             .concat(this.file);
     }
+    do_bundle(local_data) {
+        const { result_data, error_data } = this.do_push(local_data);
+        return { result_data: bundle_preset(result_data), error_data };
+    }
+}
+
+;// ./src/server/bundle/worldbook.ts
+
+const _default_implicit_keys = {
+    addMemo: true,
+    matchPersonaDescription: false,
+    matchCharacterDescription: false,
+    matchCharacterPersonality: false,
+    matchCharacterDepthPrompt: false,
+    matchScenario: false,
+    matchCreatorNotes: false,
+    group: '',
+    groupOverride: false,
+    groupWeight: 100,
+    caseSensitive: null,
+    matchWholeWords: null,
+    useGroupScoring: null,
+    automationId: '',
+};
+function to_original_worldbook_entry(entry, index) {
+    let result = lodash_default()({})
+        .set('uid', index)
+        .set('displayIndex', index)
+        .set('comment', entry.name)
+        .set('disable', !entry.enabled)
+        .set('constant', entry.strategy.type === 'constant')
+        .set('selective', entry.strategy.type === 'selective')
+        .set('key', entry.strategy.keys ?? [])
+        .set('selectiveLogic', {
+        and_any: 0,
+        not_all: 1,
+        not_any: 2,
+        and_all: 3,
+    }[entry.strategy.keys_secondary?.logic ?? 'and_any'])
+        .set('keysecondary', entry.strategy.keys_secondary?.keys ?? [])
+        .set('scanDepth', entry.strategy.scan_depth === 'same_as_global' ? null : (entry.strategy.scan_depth ?? null))
+        .set('vectorized', entry.strategy.type === 'vectorized')
+        .set('position', {
+        before_character_definition: 0,
+        after_character_definition: 1,
+        before_example_messages: 5,
+        after_example_messages: 6,
+        before_author_note: 2,
+        after_author_note: 3,
+        at_depth: 4,
+    }[entry.position.type])
+        .set('role', { system: 0, user: 1, assistant: 2 }[entry.position?.role ?? 'system'])
+        .set('depth', entry.position?.depth ?? 4)
+        .set('order', entry.position.order)
+        .set('content', entry.content)
+        .set('useProbability', true)
+        .set('probability', entry.probability ?? 100)
+        .set('excludeRecursion', entry.recursion?.prevent_incoming ?? false)
+        .set('preventRecursion', entry.recursion?.prevent_outgoing ?? false)
+        .set('delayUntilRecursion', entry.recursion?.delay_until ?? false)
+        .set('sticky', entry.effect?.sticky ?? null)
+        .set('cooldown', entry.effect?.cooldown ?? null)
+        .set('delay', entry.effect?.delay ?? null);
+    if (entry.extra) {
+        result = result.set('extra', entry.extra);
+    }
+    result = result.merge(_default_implicit_keys).merge(lodash_default().pick(entry, Object.keys(_default_implicit_keys)));
+    return result.value();
+}
+function bundle_worldbook(worldbook) {
+    return {
+        entries: Object.fromEntries(worldbook.entries.map((entry, index) => [index, to_original_worldbook_entry(entry, index)])),
+    };
 }
 
 ;// ./src/server/tavern/worldbook.ts
@@ -63585,12 +63707,20 @@ const worldbook_en_Worldbook_entry = strictObject({
             .transform(data => (data === 'same_as_global' ? null : data))
             .describe('使用评分'),
     })
-        .partial()
         .optional()
         .describe('包含组'),
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
     content: schemas_string().optional().describe('内嵌的提示词内容'),
     file: schemas_string().optional().describe('外链的提示词文件路径'),
+})
+    .transform(data => {
+    if (data.group !== undefined) {
+        _.set(data, 'groupOverride', data.group.use_priority);
+        _.set(data, 'groupWeight', data.group.weight);
+        _.set(data, 'useGroupScoring', data.group.use_scoring);
+        _.set(data, 'group', data.group.labels.join(','));
+    }
+    return data;
 })
     .superRefine((data, context) => {
     if (data.content === undefined && data.file === undefined) {
@@ -63805,12 +63935,20 @@ const worldbook_zh_Worldbook_entry = strictObject({
             .transform(data => (data === 'same_as_global' ? null : data))
             .describe('使用评分'),
     })
-        .partial()
         .optional()
         .describe('包含组'),
     额外字段: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
     内容: schemas_string().optional().describe('内嵌的提示词内容'),
     文件: schemas_string().optional().describe('外链的提示词文件路径'),
+})
+    .transform(data => {
+    if (data.群组 !== undefined) {
+        _.set(data, 'groupOverride', data.群组.使用优先级);
+        _.set(data, 'groupWeight', data.群组.权重);
+        _.set(data, 'useGroupScoring', data.群组.使用评分);
+        _.set(data, 'group', data.群组.组标签.join(','));
+    }
+    return data;
 })
     .superRefine((data, context) => {
     if (data.内容 === undefined && data.文件 === undefined) {
@@ -63850,6 +63988,7 @@ const worldbook_zh_Worldbook = strictObject({
 });
 
 ;// ./src/server/syncer/worldbook.ts
+
 
 
 
@@ -64005,6 +64144,10 @@ class Worldbook_syncer extends Syncer_interface {
         }, [])
             .concat(this.file);
     }
+    do_bundle(local_data) {
+        const { result_data, error_data } = this.do_push(local_data);
+        return { result_data: bundle_worldbook(result_data), error_data };
+    }
 }
 
 ;// ./src/server/syncer/factory.ts
@@ -64012,10 +64155,30 @@ class Worldbook_syncer extends Syncer_interface {
 
 function create_syncer(config_name, config) {
     if (config.type === 'worldbook') {
-        return new Worldbook_syncer(config_name, config.name, config.file, config.export_file ?? `${config_name}.json`);
+        return new Worldbook_syncer(config_name, config.name, config.file, config.export_file);
     }
-    return new Preset_syncer(config_name, config.name, config.file, config.export_file ?? `${config_name}.json`);
+    return new Preset_syncer(config_name, config.name, config.file, config.export_file);
 }
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/commander@13.1.0/node_modules/commander/index.js
+var commander = __webpack_require__(8915);
+;// ./node_modules/.pnpm/commander@13.1.0/node_modules/commander/esm.mjs
+
+
+// wrapper to provide named exports for ESM.
+const {
+  /* program */ "DM": program,
+  /* createCommand */ "gu": createCommand,
+  /* createArgument */ "er": createArgument,
+  /* createOption */ "Ww": createOption,
+  /* CommanderError */ "b7": CommanderError,
+  /* InvalidArgumentError */ "Di": InvalidArgumentError,
+  /* InvalidOptionArgumentError */ "a2": InvalidOptionArgumentError, // deprecated old name
+  /* Command */ "uB": Command,
+  /* Argument */ "ef": Argument,
+  /* Option */ "c$": Option,
+  /* Help */ "_V": Help,
+} = commander;
 
 ;// ./src/server/component/add_configs_to_command.ts
 
@@ -64095,6 +64258,31 @@ async function check_update_silently() {
         `));
         }
     });
+}
+
+;// ./src/server/command/bundle.ts
+
+
+
+function add_bundle_command() {
+    const command = new Command('bundle').description("将本地内容打包到 '导出文件路径' 处");
+    add_configs_to_command(command);
+    command.action(async (syncers) => {
+        check_update_silently();
+        await Promise.all(syncers.map(syncer => syncer.bundle()));
+    });
+    return command;
+}
+
+;// ./src/server/command/list.ts
+
+
+function add_list_command() {
+    const command = new Command('list').description('列出所有可用的配置');
+    command.action(() => {
+        console.info(beauingfy_configs());
+    });
+    return command;
 }
 
 ;// ./src/server/command/pull.ts
@@ -64192,10 +64380,12 @@ function add_watch_command() {
 
 
 
+
 config(zh_CN());
 program
     .name('世界书同步脚本')
     .addCommand(add_list_command())
+    .addCommand(add_bundle_command())
     .addCommand(add_pull_command())
     .addCommand(add_push_command())
     .addCommand(add_update_command())

@@ -137,7 +137,8 @@ const Prompt_placeholder = z
   }))
   .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
 
-const PromptLeaf = z.union([Prompt_normal, Prompt_placeholder]);
+export const PromptLeaf = z.union([Prompt_normal, Prompt_placeholder]);
+export type PromptLeaf = z.infer<typeof PromptLeaf>;
 const PromptBranch = z.object({
   folder: z.string(),
   get entries() {
