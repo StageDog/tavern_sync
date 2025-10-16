@@ -78,11 +78,11 @@ export class Worldbook_syncer extends Syncer_interface {
 
         const glob_files = glob_file(this.dir, file);
         if (glob_files.length === 0) {
-          file_to_write = file.replace(/\.[^\\/]+$|$/, detect_extension(entry.content));
-          file_to_set = file.replace(/\.[^\\/]+$/, '');
+          file_to_write = file.replace(/\.[^\\/.]+$|$/, detect_extension(entry.content));
+          file_to_set = file.replace(/\.[^\\/.]+$/, '');
         } else if (glob_files.length === 1) {
           file_to_write = glob_files[0];
-          file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
+          file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
         } else {
           file_to_write = file;
           file_to_set = file;
@@ -99,7 +99,10 @@ export class Worldbook_syncer extends Syncer_interface {
 
       const state = entries_state.find(state => state.name === entry.name);
       if (state === undefined && should_split) {
-        handle_file(entry, join(sanitize_filename(this.config_name), sanitize_filename(entry.name)));
+        handle_file(
+          entry,
+          join(sanitize_filename(this.config_name), sanitize_filename(entry.name) + detect_extension(entry.content)),
+        );
       } else if (state?.file !== undefined) {
         handle_file(entry, state.file);
       }

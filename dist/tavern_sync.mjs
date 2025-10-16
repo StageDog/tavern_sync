@@ -63256,12 +63256,12 @@ class Preset_syncer extends Syncer_interface {
                 let file_to_set = '';
                 const glob_files = glob_file(this.dir, file);
                 if (glob_files.length === 0) {
-                    file_to_write = file.replace(/\.[^\\/]+$|$/, detect_extension(prompt.content));
-                    file_to_set = file.replace(/\.[^\\/]+$/, '');
+                    file_to_write = file.replace(/\.[^\\/.]+$|$/, detect_extension(prompt.content));
+                    file_to_set = file.replace(/\.[^\\/.]+$/, '');
                 }
                 else if (glob_files.length === 1) {
                     file_to_write = glob_files[0];
-                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
+                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
                 }
                 else {
                     file_to_write = file;
@@ -63273,7 +63273,7 @@ class Preset_syncer extends Syncer_interface {
             };
             const state = prompts_state.find(state => state.name === prompt.name);
             if (state === undefined && should_split) {
-                const file = (0,external_node_path_.join)(sanitize_filename(this.config_name), used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name));
+                const file = (0,external_node_path_.join)(sanitize_filename(this.config_name), used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name) + detect_extension(prompt.content));
                 handle_file(prompt, file);
                 return;
             }
@@ -64031,12 +64031,12 @@ class Worldbook_syncer extends Syncer_interface {
                 let file_to_set = '';
                 const glob_files = glob_file(this.dir, file);
                 if (glob_files.length === 0) {
-                    file_to_write = file.replace(/\.[^\\/]+$|$/, detect_extension(entry.content));
-                    file_to_set = file.replace(/\.[^\\/]+$/, '');
+                    file_to_write = file.replace(/\.[^\\/.]+$|$/, detect_extension(entry.content));
+                    file_to_set = file.replace(/\.[^\\/.]+$/, '');
                 }
                 else if (glob_files.length === 1) {
                     file_to_write = glob_files[0];
-                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
+                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
                 }
                 else {
                     file_to_write = file;
@@ -64052,7 +64052,7 @@ class Worldbook_syncer extends Syncer_interface {
             };
             const state = entries_state.find(state => state.name === entry.name);
             if (state === undefined && should_split) {
-                handle_file(entry, (0,external_node_path_.join)(sanitize_filename(this.config_name), sanitize_filename(entry.name)));
+                handle_file(entry, (0,external_node_path_.join)(sanitize_filename(this.config_name), sanitize_filename(entry.name) + detect_extension(entry.content)));
             }
             else if (state?.file !== undefined) {
                 handle_file(entry, state.file);

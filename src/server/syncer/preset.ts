@@ -88,11 +88,11 @@ export class Preset_syncer extends Syncer_interface {
 
           const glob_files = glob_file(this.dir, file);
           if (glob_files.length === 0) {
-            file_to_write = file.replace(/\.[^\\/]+$|$/, detect_extension(prompt.content!));
-            file_to_set = file.replace(/\.[^\\/]+$/, '');
+            file_to_write = file.replace(/\.[^\\/.]+$|$/, detect_extension(prompt.content!));
+            file_to_set = file.replace(/\.[^\\/.]+$/, '');
           } else if (glob_files.length === 1) {
             file_to_write = glob_files[0];
-            file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/]+$/, '');
+            file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
           } else {
             file_to_write = file;
             file_to_set = file;
@@ -108,7 +108,7 @@ export class Preset_syncer extends Syncer_interface {
           const file = join(
             sanitize_filename(this.config_name),
             used ? '' : language === 'zh' ? '未使用' : 'unused',
-            sanitize_filename(prompt.name),
+            sanitize_filename(prompt.name) + detect_extension(prompt.content!),
           );
           handle_file(prompt, file);
           return;
