@@ -50,15 +50,22 @@ export async function check_update(): Promise<string | null> {
 }
 
 export async function check_update_silently(): Promise<void> {
-  return check_update().then(result => {
-    if (result !== null) {
-      console.info(
-        dedent(`
+  return check_update()
+    .then(result => {
+      if (result !== null) {
+        console.info(
+          dedent(`
           ******************************************************
           发现新版本，请运行 \`node tavern_sync.mjs update\` 更新
           ******************************************************
         `),
-      );
-    }
-  });
+        );
+      }
+    })
+    .catch(error => {
+      console.error('*************************************************************');
+      console.error('检查更新失败，如需手动检查更新，请运行 `node tavern_sync.mjs update`');
+      console.error(error instanceof Error ? error.message : String(error));
+      console.error('*************************************************************');
+    });
 }
