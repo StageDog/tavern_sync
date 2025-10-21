@@ -64249,7 +64249,8 @@ async function check_update() {
     return remote_content;
 }
 async function check_update_silently() {
-    return check_update().then(result => {
+    return check_update()
+        .then(result => {
         if (result !== null) {
             console.info(dist_dedent(`
           ******************************************************
@@ -64257,6 +64258,12 @@ async function check_update_silently() {
           ******************************************************
         `));
         }
+    })
+        .catch(error => {
+        console.error('*************************************************************');
+        console.error('检查更新失败，如需手动检查更新，请运行 `node tavern_sync.mjs update`');
+        console.error(error instanceof Error ? error.message : String(error));
+        console.error('*************************************************************');
     });
 }
 
