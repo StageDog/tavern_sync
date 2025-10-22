@@ -63544,7 +63544,7 @@ const Worldbook_entry = object({
     if (_.isEmpty(data.effect)) {
         _.unset(data, 'effect');
     }
-    if (data.group.length === 0) {
+    if (data.group.length === 0 || data.group.every(tag => tag.trim() === '')) {
         _.unset(data, 'group');
     }
     else {
