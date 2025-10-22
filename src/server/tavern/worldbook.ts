@@ -93,7 +93,7 @@ const Worldbook_entry = z
       _.unset(data, 'effect');
     }
 
-    if (data.group.length === 0) {
+    if (data.group.length === 0 || data.group.every(tag => tag.trim() === '')) {
       _.unset(data, 'group');
     } else {
       _.set(data, 'group', { labels: data.group });
