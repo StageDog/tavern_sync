@@ -74,7 +74,7 @@ export function is_zh(data: Record<string, any>): boolean {
 
 const Prompt_normal = z
   .strictObject({
-    名称: z.string(),
+    名称: z.coerce.string(),
     id: z.never().optional(),
     启用: z.boolean(),
 
@@ -97,7 +97,7 @@ const Prompt_normal = z
       .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
 
     角色: z.enum(['系统', '用户', 'AI']).prefault('系统'),
-    内容: z.string().optional().describe('内嵌的提示词内容'),
+    内容: z.coerce.string().optional().describe('内嵌的提示词内容'),
     文件: z.string().optional().describe('外链的提示词文件路径'),
 
     额外字段: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),

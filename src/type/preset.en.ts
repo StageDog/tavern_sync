@@ -4,7 +4,7 @@ import * as z from 'zod';
 
 const Prompt_normal = z
   .strictObject({
-    name: z.string(),
+    name: z.coerce.string(),
     id: z.never().optional(),
     enabled: z.boolean(),
 
@@ -27,7 +27,7 @@ const Prompt_normal = z
       .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
 
     role: z.enum(['system', 'user', 'assistant']).prefault('system'),
-    content: z.string().optional().describe('内嵌的提示词内容'),
+    content: z.coerce.string().optional().describe('内嵌的提示词内容'),
     file: z.string().optional().describe('外链的提示词文件路径'),
 
     extra: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
