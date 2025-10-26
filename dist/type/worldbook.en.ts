@@ -4,7 +4,7 @@ import * as z from 'zod';
 export type Worldbook_entry = z.infer<typeof Worldbook_entry>;
 export const Worldbook_entry = z
   .strictObject({
-    name: z.string(),
+    name: z.coerce.string(),
     uid: z.number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
     enabled: z.boolean(),
 
@@ -163,7 +163,7 @@ export const Worldbook_entry = z
 
     extra: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 
-    content: z.string().optional().describe('内嵌的提示词内容'),
+    content: z.coerce.string().optional().describe('内嵌的提示词内容'),
     file: z.string().optional().describe('外链的提示词文件路径'),
   })
   .transform(data => {

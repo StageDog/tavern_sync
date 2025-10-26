@@ -50030,9 +50030,9 @@ const $ZodBoolean = /*@__PURE__*/ $constructor("$ZodBoolean", (inst, def) => {
         return payload;
     };
 });
-const $ZodBigInt = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodBigInt", (inst, def) => {
+const $ZodBigInt = /*@__PURE__*/ $constructor("$ZodBigInt", (inst, def) => {
     $ZodType.init(inst, def);
-    inst._zod.pattern = regexes.bigint;
+    inst._zod.pattern = bigint;
     inst._zod.parse = (payload, _ctx) => {
         if (def.coerce)
             try {
@@ -50049,7 +50049,7 @@ const $ZodBigInt = /*@__PURE__*/ (/* unused pure expression or super */ null && 
         });
         return payload;
     };
-})));
+});
 const $ZodBigIntFormat = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodBigInt", (inst, def) => {
     checks.$ZodCheckBigIntFormat.init(inst, def);
     $ZodBigInt.init(inst, def); // no format checks
@@ -50140,7 +50140,7 @@ const $ZodVoid = /*@__PURE__*/ $constructor("$ZodVoid", (inst, def) => {
         return payload;
     };
 });
-const $ZodDate = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodDate", (inst, def) => {
+const $ZodDate = /*@__PURE__*/ $constructor("$ZodDate", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, _ctx) => {
         if (def.coerce) {
@@ -50163,7 +50163,7 @@ const $ZodDate = /*@__PURE__*/ (/* unused pure expression or super */ null && (c
         });
         return payload;
     };
-})));
+});
 function handleArrayResult(result, final, index) {
     if (result.issues.length) {
         final.issues.push(...prefixIssues(index, result.issues));
@@ -57236,7 +57236,7 @@ function _coercedString(Class, params) {
     return new Class({
         type: "string",
         coerce: true,
-        ...util.normalizeParams(params),
+        ...normalizeParams(params),
     });
 }
 function _email(Class, params) {
@@ -57495,7 +57495,7 @@ function _coercedNumber(Class, params) {
         type: "number",
         coerce: true,
         checks: [],
-        ...util.normalizeParams(params),
+        ...normalizeParams(params),
     });
 }
 function _int(Class, params) {
@@ -57553,7 +57553,7 @@ function _coercedBoolean(Class, params) {
     return new Class({
         type: "boolean",
         coerce: true,
-        ...util.normalizeParams(params),
+        ...normalizeParams(params),
     });
 }
 function _bigint(Class, params) {
@@ -57566,7 +57566,7 @@ function _coercedBigint(Class, params) {
     return new Class({
         type: "bigint",
         coerce: true,
-        ...util.normalizeParams(params),
+        ...normalizeParams(params),
     });
 }
 function _int64(Class, params) {
@@ -57637,7 +57637,7 @@ function _coercedDate(Class, params) {
     return new Class({
         type: "date",
         coerce: true,
-        ...util.normalizeParams(params),
+        ...normalizeParams(params),
     });
 }
 function _nan(Class, params) {
@@ -59576,27 +59576,27 @@ const ZodBoolean = /*@__PURE__*/ $constructor("ZodBoolean", (inst, def) => {
 function schemas_boolean(params) {
     return _boolean(ZodBoolean, params);
 }
-const ZodBigInt = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodBigInt", (inst, def) => {
-    core.$ZodBigInt.init(inst, def);
+const ZodBigInt = /*@__PURE__*/ $constructor("ZodBigInt", (inst, def) => {
+    $ZodBigInt.init(inst, def);
     ZodType.init(inst, def);
-    inst.gte = (value, params) => inst.check(checks.gte(value, params));
-    inst.min = (value, params) => inst.check(checks.gte(value, params));
-    inst.gt = (value, params) => inst.check(checks.gt(value, params));
-    inst.gte = (value, params) => inst.check(checks.gte(value, params));
-    inst.min = (value, params) => inst.check(checks.gte(value, params));
-    inst.lt = (value, params) => inst.check(checks.lt(value, params));
-    inst.lte = (value, params) => inst.check(checks.lte(value, params));
-    inst.max = (value, params) => inst.check(checks.lte(value, params));
-    inst.positive = (params) => inst.check(checks.gt(BigInt(0), params));
-    inst.negative = (params) => inst.check(checks.lt(BigInt(0), params));
-    inst.nonpositive = (params) => inst.check(checks.lte(BigInt(0), params));
-    inst.nonnegative = (params) => inst.check(checks.gte(BigInt(0), params));
-    inst.multipleOf = (value, params) => inst.check(checks.multipleOf(value, params));
+    inst.gte = (value, params) => inst.check(_gte(value, params));
+    inst.min = (value, params) => inst.check(_gte(value, params));
+    inst.gt = (value, params) => inst.check(_gt(value, params));
+    inst.gte = (value, params) => inst.check(_gte(value, params));
+    inst.min = (value, params) => inst.check(_gte(value, params));
+    inst.lt = (value, params) => inst.check(_lt(value, params));
+    inst.lte = (value, params) => inst.check(_lte(value, params));
+    inst.max = (value, params) => inst.check(_lte(value, params));
+    inst.positive = (params) => inst.check(_gt(BigInt(0), params));
+    inst.negative = (params) => inst.check(_lt(BigInt(0), params));
+    inst.nonpositive = (params) => inst.check(_lte(BigInt(0), params));
+    inst.nonnegative = (params) => inst.check(_gte(BigInt(0), params));
+    inst.multipleOf = (value, params) => inst.check(_multipleOf(value, params));
     const bag = inst._zod.bag;
     inst.minValue = bag.minimum ?? null;
     inst.maxValue = bag.maximum ?? null;
     inst.format = bag.format ?? null;
-})));
+});
 function schemas_bigint(params) {
     return core._bigint(ZodBigInt, params);
 }
@@ -59664,15 +59664,15 @@ function schemas_void(params) {
     return _void(ZodVoid, params);
 }
 
-const ZodDate = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodDate", (inst, def) => {
-    core.$ZodDate.init(inst, def);
+const ZodDate = /*@__PURE__*/ $constructor("ZodDate", (inst, def) => {
+    $ZodDate.init(inst, def);
     ZodType.init(inst, def);
-    inst.min = (value, params) => inst.check(checks.gte(value, params));
-    inst.max = (value, params) => inst.check(checks.lte(value, params));
+    inst.min = (value, params) => inst.check(_gte(value, params));
+    inst.max = (value, params) => inst.check(_lte(value, params));
     const c = inst._zod.bag;
     inst.minDate = c.minimum ? new Date(c.minimum) : null;
     inst.maxDate = c.maximum ? new Date(c.maximum) : null;
-})));
+});
 function schemas_date(params) {
     return core._date(ZodDate, params);
 }
@@ -60259,19 +60259,19 @@ var ZodFirstPartyTypeKind;
 
 
 function coerce_string(params) {
-    return core._coercedString(schemas.ZodString, params);
+    return _coercedString(ZodString, params);
 }
 function coerce_number(params) {
-    return core._coercedNumber(schemas.ZodNumber, params);
+    return _coercedNumber(ZodNumber, params);
 }
 function coerce_boolean(params) {
-    return core._coercedBoolean(schemas.ZodBoolean, params);
+    return _coercedBoolean(ZodBoolean, params);
 }
 function coerce_bigint(params) {
-    return core._coercedBigint(schemas.ZodBigInt, params);
+    return _coercedBigint(ZodBigInt, params);
 }
 function coerce_date(params) {
-    return core._coercedDate(schemas.ZodDate, params);
+    return _coercedDate(ZodDate, params);
 }
 
 ;// ./node_modules/.pnpm/zod@4.1.12/node_modules/zod/v4/classic/external.js
@@ -62565,7 +62565,7 @@ function alignValue(value, precedingText) {
 
 
 const Prompt_normal = strictObject({
-    name: schemas_string(),
+    name: coerce_string(),
     id: never().optional(),
     enabled: schemas_boolean(),
     position: strictObject({
@@ -62585,7 +62585,7 @@ const Prompt_normal = strictObject({
     })
         .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
     role: schemas_enum(['system', 'user', 'assistant']).prefault('system'),
-    content: schemas_string().optional().describe('内嵌的提示词内容'),
+    content: coerce_string().optional().describe('内嵌的提示词内容'),
     file: schemas_string().optional().describe('外链的提示词文件路径'),
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 })
@@ -62998,7 +62998,7 @@ function preset_zh_is_zh(data) {
     return lodash_default().has(data, '提示词');
 }
 const preset_zh_Prompt_normal = strictObject({
-    名称: schemas_string(),
+    名称: coerce_string(),
     id: never().optional(),
     启用: schemas_boolean(),
     插入位置: strictObject({
@@ -63018,7 +63018,7 @@ const preset_zh_Prompt_normal = strictObject({
     })
         .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
     角色: schemas_enum(['系统', '用户', 'AI']).prefault('系统'),
-    内容: schemas_string().optional().describe('内嵌的提示词内容'),
+    内容: coerce_string().optional().describe('内嵌的提示词内容'),
     文件: schemas_string().optional().describe('外链的提示词文件路径'),
     额外字段: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 })
@@ -63578,7 +63578,7 @@ const Worldbook = array(Worldbook_entry)
 
 
 const worldbook_en_Worldbook_entry = strictObject({
-    name: schemas_string(),
+    name: coerce_string(),
     uid: schemas_number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
     enabled: schemas_boolean(),
     strategy: strictObject({
@@ -63710,7 +63710,7 @@ const worldbook_en_Worldbook_entry = strictObject({
         .optional()
         .describe('包含组'),
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
-    content: schemas_string().optional().describe('内嵌的提示词内容'),
+    content: coerce_string().optional().describe('内嵌的提示词内容'),
     file: schemas_string().optional().describe('外链的提示词文件路径'),
 })
     .transform(data => {
@@ -63818,7 +63818,7 @@ function worldbook_zh_is_zh(data) {
     return _.has(data, '条目');
 }
 const worldbook_zh_Worldbook_entry = strictObject({
-    名称: schemas_string(),
+    名称: coerce_string(),
     uid: schemas_number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
     启用: schemas_boolean(),
     激活策略: strictObject({
@@ -63938,7 +63938,7 @@ const worldbook_zh_Worldbook_entry = strictObject({
         .optional()
         .describe('包含组'),
     额外字段: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
-    内容: schemas_string().optional().describe('内嵌的提示词内容'),
+    内容: coerce_string().optional().describe('内嵌的提示词内容'),
     文件: schemas_string().optional().describe('外链的提示词文件路径'),
 })
     .transform(data => {
