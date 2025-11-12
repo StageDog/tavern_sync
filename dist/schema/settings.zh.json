@@ -44,7 +44,6 @@
     }
   },
   "required": [
-    "user名称",
     "配置"
   ],
   "additionalProperties": false

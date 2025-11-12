@@ -30359,7 +30359,7 @@ const Config = strictObject({
         .describe('当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文件的同目录下'),
 });
 const Settings = strictObject({
-    user_name: schemas_string().regex(/^\S+$/),
+    user_name: schemas_string().regex(/^\S+$/).optional(),
     configs: record(schemas_string(), Config),
 });
 
@@ -30391,7 +30391,7 @@ const settings_zh_Config = strictObject({
         .describe('当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文的同目录下'),
 });
 const settings_zh_Settings = strictObject({
-    user名称: schemas_string().regex(/^\S+$/),
+    user名称: schemas_string().regex(/^\S+$/).optional(),
     配置: record(schemas_string(), settings_zh_Config),
 });
 
