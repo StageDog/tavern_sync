@@ -24,7 +24,6 @@ export const Config = z.strictObject({
     .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
   本地文件路径: z
     .string()
-    .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
     .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
     .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
   导出文件路径: z
