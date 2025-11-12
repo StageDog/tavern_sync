@@ -9,7 +9,6 @@ export const Config = z.strictObject({
   name: z.string().describe('世界书/预设在酒馆中的名称'),
   file: z
     .string()
-    .regex(/^(?:(?:[a-zA-Z]:|\.|\.\.)?([\\/][^\\/]+)*|[^\\/]+)$/)
     .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
     .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
   export_file: z
