@@ -1,12 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import url from 'node:url';
 import TerserPlugin from 'terser-webpack-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import webpack from 'webpack';
-
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export default [
   (_env: any, argv: any): webpack.Configuration => ({
@@ -48,7 +44,7 @@ export default [
       plugins: [
         new TsconfigPathsPlugin({
           extensions: ['.ts', '.js'],
-          configFile: path.join(__dirname, 'tsconfig.client.json'),
+          configFile: path.join(import.meta.dirname, 'tsconfig.client.json'),
         }),
       ],
       alias: {},
@@ -119,7 +115,7 @@ export default [
     target: 'node',
     output: {
       devtoolModuleFilenameTemplate: info => {
-        return `${path.relative(path.join(__dirname, 'dist'), info.resourcePath)}${
+        return `${path.relative(path.join(import.meta.dirname, 'dist'), info.resourcePath)}${
           info.loaders ? `?${info.loaders}` : ''
         }`;
       },
@@ -153,7 +149,7 @@ export default [
       plugins: [
         new TsconfigPathsPlugin({
           extensions: ['.ts', '.js'],
-          configFile: path.join(__dirname, 'tsconfig.server.json'),
+          configFile: path.join(import.meta.dirname, 'tsconfig.server.json'),
         }),
       ],
       alias: {},
@@ -192,7 +188,7 @@ export default [
     target: 'node',
     output: {
       devtoolModuleFilenameTemplate: info => {
-        return `${path.relative(path.join(__dirname, 'dist'), info.resourcePath)}${
+        return `${path.relative(path.join(import.meta.dirname, 'dist'), info.resourcePath)}${
           info.loaders ? `?${info.loaders}` : ''
         }`;
       },
@@ -226,7 +222,7 @@ export default [
       plugins: [
         new TsconfigPathsPlugin({
           extensions: ['.ts', '.js'],
-          configFile: path.join(__dirname, 'tsconfig.type.json'),
+          configFile: path.join(import.meta.dirname, 'tsconfig.type.json'),
         }),
       ],
       alias: {},
