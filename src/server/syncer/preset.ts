@@ -64,6 +64,7 @@ export class Preset_syncer extends Syncer_interface {
     { language, should_split }: Omit<Pull_options, 'should_force'>,
   ): {
     result_data: Record<string, any>;
+    error_data: Record<string, any>;
     files: {
       name: string;
       path: string;
@@ -76,6 +77,26 @@ export class Preset_syncer extends Syncer_interface {
       local_data === null
         ? []
         : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !_.has(prompt, 'id'));
+
+    const local_names = prompts_state.map(entry => entry.name);
+    const tavern_names = [...tavern_data.prompts, ...tavern_data.prompts_unused].map(entry => entry.name);
+    const duplicated_names = _(tavern_names)
+      .filter(name => {
+        const index = local_names.findIndex(n => n === name);
+        if (index !== -1) {
+          local_names.splice(index, 1);
+          return false;
+        }
+        return true;
+      })
+      .countBy()
+      .filter(count => count > 1)
+      .keys()
+      .value();
+    if (duplicated_names.length > 0) {
+      return { result_data: {}, error_data: { 以下条目存在同名条目: duplicated_names }, files: [] };
+    }
+
     const convert_prompts = (prompts: Preset_tavern['prompts'], { used }: { used: boolean }) =>
       prompts.forEach(prompt => {
         if (_.has(prompt, 'id')) {
@@ -120,7 +141,7 @@ export class Preset_syncer extends Syncer_interface {
       });
     convert_prompts(tavern_data.prompts, { used: true });
     convert_prompts(tavern_data.prompts_unused, { used: false });
-    return { result_data: tavern_data, files };
+    return { result_data: tavern_data, error_data: {}, files };
   }
 
   protected do_beautify_config(tavern_data: Preset_tavern, language: 'zh' | 'en'): string {

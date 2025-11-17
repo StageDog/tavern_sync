@@ -61,6 +61,7 @@ export class Worldbook_syncer extends Syncer_interface {
     { should_split }: Omit<Pull_options, 'should_force'>,
   ): {
     result_data: Record<string, any>;
+    error_data: Record<string, any>;
     files: {
       name: string;
       path: string;
@@ -71,6 +72,26 @@ export class Worldbook_syncer extends Syncer_interface {
 
     const entries_state: { name: string; content?: string; file?: string }[] =
       local_data === null ? [] : local_data.entries;
+
+    const local_names = entries_state.map(entry => entry.name);
+    const tavern_names = tavern_data.entries.map(entry => entry.name);
+    const duplicated_names = _(tavern_names)
+      .filter(name => {
+        const index = local_names.findIndex(n => n === name);
+        if (index !== -1) {
+          local_names.splice(index, 1);
+          return false;
+        }
+        return true;
+      })
+      .countBy()
+      .filter(count => count > 1)
+      .keys()
+      .value();
+    if (duplicated_names.length > 0) {
+      return { result_data: {}, error_data: { 以下条目存在同名条目: duplicated_names }, files: [] };
+    }
+
     tavern_data.entries.forEach(entry => {
       const handle_file = (entry: Worldbook_tavern['entries'][number], file: string) => {
         let file_to_write = '';
@@ -108,7 +129,7 @@ export class Worldbook_syncer extends Syncer_interface {
       }
     });
 
-    return { result_data: tavern_data, files };
+    return { result_data: tavern_data, error_data: {}, files };
   }
 
   // TODO: 拆分 component

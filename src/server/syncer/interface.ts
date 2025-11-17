@@ -117,6 +117,7 @@ export abstract class Syncer_interface {
     options: Omit<Pull_options, 'should_force'>,
   ): {
     result_data: Record<string, any>;
+    error_data: Record<string, any>;
     files: {
       name: string;
       path: string;
@@ -145,10 +146,17 @@ ${this.do_beautify_config(tavern_data, language)}`;
       }
     }
 
-    const { result_data, files } = this.do_pull(typeof local_data === 'string' ? null : local_data, tavern_data, {
-      language,
-      should_split,
-    });
+    const { result_data, files, error_data } = this.do_pull(
+      typeof local_data === 'string' ? null : local_data,
+      tavern_data,
+      {
+        language,
+        should_split,
+      },
+    );
+    if (!_.isEmpty(error_data)) {
+      exit_on_error(YAML.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data }));
+    }
     const collection_files = _(files)
       .remove(file => is_collection_file(file.path))
       .groupBy(file => resolve(this.dir, file.path))
