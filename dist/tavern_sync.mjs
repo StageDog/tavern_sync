@@ -62366,10 +62366,13 @@ ${this.do_beautify_config(tavern_data, language)}`;
                     `如果想无视条目差异, 请在命令尾部添加 '-f' 或 '--force' 选项, 如: 'node tavern_sync.mjs pull 猴子打字机 -f'`);
             }
         }
-        const { result_data, files } = this.do_pull(typeof local_data === 'string' ? null : local_data, tavern_data, {
+        const { result_data, files, error_data } = this.do_pull(typeof local_data === 'string' ? null : local_data, tavern_data, {
             language,
             should_split,
         });
+        if (!lodash_default().isEmpty(error_data)) {
+            exit_on_error(dist.stringify({ [`拉取${this.type_zh} '${this.name}' 失败`]: error_data }));
+        }
         const collection_files = lodash_default()(files)
             .remove(file => is_collection_file(file.path))
             .groupBy(file => (0,external_node_path_.resolve)(this.dir, file.path))
@@ -63249,6 +63252,24 @@ class Preset_syncer extends Syncer_interface {
         const prompts_state = local_data === null
             ? []
             : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !lodash_default().has(prompt, 'id'));
+        const local_names = prompts_state.map(entry => entry.name);
+        const tavern_names = [...tavern_data.prompts, ...tavern_data.prompts_unused].map(entry => entry.name);
+        const duplicated_names = lodash_default()(tavern_names)
+            .filter(name => {
+            const index = local_names.findIndex(n => n === name);
+            if (index !== -1) {
+                local_names.splice(index, 1);
+                return false;
+            }
+            return true;
+        })
+            .countBy()
+            .filter(count => count > 1)
+            .keys()
+            .value();
+        if (duplicated_names.length > 0) {
+            return { result_data: {}, error_data: { 以下条目存在同名条目: duplicated_names }, files: [] };
+        }
         const convert_prompts = (prompts, { used }) => prompts.forEach(prompt => {
             if (lodash_default().has(prompt, 'id')) {
                 return;
@@ -63286,7 +63307,7 @@ class Preset_syncer extends Syncer_interface {
         });
         convert_prompts(tavern_data.prompts, { used: true });
         convert_prompts(tavern_data.prompts_unused, { used: false });
-        return { result_data: tavern_data, files };
+        return { result_data: tavern_data, error_data: {}, files };
     }
     do_beautify_config(tavern_data, language) {
         const document = new dist.Document(language === 'zh' ? translate(tavern_data, lodash_default().invert(this.zh_to_en_map)) : tavern_data);
@@ -64029,6 +64050,24 @@ class Worldbook_syncer extends Syncer_interface {
     do_pull(local_data, tavern_data, { should_split }) {
         let files = [];
         const entries_state = local_data === null ? [] : local_data.entries;
+        const local_names = entries_state.map(entry => entry.name);
+        const tavern_names = tavern_data.entries.map(entry => entry.name);
+        const duplicated_names = lodash_default()(tavern_names)
+            .filter(name => {
+            const index = local_names.findIndex(n => n === name);
+            if (index !== -1) {
+                local_names.splice(index, 1);
+                return false;
+            }
+            return true;
+        })
+            .countBy()
+            .filter(count => count > 1)
+            .keys()
+            .value();
+        if (duplicated_names.length > 0) {
+            return { result_data: {}, error_data: { 以下条目存在同名条目: duplicated_names }, files: [] };
+        }
         tavern_data.entries.forEach(entry => {
             const handle_file = (entry, file) => {
                 let file_to_write = '';
@@ -64062,7 +64101,7 @@ class Worldbook_syncer extends Syncer_interface {
                 handle_file(entry, state.file);
             }
         });
-        return { result_data: tavern_data, files };
+        return { result_data: tavern_data, error_data: {}, files };
     }
     // TODO: 拆分 component
     do_beautify_config(tavern_data, language) {
