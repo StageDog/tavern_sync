@@ -154,7 +154,7 @@ export class Preset_syncer extends Syncer_interface {
   protected do_push(local_data: Preset_en): { result_data: Preset_en; error_data: Record<string, any> } {
     let error_data = {
       未能找到以下外链提示词文件: [] as string[],
-      通过补全文件后缀找到了多个文件: [] as string[],
+      通过补全文件后缀找到了多个文件: [] as Record<string, string[]>[],
       未能从合集文件中找到以下条目: [] as string[],
     };
 
@@ -176,11 +176,15 @@ export class Preset_syncer extends Syncer_interface {
 
         const paths = glob_file(this.dir, prompt.file);
         if (paths.length === 0) {
-          error_data.未能找到以下外链提示词文件.push(`${source}条目 '${index}' 的 '${prompt.file}'`);
+          error_data.未能找到以下外链提示词文件.push(
+            `'${source}' 中第 '${index}' 条目 '${prompt.name}': '${prompt.file}'`,
+          );
           return;
         }
         if (paths.length > 1) {
-          error_data.通过补全文件后缀找到了多个文件.push(`${source}条目 '${index}' 的 '${prompt.file}'`);
+          error_data.通过补全文件后缀找到了多个文件.push({
+            [`'${source}' 中第 '${index}' 条目 '${prompt.name}'`]: paths,
+          });
         }
         const content = extract_file_content(paths[0]);
         if (is_collection_file(prompt.file!)) {

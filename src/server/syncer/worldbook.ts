@@ -143,7 +143,7 @@ export class Worldbook_syncer extends Syncer_interface {
   protected do_push(local_data: Worldbook_en): { result_data: Worldbook_en; error_data: Record<string, any> } {
     let error_data = {
       未能找到以下外链提示词文件: [] as string[],
-      通过补全文件后缀找到了多个文件: [] as string[],
+      通过补全文件后缀找到了多个文件: [] as Record<string, string[]>[],
       未能从合集文件中找到以下条目: [] as string[],
     };
 
@@ -158,7 +158,7 @@ export class Worldbook_syncer extends Syncer_interface {
         return;
       }
       if (paths.length > 1) {
-        error_data.通过补全文件后缀找到了多个文件.push(`第 '${index}' 条目 '${entry.name}': '${entry.file}'`);
+        error_data.通过补全文件后缀找到了多个文件.push({ [`第 '${index}' 条目 '${entry.name}'`]: paths });
         return;
       }
       const content = extract_file_content(paths[0]);
