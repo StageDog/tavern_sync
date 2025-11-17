@@ -45,15 +45,6 @@ export const Worldbook_entry = z
           .optional()
           .describe('扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推'),
       })
-      .superRefine((data, context) => {
-        if (data.type === 'selective' && data.keys === undefined) {
-          context.addIssue({
-            code: 'custom',
-            path: ['keys'],
-            message: "当激活策略为绿灯 (`'selective'`) 时, `keys` 中有必须至少一个主要关键字",
-          });
-        }
-      })
       .describe('激活策略: 条目应该何时激活'),
 
     position: z
@@ -174,6 +165,15 @@ export const Worldbook_entry = z
       _.set(data, 'group', data.group.labels.join(','));
     }
     return data;
+  })
+  .superRefine((data, context) => {
+    if (data.enabled && data.strategy.type === 'selective' && data.strategy.keys === undefined) {
+      context.addIssue({
+        code: 'custom',
+        path: ['strategy', 'keys'],
+        message: "当条目启用 (`'enabled'`) 且激活策略为绿灯 (`'selective'`) 时, `keys` 中有必须至少一个主要关键字",
+      });
+    }
   })
   .superRefine((data, context) => {
     if (data.content === undefined && data.file === undefined) {
