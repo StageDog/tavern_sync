@@ -79,7 +79,9 @@ export class Preset_syncer extends Syncer_interface {
         : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !_.has(prompt, 'id'));
 
     const local_names = prompts_state.map(entry => entry.name);
-    const tavern_names = [...tavern_data.prompts, ...tavern_data.prompts_unused].map(entry => entry.name);
+    const tavern_names = [...tavern_data.prompts, ...tavern_data.prompts_unused]
+      .filter(entry => entry.name !== undefined)
+      .map(entry => entry.name);
     const duplicated_names = _(tavern_names)
       .filter(name => {
         const index = local_names.findIndex(n => n === name);

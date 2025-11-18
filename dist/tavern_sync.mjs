@@ -63253,7 +63253,9 @@ class Preset_syncer extends Syncer_interface {
             ? []
             : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !lodash_default().has(prompt, 'id'));
         const local_names = prompts_state.map(entry => entry.name);
-        const tavern_names = [...tavern_data.prompts, ...tavern_data.prompts_unused].map(entry => entry.name);
+        const tavern_names = [...tavern_data.prompts, ...tavern_data.prompts_unused]
+            .filter(entry => entry.name !== undefined)
+            .map(entry => entry.name);
         const duplicated_names = lodash_default()(tavern_names)
             .filter(name => {
             const index = local_names.findIndex(n => n === name);
