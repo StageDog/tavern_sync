@@ -85,8 +85,10 @@ export class Worldbook_syncer extends Syncer_interface {
         return true;
       })
       .countBy()
-      .filter(count => count > 1)
+      .pickBy(count => count > 1)
       .keys()
+      .uniq()
+      .sort()
       .value();
     if (duplicated_names.length > 0) {
       return { result_data: {}, error_data: { 以下条目存在同名条目: duplicated_names }, files: [] };
