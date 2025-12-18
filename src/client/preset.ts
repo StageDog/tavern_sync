@@ -2,7 +2,16 @@ import { get_settings } from '@client/settings';
 import { get_socket } from '@client/socket';
 
 async function update_preset(name: string, data: Preset) {
-  await createOrReplacePreset(name, data);
+  if (getPresetNames().includes(name)) {
+    await updatePresetWith(name, preset => {
+      if (_.isEmpty(data.extensions)) {
+        return { ...data, extensions: preset.extensions };
+      }
+      return data;
+    });
+  } else {
+    await createPreset(name, data);
+  }
   if (getLoadedPresetName() === name) {
     loadPreset(name);
   }
