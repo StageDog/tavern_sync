@@ -10,8 +10,13 @@ export function add_bundle_command(): Command {
   add_configs_to_command(command);
 
   command.action(async (syncers: Syncer_interface[]) => {
-    check_update_silently();
-    await Promise.all(syncers.map(syncer => syncer.bundle()));
+    const update_abort_controller = new AbortController();
+    check_update_silently(update_abort_controller.signal);
+    try {
+      await Promise.all(syncers.map(syncer => syncer.bundle()));
+    } finally {
+      update_abort_controller.abort();
+    }
   });
   return command;
 }

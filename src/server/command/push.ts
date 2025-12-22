@@ -21,8 +21,15 @@ export function add_push_command(): Command {
   );
 
   command.action(async (syncers: Syncer_interface[], options: { force: boolean; export: boolean }) => {
-    check_update_silently();
-    await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force, should_export: options.export })));
+    const update_abort_controller = new AbortController();
+    check_update_silently(update_abort_controller.signal);
+    try {
+      await Promise.all(
+        syncers.map(syncer => syncer.push({ should_force: options.force, should_export: options.export })),
+      );
+    } finally {
+      update_abort_controller.abort();
+    }
     close_server();
   });
   return command;

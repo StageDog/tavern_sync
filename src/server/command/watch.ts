@@ -15,8 +15,13 @@ export function add_watch_command(): Command {
   );
 
   command.action(async (syncers: Syncer_interface[], options: { force: boolean }) => {
-    check_update_silently();
-    await Promise.all(syncers.map(syncer => syncer.watch({ should_force: options.force })));
+    const update_abort_controller = new AbortController();
+    check_update_silently(update_abort_controller.signal);
+    try {
+      await Promise.all(syncers.map(syncer => syncer.watch({ should_force: options.force })));
+    } finally {
+      update_abort_controller.abort();
+    }
   });
   return command;
 }

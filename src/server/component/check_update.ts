@@ -3,7 +3,11 @@ import _ from 'lodash';
 import { readFileSync } from 'node:fs';
 import YAML from 'yaml';
 
-async function download_latest(): Promise<string> {
+function is_abort_error(error: Error): boolean {
+  return error.name === 'AbortError';
+}
+
+async function download_latest(signal?: AbortSignal): Promise<string> {
   const urls = [
     'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync.mjs',
     'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.mjs',
@@ -15,14 +19,21 @@ async function download_latest(): Promise<string> {
 
   const fetches = urls.map(async url => {
     try {
-      const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      const timeout_signal = AbortSignal.timeout(5000);
+      const response = await fetch(url, {
+        signal: signal ? AbortSignal.any([timeout_signal, signal]) : timeout_signal,
+      });
       if (response.ok) {
         return { url, content: await response.text(), error: null };
       } else {
         return { url, content: null, error: `HTTP ${response.status} ${response.statusText}` };
       }
-    } catch (error) {
-      return { url, content: null, error: (error as Error).message };
+    } catch (err) {
+      const error = err as Error;
+      if (is_abort_error(error) && signal?.aborted) {
+        throw error;
+      }
+      return { url, content: null, error: error.message };
     }
   });
 
@@ -40,17 +51,17 @@ async function download_latest(): Promise<string> {
   throw Error(YAML.stringify({ 无法获取最新版脚本: erorr_data }));
 }
 
-export async function check_update(): Promise<string | null> {
+export async function check_update(signal?: AbortSignal): Promise<string | null> {
   const current_content = readFileSync(__filename, 'utf8');
-  const remote_content = await download_latest();
+  const remote_content = await download_latest(signal);
   if (current_content === remote_content) {
     return null;
   }
   return remote_content;
 }
 
-export async function check_update_silently(): Promise<void> {
-  return check_update()
+export async function check_update_silently(signal?: AbortSignal): Promise<void> {
+  return check_update(signal)
     .then(result => {
       if (result !== null) {
         console.info(
@@ -63,6 +74,9 @@ export async function check_update_silently(): Promise<void> {
       }
     })
     .catch(error => {
+      if (is_abort_error(error)) {
+        return;
+      }
       console.error('*************************************************************');
       console.error('检查更新失败，如需手动检查更新，请运行 `node tavern_sync.mjs update`');
       console.error(error instanceof Error ? error.message : String(error));

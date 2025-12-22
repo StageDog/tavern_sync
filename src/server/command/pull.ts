@@ -23,12 +23,17 @@ export function add_pull_command(): Command {
 
   command.action(
     async (syncers: Syncer_interface[], options: { language: 'zh' | 'en'; inline: boolean; force: boolean }) => {
-      check_update_silently();
-      await Promise.all(
-        syncers.map(syncer =>
-          syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force }),
-        ),
-      );
+      const update_abort_controller = new AbortController();
+      check_update_silently(update_abort_controller.signal);
+      try {
+        await Promise.all(
+          syncers.map(syncer =>
+            syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force }),
+          ),
+        );
+      } finally {
+        update_abort_controller.abort();
+      }
       close_server();
     },
   );
