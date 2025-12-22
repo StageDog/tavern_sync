@@ -63707,6 +63707,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
             exit_on_error(dist.stringify({ [`打包${this.type_zh} '${this.name}' 失败`]: error_data }));
         }
         write_file_recursively(this.dir, this.export_file, JSON.stringify(result_data, null, 2));
+        console.info(`成功将${this.type_zh} '${this.name}' 打包到 '${(0,external_node_path_.resolve)(this.dir, this.export_file)}' 中`);
     }
 }
 
