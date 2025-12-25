@@ -13,7 +13,7 @@
     "@types/lodash": "^4.17.21",
     "@types/node": "^22.19.3",
     "@types/toastr": "^2.1.43",
-    "@typescript-eslint/parser": "^8.50.0",
+    "@typescript-eslint/parser": "^8.50.1",
     "bufferutil": "^4.1.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
@@ -34,7 +34,7 @@
     "compare-versions": "^6.1.1",
     "dedent": "^1.7.1",
     "lodash": "^4.17.21",
-    "socket.io": "^4.8.1",
+    "socket.io": "^4.8.3",
     "type-fest": "^4.41.0",
     "yaml": "^2.8.2",
     "zod": "^4.2.1"
