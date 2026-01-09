@@ -3,14 +3,15 @@
   "type": "object",
   "properties": {
     "anchors": {
-      "description": "用于存放 YAML 锚点, 不会被实际使用"
+      "description": "用于存放 YAML 锚点, 不会被实际使用",
+      "$ref": "#/$defs/__schema0"
     },
     "entries": {
       "type": "array",
       "items": {
         "anyOf": [
           {
-            "$ref": "#/$defs/__schema0"
+            "$ref": "#/$defs/__schema1"
           },
           {
             "type": "object",
@@ -21,7 +22,7 @@
               "entries": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/$defs/__schema0"
+                  "$ref": "#/$defs/__schema1"
                 }
               }
             },
@@ -39,7 +40,11 @@
   ],
   "additionalProperties": false,
   "$defs": {
-    "__schema0": {
+    "__schema0": {},
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
       "type": "object",
       "properties": {
         "name": {
@@ -47,117 +52,55 @@
         },
         "uid": {
           "description": "该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的",
-          "type": "number"
+          "$ref": "#/$defs/__schema3"
         },
         "enabled": {
           "type": "boolean"
         },
         "strategy": {
-          "description": "激活策略: 条目应该何时激活",
           "type": "object",
           "properties": {
             "type": {
-              "description": "激活策略类型:\n- constant: 常量🔵, 俗称蓝灯. 只需要满足 \"启用\"、\"激活概率%\" 等别的要求即可.\n- selective: 可选项🟢, 俗称绿灯. 除了蓝灯条件, 还需要满足 `keys` 扫描条件\n- vectorized: 向量化🔗. 一般不使用",
-              "type": "string",
-              "enum": [
-                "constant",
-                "selective",
-                "vectorized"
-              ]
+              "$ref": "#/$defs/__schema4"
             },
             "keys": {
-              "description": "关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活",
-              "minItems": 1,
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "$ref": "#/$defs/__schema5"
             },
             "keys_secondary": {
-              "description": "次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`",
-              "type": "object",
-              "properties": {
-                "logic": {
-                  "description": "次要关键字逻辑:\n- and_any: 次要关键字中任意一个关键字能在欲扫描文本中匹配到\n- and_all: 次要关键字中所有关键字都能在欲扫描文本中匹配到\n- not_all: 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到\n- not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到",
-                  "type": "string",
-                  "enum": [
-                    "and_any",
-                    "and_all",
-                    "not_all",
-                    "not_any"
-                  ]
-                },
-                "keys": {
-                  "minItems": 1,
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "required": [
-                "logic",
-                "keys"
-              ],
-              "additionalProperties": false
+              "$ref": "#/$defs/__schema8"
             },
             "scan_depth": {
-              "description": "扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推",
-              "anyOf": [
-                {
-                  "type": "string",
-                  "const": "same_as_global"
-                },
-                {
-                  "type": "number",
-                  "minimum": 1
-                }
-              ]
+              "$ref": "#/$defs/__schema11"
             }
           },
           "required": [
             "type"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "激活策略: 条目应该何时激活"
         },
         "position": {
           "type": "object",
           "properties": {
             "type": {
-              "description": "插入位置类型:\n- before_character_definition: 角色定义之前\n- after_character_definition: 角色定义之后\n- before_example_messages: 示例消息之前\n- after_example_messages: 示例消息之后\n- before_author_note: 作者注释之前\n- after_author_note: 作者注释之后\n- at_depth: 插入到指定深度",
-              "type": "string",
-              "enum": [
-                "before_character_definition",
-                "after_character_definition",
-                "before_example_messages",
-                "after_example_messages",
-                "before_author_note",
-                "after_author_note",
-                "at_depth"
-              ]
+              "$ref": "#/$defs/__schema13"
             },
             "role": {
-              "description": "该条目的消息身份, 仅位置类型为 `'at_depth'` 时有效",
-              "type": "string",
-              "enum": [
-                "system",
-                "assistant",
-                "user"
-              ]
+              "$ref": "#/$defs/__schema14"
             },
             "depth": {
-              "description": "该条目要插入的深度, 仅位置类型为 `'at_depth'` 时有效",
-              "type": "number"
+              "$ref": "#/$defs/__schema16"
             },
             "order": {
-              "type": "number"
+              "$ref": "#/$defs/__schema18"
             }
           },
           "required": [
             "type",
             "order"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "插入位置: 如果条目激活应该插入到什么地方"
         },
         "probability": {
           "type": "number",
@@ -166,129 +109,62 @@
         },
         "recursion": {
           "description": "递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目",
-          "type": "object",
-          "properties": {
-            "prevent_incoming": {
-              "description": "禁止其他条目递归激活本条目",
-              "type": "boolean"
-            },
-            "prevent_outgoing": {
-              "description": "禁止本条目递归激活其他条目",
-              "type": "boolean"
-            },
-            "delay_until": {
-              "description": "延迟到第 n 级递归检查时才能激活本条目",
-              "anyOf": [
-                {
-                  "type": "number",
-                  "minimum": 1
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            }
-          },
-          "additionalProperties": false
+          "$ref": "#/$defs/__schema19"
         },
         "effect": {
           "type": "object",
           "properties": {
             "sticky": {
-              "description": "黏性: 条目激活后, 在之后 n 条消息内始终激活, 无视激活策略、激活概率%",
               "anyOf": [
                 {
-                  "type": "number",
-                  "minimum": 1
+                  "$ref": "#/$defs/__schema21"
                 },
                 {
                   "type": "null"
                 }
-              ]
+              ],
+              "description": "黏性: 条目激活后, 在之后 n 条消息内始终激活, 无视激活策略、激活概率%"
             },
             "cooldown": {
-              "description": "冷却: 条目激活后, 在之后 n 条消息内不能再激活",
               "anyOf": [
                 {
-                  "type": "number",
-                  "minimum": 1
+                  "$ref": "#/$defs/__schema22"
                 },
                 {
                   "type": "null"
                 }
-              ]
+              ],
+              "description": "冷却: 条目激活后, 在之后 n 条消息内不能再激活"
             },
             "delay": {
-              "description": "延迟: 聊天中至少有 n 楼消息时, 才能激活条目",
               "anyOf": [
                 {
-                  "type": "number",
-                  "minimum": 1
+                  "$ref": "#/$defs/__schema23"
                 },
                 {
                   "type": "null"
                 }
-              ]
+              ],
+              "description": "延迟: 聊天中至少有 n 楼消息时, 才能激活条目"
             }
           },
           "additionalProperties": false
         },
         "group": {
           "description": "包含组",
-          "type": "object",
-          "properties": {
-            "labels": {
-              "description": "组标签",
-              "minItems": 1,
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "use_priority": {
-              "description": "使用优先级",
-              "default": false,
-              "type": "boolean"
-            },
-            "weight": {
-              "description": "权重",
-              "default": 100,
-              "type": "number"
-            },
-            "use_scoring": {
-              "description": "使用评分",
-              "default": "same_as_global",
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "string",
-                  "const": "same_as_global"
-                }
-              ]
-            }
-          },
-          "required": [
-            "labels"
-          ],
-          "additionalProperties": false
+          "$ref": "#/$defs/__schema24"
         },
         "extra": {
           "description": "额外字段: 用于为预设提示词绑定额外数据",
-          "type": "object",
-          "propertyNames": {
-            "type": "string"
-          },
-          "additionalProperties": {}
+          "$ref": "#/$defs/__schema29"
         },
         "content": {
           "description": "内嵌的提示词内容",
-          "type": "string"
+          "$ref": "#/$defs/__schema30"
         },
         "file": {
           "description": "外链的提示词文件路径",
-          "type": "string"
+          "$ref": "#/$defs/__schema31"
         }
       },
       "required": [
@@ -298,6 +174,223 @@
         "position"
       ],
       "additionalProperties": false
+    },
+    "__schema3": {
+      "type": "number"
+    },
+    "__schema4": {
+      "type": "string",
+      "enum": [
+        "constant",
+        "selective",
+        "vectorized"
+      ],
+      "description": "激活策略类型:\n- constant: 常量🔵, 俗称蓝灯. 只需要满足 \"启用\"、\"激活概率%\" 等别的要求即可.\n- selective: 可选项🟢, 俗称绿灯. 除了蓝灯条件, 还需要满足 `keys` 扫描条件\n- vectorized: 向量化🔗. 一般不使用"
+    },
+    "__schema5": {
+      "description": "关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活",
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema7"
+      }
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {
+      "description": "次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`",
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "type": "object",
+      "properties": {
+        "logic": {
+          "type": "string",
+          "enum": [
+            "and_any",
+            "and_all",
+            "not_all",
+            "not_any"
+          ],
+          "description": "次要关键字逻辑:\n- and_any: 次要关键字中任意一个关键字能在欲扫描文本中匹配到\n- and_all: 次要关键字中所有关键字都能在欲扫描文本中匹配到\n- not_all: 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到\n- not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到"
+        },
+        "keys": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema10"
+          }
+        }
+      },
+      "required": [
+        "logic",
+        "keys"
+      ],
+      "additionalProperties": false
+    },
+    "__schema10": {
+      "type": "string"
+    },
+    "__schema11": {
+      "description": "扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推",
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "same_as_global"
+        },
+        {
+          "type": "number",
+          "minimum": 1
+        }
+      ]
+    },
+    "__schema13": {
+      "type": "string",
+      "enum": [
+        "before_character_definition",
+        "after_character_definition",
+        "before_example_messages",
+        "after_example_messages",
+        "before_author_note",
+        "after_author_note",
+        "at_depth"
+      ],
+      "description": "插入位置类型:\n- before_character_definition: 角色定义之前\n- after_character_definition: 角色定义之后\n- before_example_messages: 示例消息之前\n- after_example_messages: 示例消息之后\n- before_author_note: 作者注释之前\n- after_author_note: 作者注释之后\n- at_depth: 插入到指定深度"
+    },
+    "__schema14": {
+      "description": "该条目的消息身份, 仅位置类型为 `'at_depth'` 时有效",
+      "$ref": "#/$defs/__schema15"
+    },
+    "__schema15": {
+      "type": "string",
+      "enum": [
+        "system",
+        "assistant",
+        "user"
+      ]
+    },
+    "__schema16": {
+      "description": "该条目要插入的深度, 仅位置类型为 `'at_depth'` 时有效",
+      "$ref": "#/$defs/__schema17"
+    },
+    "__schema17": {
+      "type": "number"
+    },
+    "__schema18": {
+      "type": "number"
+    },
+    "__schema19": {
+      "type": "object",
+      "properties": {
+        "prevent_incoming": {
+          "type": "boolean",
+          "description": "禁止其他条目递归激活本条目"
+        },
+        "prevent_outgoing": {
+          "type": "boolean",
+          "description": "禁止本条目递归激活其他条目"
+        },
+        "delay_until": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/__schema20"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "延迟到第 n 级递归检查时才能激活本条目"
+        }
+      },
+      "additionalProperties": false
+    },
+    "__schema20": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema21": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema22": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema23": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema24": {
+      "type": "object",
+      "properties": {
+        "labels": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema25"
+          },
+          "description": "组标签"
+        },
+        "use_priority": {
+          "default": false,
+          "description": "使用优先级",
+          "$ref": "#/$defs/__schema26"
+        },
+        "weight": {
+          "default": 100,
+          "description": "权重",
+          "$ref": "#/$defs/__schema27"
+        },
+        "use_scoring": {
+          "description": "使用评分",
+          "$ref": "#/$defs/__schema28"
+        }
+      },
+      "required": [
+        "labels"
+      ],
+      "additionalProperties": false
+    },
+    "__schema25": {
+      "type": "string"
+    },
+    "__schema26": {
+      "type": "boolean"
+    },
+    "__schema27": {
+      "type": "number"
+    },
+    "__schema28": {
+      "default": "same_as_global",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "const": "same_as_global"
+        }
+      ]
+    },
+    "__schema29": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    },
+    "__schema30": {
+      "type": "string"
+    },
+    "__schema31": {
+      "type": "string"
     }
   }
 }

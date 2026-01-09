@@ -22,16 +22,16 @@
             ]
           },
           "酒馆中的名称": {
-            "description": "世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径",
-            "type": "string"
+            "type": "string",
+            "description": "世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径"
           },
           "本地文件路径": {
             "description": "世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径",
-            "type": "string"
+            "$ref": "#/$defs/__schema0"
           },
           "导出文件路径": {
             "description": "当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文的同目录下",
-            "type": "string"
+            "$ref": "#/$defs/__schema1"
           }
         },
         "required": [
@@ -46,5 +46,13 @@
   "required": [
     "配置"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {
+      "type": "string"
+    }
+  }
 }
