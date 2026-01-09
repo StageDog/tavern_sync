@@ -20,13 +20,11 @@ async function update_preset(name: string, data: Preset) {
     toastr.success(`已推送预设 '${name}' 到酒馆`, 'TavernSync');
   }
 }
-const update_preset_debounced = _.debounce(update_preset, get_settings().delay);
 
 export function register_preset() {
   const socket = get_socket();
   socket.on('export_preset', async (data: { name: string }, callback: (data: Record<string, any> | string) => void) => {
     console.info(`[TavernSync] 收到导出预设 '${data.name}' 的请求`);
-    await update_preset_debounced.flush();
     const preset = SillyTavern.getPresetManager('openai').getCompletionPresetByName(data.name);
     if (preset === undefined) {
       if (get_settings().should_notify) {
@@ -96,7 +94,7 @@ export function register_preset() {
   });
   socket.on('push_preset', (data: { name: string; data: Preset }, callback: () => void) => {
     console.info(`[TavernSync] 收到推送预设 '${data.name}' 的请求`);
-    update_preset_debounced(data.name, data.data);
+    update_preset(data.name, data.data);
     callback();
   });
 }

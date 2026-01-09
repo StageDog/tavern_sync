@@ -10,7 +10,6 @@ async function update_worldbook(name: string, data: PartialDeep<WorldbookEntry>[
     toastr.success(`已推送世界书 '${name}' 到酒馆`, 'TavernSync');
   }
 }
-const update_worldbook_debounced = _.debounce(update_worldbook, get_settings().delay);
 
 export function register_worldbook() {
   const socket = get_socket();
@@ -18,7 +17,6 @@ export function register_worldbook() {
     'export_worldbook',
     async (data: { name: string }, callback: (data: Record<string, any> | string) => void) => {
       console.info(`[TavernSync] 收到导出世界书 '${data.name}' 的请求`);
-      await update_worldbook_debounced.flush();
       const worldbook = await SillyTavern.loadWorldInfo(data.name);
       if (!worldbook) {
         if (get_settings().should_notify) {
@@ -56,7 +54,7 @@ export function register_worldbook() {
     'push_worldbook',
     (data: { name: string; data: { entries: PartialDeep<WorldbookEntry>[] } }, callback: () => void) => {
       console.info(`[TavernSync] 收到推送世界书 '${data.name}' 的请求`);
-      update_worldbook_debounced(data.name, data.data.entries);
+      update_worldbook(data.name, data.data.entries);
       callback();
     },
   );
