@@ -122,10 +122,13 @@ const Prompt_normal = z
       );
     }
   })
-  .transform(data => ({
-    ...data,
-    id: _.uniqueId(),
-  }))
+  .transform(data => {
+    const unique_id = _.uniqueId();
+    return {
+      ...data,
+      id: unique_id === '1' ? 'main' : unique_id,
+    };
+  })
   .describe('手动在预设中添加的提示词');
 
 const prompt_rolable_placeholder_ids = <const>[
