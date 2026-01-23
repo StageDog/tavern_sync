@@ -4,7 +4,7 @@ import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "node:module";
 const __WEBPACK_EXTERNAL_createRequire_require = __WEBPACK_EXTERNAL_createRequire(import.meta.url);
 /******/ var __webpack_modules__ = ({
 
-/***/ 935
+/***/ 345
 (module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
@@ -22,7 +22,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.21';
+  var VERSION = '4.17.23';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -3776,7 +3776,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
           if (isArray(iteratee)) {
             return function(value) {
               return baseGet(value, iteratee.length === 1 ? iteratee[0] : iteratee);
-            }
+            };
           }
           return iteratee;
         });
@@ -4380,8 +4380,47 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      */
     function baseUnset(object, path) {
       path = castPath(path, object);
-      object = parent(object, path);
-      return object == null || delete object[toKey(last(path))];
+
+      // Prevent prototype pollution, see: https://github.com/lodash/lodash/security/advisories/GHSA-xxjr-mmjv-4gpg
+      var index = -1,
+          length = path.length;
+
+      if (!length) {
+        return true;
+      }
+
+      var isRootPrimitive = object == null || (typeof object !== 'object' && typeof object !== 'function');
+
+      while (++index < length) {
+        var key = path[index];
+
+        // skip non-string keys (e.g., Symbols, numbers)
+        if (typeof key !== 'string') {
+          continue;
+        }
+
+        // Always block "__proto__" anywhere in the path if it's not expected
+        if (key === '__proto__' && !hasOwnProperty.call(object, '__proto__')) {
+          return false;
+        }
+
+        // Block "constructor.prototype" chains
+        if (key === 'constructor' &&
+            (index + 1) < length &&
+            typeof path[index + 1] === 'string' &&
+            path[index + 1] === 'prototype') {
+
+          // Allow ONLY when the path starts at a primitive root, e.g., _.unset(0, 'constructor.prototype.a')
+          if (isRootPrimitive && index === 0) {
+            continue;
+          }
+
+          return false;
+        }
+      }
+
+      var obj = parent(object, path);
+      return obj == null || delete obj[toKey(last(path))];
     }
 
     /**
@@ -17679,8 +17718,8 @@ function alignValue(value, precedingText) {
   return value;
 }
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/lodash.js
-var lodash = __webpack_require__(935);
+// EXTERNAL MODULE: ./node_modules/.pnpm/lodash@4.17.23/node_modules/lodash/lodash.js
+var lodash = __webpack_require__(345);
 var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
 ;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/core.js
 /** A special constant with type `never` */
@@ -31450,10 +31489,13 @@ const Prompt_normal = strictObject({
         }));
     }
 })
-    .transform(data => ({
-    ...data,
-    id: lodash_default().uniqueId(),
-}))
+    .transform(data => {
+    const unique_id = lodash_default().uniqueId();
+    return {
+        ...data,
+        id: unique_id === '1' ? 'main' : unique_id,
+    };
+})
     .describe('手动在预设中添加的提示词');
 const prompt_rolable_placeholder_ids = [
     'world_info_before',
@@ -31723,10 +31765,13 @@ const preset_zh_Prompt_normal = strictObject({
         }));
     }
 })
-    .transform(data => ({
-    ...data,
-    id: lodash_default().uniqueId(),
-}))
+    .transform(data => {
+    const unique_id = lodash_default().uniqueId();
+    return {
+        ...data,
+        id: unique_id === '1' ? 'main' : unique_id,
+    };
+})
     .describe('手动在预设中添加的提示词');
 const preset_zh_prompt_rolable_placeholder_ids = [
     '角色定义之前',
