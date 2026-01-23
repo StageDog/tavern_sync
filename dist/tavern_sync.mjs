@@ -62244,20 +62244,21 @@ ${Object.entries(get_settings().configs)
 ;// ./src/server/bundle/preset.ts
 
 function fromPresetPrompt(prompt) {
-    const is_placeholder_prompt = Number.isNaN(parseInt(prompt.id));
-    const is_normal_prompt = !is_placeholder_prompt;
+    const is_system_prompt = prompt.id === 'main';
+    const is_placeholder_prompt = !is_system_prompt && Number.isNaN(parseInt(prompt.id));
+    const is_normal_prompt = !is_system_prompt && !is_placeholder_prompt;
     let result = lodash_default()({}).set('identifier', prompt.id).set('name', prompt.name).set('enabled', prompt.enabled);
-    if (!['dialogueExamples', 'chatHistory'].includes(prompt.id)) {
+    if ((is_normal_prompt || is_placeholder_prompt) && !['dialogueExamples', 'chatHistory'].includes(prompt.id)) {
         result = result
             .set('injection_position', (prompt.position?.type ?? 'relative') === 'relative' ? 0 : 1)
             .set('injection_depth', prompt.position?.depth ?? 4)
             .set('injection_order', prompt.position?.order ?? 100);
     }
     result = result.set('role', prompt.role);
-    if (is_normal_prompt) {
+    if (is_normal_prompt || is_system_prompt) {
         result = result.set('content', prompt.content);
     }
-    result = result.set('system_prompt', is_placeholder_prompt).set('marker', is_placeholder_prompt);
+    result = result.set('system_prompt', is_system_prompt || is_placeholder_prompt).set('marker', is_placeholder_prompt);
     if (prompt.extra) {
         result = result.set('extra', prompt.extra);
     }
