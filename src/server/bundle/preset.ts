@@ -43,6 +43,7 @@ type _OriginalPreset = {
 
   extensions: Record<string, any>;
 };
+
 type _OriginalPromptOrder = {
   identifier: string;
   enabled: boolean;
@@ -107,7 +108,6 @@ type _OriginalPlaceholderPrompt = {
 
   extra?: Record<string, any>;
 };
-
 function fromPresetPrompt(prompt: PromptLeaf): _OriginalPrompt {
   const is_system_prompt = prompt.id === 'main';
   const is_placeholder_prompt = !is_system_prompt && Number.isNaN(parseInt(prompt.id));
@@ -137,9 +137,67 @@ function fromPresetPrompt(prompt: PromptLeaf): _OriginalPrompt {
 
   return result.value() as _OriginalPrompt;
 }
+
+type TavernRegex = {
+  id: string;
+  script_name: string;
+  enabled: boolean;
+  run_on_edit: boolean;
+
+  find_regex: string;
+  replace_string: string;
+
+  source: {
+    user_input: boolean;
+    ai_output: boolean;
+    slash_command: boolean;
+    world_info: boolean;
+  };
+
+  destination: {
+    display: boolean;
+    prompt: boolean;
+  };
+
+  min_depth: number | null;
+  max_depth: number | null;
+};
+function from_tavern_regex(tavern_regex: TavernRegex): any {
+  return {
+    id: tavern_regex.id,
+    scriptName: tavern_regex.script_name,
+    disabled: !tavern_regex.enabled,
+    runOnEdit: tavern_regex.run_on_edit,
+
+    findRegex: tavern_regex.find_regex,
+    replaceString: tavern_regex.replace_string,
+    trimStrings: [], // TODO: handle this?
+
+    placement: [
+      ...(tavern_regex.source.user_input ? [1] : []),
+      ...(tavern_regex.source.ai_output ? [2] : []),
+      ...(tavern_regex.source.slash_command ? [3] : []),
+      ...(tavern_regex.source.world_info ? [5] : []),
+    ],
+
+    substituteRegex: 0, // TODO: handle this?
+
+    minDepth: tavern_regex.min_depth,
+    maxDepth: tavern_regex.max_depth,
+
+    markdownOnly: tavern_regex.destination.display,
+    promptOnly: tavern_regex.destination.prompt,
+  };
+}
+
 export function bundle_preset(preset: Preset): _OriginalPreset {
   const prompt_used = preset.prompts.map(prompt => fromPresetPrompt(prompt));
   const prompt_unused = preset.prompts_unused.map(prompt => fromPresetPrompt(prompt));
+
+  const extensions = _.cloneDeep(preset.extensions);
+  if (_.has(extensions, 'regex_scripts[0].source')) {
+    extensions.regex_scripts = extensions.regex_scripts.map(from_tavern_regex);
+  }
 
   return {
     max_context_unlocked: true,
