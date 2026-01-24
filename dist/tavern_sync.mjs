@@ -62265,9 +62265,35 @@ function fromPresetPrompt(prompt) {
     result = result.set('forbid_overrides', false);
     return result.value();
 }
+function from_tavern_regex(tavern_regex) {
+    return {
+        id: tavern_regex.id,
+        scriptName: tavern_regex.script_name,
+        disabled: !tavern_regex.enabled,
+        runOnEdit: tavern_regex.run_on_edit,
+        findRegex: tavern_regex.find_regex,
+        replaceString: tavern_regex.replace_string,
+        trimStrings: [], // TODO: handle this?
+        placement: [
+            ...(tavern_regex.source.user_input ? [1] : []),
+            ...(tavern_regex.source.ai_output ? [2] : []),
+            ...(tavern_regex.source.slash_command ? [3] : []),
+            ...(tavern_regex.source.world_info ? [5] : []),
+        ],
+        substituteRegex: 0, // TODO: handle this?
+        minDepth: tavern_regex.min_depth,
+        maxDepth: tavern_regex.max_depth,
+        markdownOnly: tavern_regex.destination.display,
+        promptOnly: tavern_regex.destination.prompt,
+    };
+}
 function bundle_preset(preset) {
     const prompt_used = preset.prompts.map(prompt => fromPresetPrompt(prompt));
     const prompt_unused = preset.prompts_unused.map(prompt => fromPresetPrompt(prompt));
+    const extensions = lodash_default().cloneDeep(preset.extensions);
+    if (lodash_default().has(extensions, 'regex_scripts[0].source')) {
+        extensions.regex_scripts = extensions.regex_scripts.map(from_tavern_regex);
+    }
     return {
         max_context_unlocked: true,
         openai_max_context: preset.settings.max_context,
