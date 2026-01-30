@@ -484,10 +484,235 @@
     },
     "__schema40": {
       "type": "object",
-      "propertyNames": {
-        "type": "string"
+      "properties": {
+        "regex_scripts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "default": "f8b03bef-c94c-4459-9ae1-bd44dc534fe5",
+                "type": "string"
+              },
+              "script_name": {
+                "type": "string"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "find_regex": {
+                "type": "string"
+              },
+              "replace_string": {
+                "type": "string"
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "user_input": {
+                    "type": "boolean"
+                  },
+                  "ai_output": {
+                    "type": "boolean"
+                  },
+                  "slash_command": {
+                    "type": "boolean"
+                  },
+                  "world_info": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "user_input",
+                  "ai_output"
+                ]
+              },
+              "destination": {
+                "type": "object",
+                "properties": {
+                  "display": {
+                    "type": "boolean"
+                  },
+                  "prompt": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "display",
+                  "prompt"
+                ]
+              },
+              "run_on_edit": {
+                "type": "boolean"
+              },
+              "min_depth": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "max_depth": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "script_name",
+              "enabled",
+              "find_regex",
+              "replace_string",
+              "source",
+              "destination"
+            ]
+          }
+        },
+        "tavern_helper": {
+          "type": "object",
+          "properties": {
+            "scripts": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/__schema41"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "folder"
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "default": "6ceed06c-c87d-4a3d-bfee-130d7034c3ac",
+                        "type": "string"
+                      },
+                      "icon": {
+                        "default": "fa-solid fa-folder",
+                        "type": "string"
+                      },
+                      "color": {
+                        "default": "rgba(219, 219, 214, 1)",
+                        "type": "string"
+                      },
+                      "scripts": {
+                        "default": [],
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/__schema41"
+                        }
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "enabled",
+                      "name"
+                    ]
+                  }
+                ]
+              }
+            },
+            "variables": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          }
+        }
       },
+      "required": [
+        "regex_scripts",
+        "tavern_helper"
+      ],
       "additionalProperties": {}
+    },
+    "__schema41": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "script"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "id": {
+          "default": "75dc400f-bd05-49ac-bdb8-8efaec8fad49",
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "info": {
+          "type": "string"
+        },
+        "button": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "type": "boolean"
+            },
+            "buttons": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "visible": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "visible"
+                ]
+              }
+            }
+          }
+        },
+        "data": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "type",
+        "enabled",
+        "name",
+        "content"
+      ]
     }
   }
 }

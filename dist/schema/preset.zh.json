@@ -488,6 +488,237 @@
     "__schema39": {
       "$ref": "#/$defs/__schema12"
     },
-    "__schema40": {}
+    "__schema40": {
+      "type": "object",
+      "properties": {
+        "正则": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "default": "fd5c8097-7498-47a9-982e-991f991d9aaa",
+                "type": "string"
+              },
+              "正则名称": {
+                "type": "string"
+              },
+              "启用": {
+                "type": "boolean"
+              },
+              "查找表达式": {
+                "type": "string"
+              },
+              "替换为": {
+                "type": "string"
+              },
+              "来源": {
+                "type": "object",
+                "properties": {
+                  "用户输入": {
+                    "type": "boolean"
+                  },
+                  "AI输出": {
+                    "type": "boolean"
+                  },
+                  "快捷命令": {
+                    "type": "boolean"
+                  },
+                  "世界信息": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "用户输入",
+                  "AI输出"
+                ]
+              },
+              "作用于": {
+                "type": "object",
+                "properties": {
+                  "仅格式显示": {
+                    "type": "boolean"
+                  },
+                  "仅格式提示词": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "仅格式显示",
+                  "仅格式提示词"
+                ]
+              },
+              "在编辑时运行": {
+                "type": "boolean"
+              },
+              "最小深度": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "最大深度": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "正则名称",
+              "启用",
+              "查找表达式",
+              "替换为",
+              "来源",
+              "作用于"
+            ]
+          }
+        },
+        "酒馆助手": {
+          "type": "object",
+          "properties": {
+            "脚本库": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/__schema41"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "类型": {
+                        "type": "string",
+                        "const": "文件夹"
+                      },
+                      "启用": {
+                        "type": "boolean"
+                      },
+                      "名称": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "default": "12fa897d-51e0-446f-8093-68c5d3c87637",
+                        "type": "string"
+                      },
+                      "图标": {
+                        "default": "fa-solid fa-folder",
+                        "type": "string"
+                      },
+                      "颜色": {
+                        "default": "#DBDBD6",
+                        "type": "string"
+                      },
+                      "脚本库": {
+                        "default": [],
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/__schema41"
+                        }
+                      }
+                    },
+                    "required": [
+                      "类型",
+                      "启用",
+                      "名称"
+                    ]
+                  }
+                ]
+              }
+            },
+            "变量": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          }
+        }
+      },
+      "required": [
+        "酒馆助手"
+      ],
+      "additionalProperties": {}
+    },
+    "__schema41": {
+      "type": "object",
+      "properties": {
+        "类型": {
+          "type": "string",
+          "const": "脚本"
+        },
+        "启用": {
+          "type": "boolean"
+        },
+        "名称": {
+          "type": "string"
+        },
+        "id": {
+          "default": "c1b227b6-5fd0-4720-9cca-497c2a0307bb",
+          "type": "string"
+        },
+        "内容": {
+          "type": "string"
+        },
+        "介绍": {
+          "type": "string"
+        },
+        "按钮": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "启用": {
+              "default": true,
+              "type": "boolean"
+            },
+            "按钮列表": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "名称": {
+                    "type": "string"
+                  },
+                  "可见": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "名称",
+                  "可见"
+                ]
+              }
+            }
+          }
+        },
+        "数据": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "类型",
+        "启用",
+        "名称",
+        "内容"
+      ]
+    }
   }
 }

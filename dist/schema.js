@@ -4,6 +4,128 @@ import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "node:module";
 const __WEBPACK_EXTERNAL_createRequire_require = __WEBPACK_EXTERNAL_createRequire(import.meta.url);
 /******/ var __webpack_modules__ = ({
 
+/***/ 327
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+(function(){
+
+  var
+    buf,
+    bufIdx = 0,
+    hexBytes = [],
+    i
+  ;
+
+  // Pre-calculate toString(16) for speed
+  for (i = 0; i < 256; i++) {
+    hexBytes[i] = (i + 0x100).toString(16).substr(1);
+  }
+
+  // Buffer random numbers for speed
+  // Reduce memory usage by decreasing this number (min 16)
+  // or improve speed by increasing this number (try 16384)
+  uuid.BUFFER_SIZE = 4096;
+
+  // Binary uuids
+  uuid.bin = uuidBin;
+
+  // Clear buffer
+  uuid.clearBuffer = function() {
+    buf = null;
+    bufIdx = 0;
+  };
+
+  // Test for uuid
+  uuid.test = function(uuid) {
+    if (typeof uuid === 'string') {
+      return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid);
+    }
+    return false;
+  };
+
+  // Node & Browser support
+  var crypt0;
+  if (typeof crypto !== 'undefined') {
+    crypt0 = crypto;
+  } else if( (typeof window !== 'undefined') && (typeof window.msCrypto !== 'undefined')) {
+    crypt0 = window.msCrypto; // IE11
+  }
+
+  if (true) {
+    crypt0 = crypt0 || __webpack_require__(982);
+    module.exports = uuid;
+  } else // removed by dead control flow
+{}
+
+  // Use best available PRNG
+  // Also expose this so you can override it.
+  uuid.randomBytes = (function(){
+    if (crypt0) {
+      if (crypt0.randomBytes) {
+        return crypt0.randomBytes;
+      }
+      if (crypt0.getRandomValues) {
+        if (typeof Uint8Array.prototype.slice !== 'function') {
+          return function(n) {
+            var bytes = new Uint8Array(n);
+            crypt0.getRandomValues(bytes);
+            return Array.from(bytes);
+          };
+        }
+        return function(n) {
+          var bytes = new Uint8Array(n);
+          crypt0.getRandomValues(bytes);
+          return bytes;
+        };
+      }
+    }
+    return function(n) {
+      var i, r = [];
+      for (i = 0; i < n; i++) {
+        r.push(Math.floor(Math.random() * 256));
+      }
+      return r;
+    };
+  })();
+
+  // Buffer some random bytes for speed
+  function randomBytesBuffered(n) {
+    if (!buf || ((bufIdx + n) > uuid.BUFFER_SIZE)) {
+      bufIdx = 0;
+      buf = uuid.randomBytes(uuid.BUFFER_SIZE);
+    }
+    return buf.slice(bufIdx, bufIdx += n);
+  }
+
+  // uuid.bin
+  function uuidBin() {
+    var b = randomBytesBuffered(16);
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    return b;
+  }
+
+  // String UUIDv4 (Random)
+  function uuid() {
+    var b = uuidBin();
+    return hexBytes[b[0]] + hexBytes[b[1]] +
+      hexBytes[b[2]] + hexBytes[b[3]] + '-' +
+      hexBytes[b[4]] + hexBytes[b[5]] + '-' +
+      hexBytes[b[6]] + hexBytes[b[7]] + '-' +
+      hexBytes[b[8]] + hexBytes[b[9]] + '-' +
+      hexBytes[b[10]] + hexBytes[b[11]] +
+      hexBytes[b[12]] + hexBytes[b[13]] +
+      hexBytes[b[14]] + hexBytes[b[15]]
+    ;
+  }
+
+})();
+
+
+/***/ },
+
 /***/ 345
 (module, exports, __webpack_require__) {
 
@@ -17251,6 +17373,13 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 }.call(this));
 
 
+/***/ },
+
+/***/ 982
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("crypto");
+
 /***/ }
 
 /******/ });
@@ -17335,7 +17464,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 /************************************************************************/
 var __webpack_exports__ = {};
 
-// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/regexes.js
+// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/regexes.js
 var regexes_namespaceObject = {};
 __webpack_require__.r(regexes_namespaceObject);
 __webpack_require__.d(regexes_namespaceObject, {
@@ -17399,7 +17528,7 @@ __webpack_require__.d(regexes_namespaceObject, {
   xid: () => (xid)
 });
 
-// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/checks.js
+// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/checks.js
 var classic_checks_namespaceObject = {};
 __webpack_require__.r(classic_checks_namespaceObject);
 __webpack_require__.d(classic_checks_namespaceObject, {
@@ -17434,7 +17563,7 @@ __webpack_require__.d(classic_checks_namespaceObject, {
   uppercase: () => (_uppercase)
 });
 
-// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/iso.js
+// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/iso.js
 var iso_namespaceObject = {};
 __webpack_require__.r(iso_namespaceObject);
 __webpack_require__.d(iso_namespaceObject, {
@@ -17448,7 +17577,7 @@ __webpack_require__.d(iso_namespaceObject, {
   time: () => (iso_time)
 });
 
-// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/schemas.js
+// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/schemas.js
 var classic_schemas_namespaceObject = {};
 __webpack_require__.r(classic_schemas_namespaceObject);
 __webpack_require__.d(classic_schemas_namespaceObject, {
@@ -17618,110 +17747,10 @@ __webpack_require__.d(classic_schemas_namespaceObject, {
   xor: () => (xor)
 });
 
-;// ./node_modules/.pnpm/dedent@1.7.1/node_modules/dedent/dist/dedent.mjs
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-const dedent = createDedent({});
-/* harmony default export */ const dist_dedent = (dedent);
-function createDedent(options) {
-  dedent.withOptions = newOptions => createDedent(_objectSpread(_objectSpread({}, options), newOptions));
-  return dedent;
-  function dedent(strings, ...values) {
-    const raw = typeof strings === "string" ? [strings] : strings.raw;
-    const {
-      alignValues = false,
-      escapeSpecialCharacters = Array.isArray(strings),
-      trimWhitespace = true
-    } = options;
-
-    // first, perform interpolation
-    let result = "";
-    for (let i = 0; i < raw.length; i++) {
-      let next = raw[i];
-      if (escapeSpecialCharacters) {
-        // handle escaped newlines, backticks, and interpolation characters
-        next = next.replace(/\\\n[ \t]*/g, "").replace(/\\`/g, "`").replace(/\\\$/g, "$").replace(/\\\{/g, "{");
-      }
-      result += next;
-      if (i < values.length) {
-        const value = alignValues ? alignValue(values[i], result) : values[i];
-
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        result += value;
-      }
-    }
-
-    // now strip indentation
-    const lines = result.split("\n");
-    let mindent = null;
-    for (const l of lines) {
-      const m = l.match(/^(\s+)\S+/);
-      if (m) {
-        const indent = m[1].length;
-        if (!mindent) {
-          // this is the first indented line
-          mindent = indent;
-        } else {
-          mindent = Math.min(mindent, indent);
-        }
-      }
-    }
-    if (mindent !== null) {
-      const m = mindent; // appease TypeScript
-      result = lines
-      // https://github.com/typescript-eslint/typescript-eslint/issues/7140
-      // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
-      .map(l => l[0] === " " || l[0] === "\t" ? l.slice(m) : l).join("\n");
-    }
-
-    // dedent eats leading and trailing whitespace too
-    if (trimWhitespace) {
-      result = result.trim();
-    }
-
-    // handle escaped newlines at the end to ensure they don't get stripped too
-    if (escapeSpecialCharacters) {
-      result = result.replace(/\\n/g, "\n");
-    }
-
-    // Workaround for Bun issue with Unicode characters
-    // https://github.com/oven-sh/bun/issues/8745
-    if (typeof Bun !== "undefined") {
-      result = result.replace(
-      // Matches e.g. \\u{1f60a} or \\u5F1F
-      /\\u(?:\{([\da-fA-F]{1,6})\}|([\da-fA-F]{4}))/g, (_, braced, unbraced) => {
-        var _ref;
-        const hex = (_ref = braced !== null && braced !== void 0 ? braced : unbraced) !== null && _ref !== void 0 ? _ref : "";
-        return String.fromCodePoint(parseInt(hex, 16));
-      });
-    }
-    return result;
-  }
-}
-
-/**
- * Adjusts the indentation of a multi-line interpolated value to match the current line.
- */
-function alignValue(value, precedingText) {
-  if (typeof value !== "string" || !value.includes("\n")) {
-    return value;
-  }
-  const currentLine = precedingText.slice(precedingText.lastIndexOf("\n") + 1);
-  const indentMatch = currentLine.match(/^(\s+)/);
-  if (indentMatch) {
-    const indent = indentMatch[1];
-    return value.replace(/\n/g, `\n${indent}`);
-  }
-  return value;
-}
-
-// EXTERNAL MODULE: ./node_modules/.pnpm/lodash@4.17.23/node_modules/lodash/lodash.js
-var lodash = __webpack_require__(345);
-var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/core.js
+// EXTERNAL MODULE: ./node_modules/.pnpm/uuid-random@1.3.2/node_modules/uuid-random/index.js
+var uuid_random = __webpack_require__(327);
+var uuid_random_default = /*#__PURE__*/__webpack_require__.n(uuid_random);
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/core.js
 /** A special constant with type `never` */
 const NEVER = Object.freeze({
     status: "aborted",
@@ -17799,7 +17828,7 @@ function config(newConfig) {
     return globalConfig;
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/util.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/util.js
 // functions
 function assertEqual(val) {
     return val;
@@ -18452,7 +18481,7 @@ class Class {
     constructor(..._args) { }
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/errors.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/errors.js
 
 
 const initializer = (inst, def) => {
@@ -18636,7 +18665,7 @@ function prettifyError(error) {
     return lines.join("\n");
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/parse.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/parse.js
 
 
 
@@ -18731,7 +18760,7 @@ const _safeDecodeAsync = (_Err) => async (schema, value, _ctx) => {
 };
 const safeDecodeAsync = /* @__PURE__*/ _safeDecodeAsync($ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/regexes.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/regexes.js
 
 const cuid = /^[cC][^\s-]{8,}$/;
 const cuid2 = /^[0-9a-z]+$/;
@@ -18866,7 +18895,7 @@ const sha512_hex = /^[0-9a-fA-F]{128}$/;
 const sha512_base64 = /*@__PURE__*/ fixedBase64(86, "==");
 const sha512_base64url = /*@__PURE__*/ fixedBase64url(86);
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/checks.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/checks.js
 // import { $ZodType } from "./schemas.js";
 
 
@@ -19443,7 +19472,7 @@ const $ZodCheckOverwrite = /*@__PURE__*/ $constructor("$ZodCheckOverwrite", (ins
     };
 });
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/doc.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/doc.js
 class Doc {
     constructor(args = []) {
         this.content = [];
@@ -19480,14 +19509,14 @@ class Doc {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/versions.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/versions.js
 const version = {
     major: 4,
     minor: 3,
-    patch: 5,
+    patch: 6,
 };
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/schemas.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/schemas.js
 
 
 
@@ -20855,11 +20884,9 @@ const $ZodRecord = /*@__PURE__*/ $constructor("$ZodRecord", (inst, def) => {
                 if (keyResult instanceof Promise) {
                     throw new Error("Async schemas not supported in object keys currently");
                 }
-                // Numeric string fallback: if key failed with "expected number", retry with Number(key)
-                const checkNumericKey = typeof key === "string" &&
-                    number.test(key) &&
-                    keyResult.issues.length &&
-                    keyResult.issues.some((iss) => iss.code === "invalid_type" && iss.expected === "number");
+                // Numeric string fallback: if key is a numeric string and failed, retry with Number(key)
+                // This handles z.number(), z.literal([1, 2, 3]), and unions containing numeric literals
+                const checkNumericKey = typeof key === "string" && number.test(key) && keyResult.issues.length;
                 if (checkNumericKey) {
                     const retryResult = def.keyType._zod.run({ value: Number(key), issues: [] }, ctx);
                     if (retryResult instanceof Promise) {
@@ -21584,7 +21611,7 @@ function handleRefineResult(result, payload, input, inst) {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ar.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ar.js
 
 const error = () => {
     const Sizable = {
@@ -21692,7 +21719,7 @@ const error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/az.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/az.js
 
 const az_error = () => {
     const Sizable = {
@@ -21799,7 +21826,7 @@ const az_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/be.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/be.js
 
 function getBelarusianPlural(count, one, few, many) {
     const absCount = Math.abs(count);
@@ -21957,7 +21984,7 @@ const be_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/bg.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/bg.js
 
 const bg_error = () => {
     const Sizable = {
@@ -22079,7 +22106,7 @@ const bg_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ca.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ca.js
 
 const ca_error = () => {
     const Sizable = {
@@ -22188,7 +22215,7 @@ const ca_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/cs.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/cs.js
 
 const cs_error = () => {
     const Sizable = {
@@ -22301,7 +22328,7 @@ const cs_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/da.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/da.js
 
 const da_error = () => {
     const Sizable = {
@@ -22418,7 +22445,7 @@ const da_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/de.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/de.js
 
 const de_error = () => {
     const Sizable = {
@@ -22528,7 +22555,7 @@ const de_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/en.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/en.js
 
 const en_error = () => {
     const Sizable = {
@@ -22639,7 +22666,7 @@ const en_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/eo.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/eo.js
 
 const eo_error = () => {
     const Sizable = {
@@ -22750,7 +22777,7 @@ const eo_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/es.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/es.js
 
 const es_error = () => {
     const Sizable = {
@@ -22884,7 +22911,7 @@ const es_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/fa.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/fa.js
 
 const fa_error = () => {
     const Sizable = {
@@ -23000,7 +23027,7 @@ const fa_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/fi.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/fi.js
 
 const fi_error = () => {
     const Sizable = {
@@ -23114,7 +23141,7 @@ const fi_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/fr.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/fr.js
 
 const fr_error = () => {
     const Sizable = {
@@ -23224,7 +23251,7 @@ const fr_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/fr-CA.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/fr-CA.js
 
 const fr_CA_error = () => {
     const Sizable = {
@@ -23333,7 +23360,7 @@ const fr_CA_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/he.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/he.js
 
 const he_error = () => {
     // Hebrew labels + grammatical gender
@@ -23549,7 +23576,7 @@ const he_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/hu.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/hu.js
 
 const hu_error = () => {
     const Sizable = {
@@ -23659,7 +23686,7 @@ const hu_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/hy.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/hy.js
 
 function getArmenianPlural(count, one, many) {
     return Math.abs(count) === 1 ? one : many;
@@ -23808,7 +23835,7 @@ const hy_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/id.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/id.js
 
 const id_error = () => {
     const Sizable = {
@@ -23916,7 +23943,7 @@ const id_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/is.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/is.js
 
 const is_error = () => {
     const Sizable = {
@@ -24027,7 +24054,7 @@ const is_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/it.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/it.js
 
 const it_error = () => {
     const Sizable = {
@@ -24137,7 +24164,7 @@ const it_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ja.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ja.js
 
 const ja_error = () => {
     const Sizable = {
@@ -24246,7 +24273,7 @@ const ja_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ka.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ka.js
 
 const ka_error = () => {
     const Sizable = {
@@ -24360,7 +24387,7 @@ const ka_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/km.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/km.js
 
 const km_error = () => {
     const Sizable = {
@@ -24472,14 +24499,14 @@ const km_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/kh.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/kh.js
 
 /** @deprecated Use `km` instead. */
 /* harmony default export */ function kh() {
     return km();
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ko.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ko.js
 
 const ko_error = () => {
     const Sizable = {
@@ -24592,7 +24619,7 @@ const ko_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/lt.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/lt.js
 
 const capitalizeFirstCharacter = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -24797,7 +24824,7 @@ const lt_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/mk.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/mk.js
 
 const mk_error = () => {
     const Sizable = {
@@ -24908,7 +24935,7 @@ const mk_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ms.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ms.js
 
 const ms_error = () => {
     const Sizable = {
@@ -25017,7 +25044,7 @@ const ms_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/nl.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/nl.js
 
 const nl_error = () => {
     const Sizable = {
@@ -25129,7 +25156,7 @@ const nl_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/no.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/no.js
 
 const no_error = () => {
     const Sizable = {
@@ -25239,7 +25266,7 @@ const no_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ota.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ota.js
 
 const ota_error = () => {
     const Sizable = {
@@ -25350,7 +25377,7 @@ const ota_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ps.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ps.js
 
 const ps_error = () => {
     const Sizable = {
@@ -25466,7 +25493,7 @@ const ps_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/pl.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/pl.js
 
 const pl_error = () => {
     const Sizable = {
@@ -25577,7 +25604,7 @@ const pl_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/pt.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/pt.js
 
 const pt_error = () => {
     const Sizable = {
@@ -25687,7 +25714,7 @@ const pt_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ru.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ru.js
 
 function getRussianPlural(count, one, few, many) {
     const absCount = Math.abs(count);
@@ -25845,7 +25872,7 @@ const ru_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/sl.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/sl.js
 
 const sl_error = () => {
     const Sizable = {
@@ -25956,7 +25983,7 @@ const sl_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/sv.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/sv.js
 
 const sv_error = () => {
     const Sizable = {
@@ -26068,7 +26095,7 @@ const sv_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ta.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ta.js
 
 const ta_error = () => {
     const Sizable = {
@@ -26180,7 +26207,7 @@ const ta_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/th.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/th.js
 
 const th_error = () => {
     const Sizable = {
@@ -26292,7 +26319,7 @@ const th_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/tr.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/tr.js
 
 const tr_error = () => {
     const Sizable = {
@@ -26399,7 +26426,7 @@ const tr_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/uk.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/uk.js
 
 const uk_error = () => {
     const Sizable = {
@@ -26509,14 +26536,14 @@ const uk_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ua.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ua.js
 
 /** @deprecated Use `uk` instead. */
 /* harmony default export */ function ua() {
     return uk();
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/ur.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/ur.js
 
 const ur_error = () => {
     const Sizable = {
@@ -26628,7 +26655,7 @@ const ur_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/uz.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/uz.js
 
 const uz_error = () => {
     const Sizable = {
@@ -26739,7 +26766,7 @@ const uz_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/vi.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/vi.js
 
 const vi_error = () => {
     const Sizable = {
@@ -26849,7 +26876,7 @@ const vi_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/zh-CN.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/zh-CN.js
 
 const zh_CN_error = () => {
     const Sizable = {
@@ -26960,7 +26987,7 @@ const zh_CN_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/zh-TW.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/zh-TW.js
 
 const zh_TW_error = () => {
     const Sizable = {
@@ -27069,7 +27096,7 @@ const zh_TW_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/yo.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/yo.js
 
 const yo_error = () => {
     const Sizable = {
@@ -27178,7 +27205,7 @@ const yo_error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/locales/index.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/locales/index.js
 
 
 
@@ -27229,7 +27256,7 @@ const yo_error = () => {
 
 
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/registries.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/registries.js
 var _a;
 const $output = Symbol("ZodOutput");
 const $input = Symbol("ZodInput");
@@ -27282,7 +27309,7 @@ function registry() {
 (_a = globalThis).__zod_globalRegistry ?? (_a.__zod_globalRegistry = registry());
 const registries_globalRegistry = globalThis.__zod_globalRegistry;
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/api.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/api.js
 
 
 
@@ -28362,7 +28389,7 @@ function _stringFormat(Class, format, fnOrRegex, _params = {}) {
     return inst;
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/to-json-schema.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/to-json-schema.js
 
 // function initializeContext<T extends schemas.$ZodType>(inputs: JSONSchemaGeneratorParams<T>): ToJSONSchemaContext<T> {
 //   return {
@@ -28618,7 +28645,7 @@ function to_json_schema_finalize(ctx, schema) {
                 }
             }
             // When ref was extracted to $defs, remove properties that match the definition
-            if (refSchema.$ref) {
+            if (refSchema.$ref && refSeen.def) {
                 for (const key in schema) {
                     if (key === "$ref" || key === "allOf")
                         continue;
@@ -28801,7 +28828,7 @@ const createStandardJSONSchemaMethod = (schema, io, processors = {}) => (params)
     return to_json_schema_finalize(ctx, schema);
 };
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/json-schema-processors.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/json-schema-processors.js
 
 
 const formatMap = {
@@ -29408,7 +29435,7 @@ function toJSONSchema(input, params) {
     return to_json_schema_finalize(ctx, input);
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/json-schema-generator.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/json-schema-generator.js
 
 
 /**
@@ -29505,7 +29532,7 @@ class JSONSchemaGenerator {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/core/index.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/core/index.js
 
 
 
@@ -29523,10 +29550,10 @@ class JSONSchemaGenerator {
 
 
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/checks.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/checks.js
 
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/iso.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/iso.js
 
 
 const ZodISODateTime = /*@__PURE__*/ $constructor("ZodISODateTime", (inst, def) => {
@@ -29558,7 +29585,7 @@ function iso_duration(params) {
     return _isoDuration(ZodISODuration, params);
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/errors.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/errors.js
 
 
 
@@ -29608,7 +29635,7 @@ const ZodRealError = $constructor("ZodError", errors_initializer, {
 // /** @deprecated Use `z.core.$ZodErrorMapCtx` instead. */
 // export type ErrorMapCtx = core.$ZodErrorMapCtx;
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/parse.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/parse.js
 
 
 const parse_parse = /* @__PURE__ */ _parse(ZodRealError);
@@ -29625,7 +29652,7 @@ const parse_safeDecode = /* @__PURE__ */ _safeDecode(ZodRealError);
 const parse_safeEncodeAsync = /* @__PURE__ */ _safeEncodeAsync(ZodRealError);
 const parse_safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/schemas.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/schemas.js
 
 
 
@@ -30784,7 +30811,7 @@ function preprocess(fn, schema) {
     return pipe(transform(fn), schema);
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/compat.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/compat.js
 // Zod 3 compat layer
 
 /** @deprecated Use the raw string literal codes instead, e.g. "invalid_type". */
@@ -30817,7 +30844,7 @@ var ZodFirstPartyTypeKind;
 (function (ZodFirstPartyTypeKind) {
 })(ZodFirstPartyTypeKind || (ZodFirstPartyTypeKind = {}));
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/from-json-schema.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/from-json-schema.js
 
 
 
@@ -31403,7 +31430,7 @@ function fromJSONSchema(schema, params) {
     return convertSchema(schema, ctx);
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/coerce.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/coerce.js
 
 
 function coerce_string(params) {
@@ -31422,7 +31449,7 @@ function coerce_date(params) {
     return _coercedDate(ZodDate, params);
 }
 
-;// ./node_modules/.pnpm/zod@4.3.5/node_modules/zod/v4/classic/external.js
+;// ./node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/external.js
 
 
 
@@ -31444,7 +31471,169 @@ config(en());
 
 
 
+;// ./src/type/extensions.en.ts
+
+
+const ScriptButton = object({
+    name: coerce_string(),
+    visible: schemas_boolean(),
+});
+const Script = object({
+    type: literal('script'),
+    enabled: schemas_boolean(),
+    name: coerce_string(),
+    id: coerce_string().prefault((uuid_random_default())),
+    content: coerce_string(),
+    info: coerce_string().prefault(''),
+    button: object({
+        enabled: schemas_boolean().prefault(true),
+        buttons: array(ScriptButton).prefault([]),
+    })
+        .prefault({}),
+    data: record(schemas_string(), any()).prefault({}).catch({}),
+});
+const ScriptFolder = object({
+    type: literal('folder'),
+    enabled: schemas_boolean(),
+    name: coerce_string(),
+    id: coerce_string().prefault((uuid_random_default())),
+    icon: schemas_string().prefault('fa-solid fa-folder'),
+    color: schemas_string().prefault('rgba(219, 219, 214, 1)'),
+    scripts: array(Script).prefault([]).catch([]),
+});
+const ScriptTree = discriminatedUnion('type', [Script, ScriptFolder]);
+const Extensions = looseObject({
+    regex_scripts: array(object({
+        id: schemas_string().prefault((uuid_random_default())),
+        script_name: schemas_string(),
+        enabled: schemas_boolean(),
+        find_regex: schemas_string(),
+        replace_string: schemas_string(),
+        source: object({
+            user_input: schemas_boolean(),
+            ai_output: schemas_boolean(),
+            slash_command: schemas_boolean().prefault(false),
+            world_info: schemas_boolean().prefault(false),
+        }),
+        destination: object({
+            display: schemas_boolean(),
+            prompt: schemas_boolean(),
+        }),
+        run_on_edit: schemas_boolean().prefault(false),
+        min_depth: union([schemas_number(), schemas_null()]).prefault(null),
+        max_depth: union([schemas_number(), schemas_null()]).prefault(null),
+    })),
+    tavern_helper: object({
+        scripts: array(ScriptTree).prefault([]).catch([]),
+        variables: record(schemas_string(), any()).prefault({}).catch({}),
+    }),
+});
+
+;// ./node_modules/.pnpm/dedent@1.7.1/node_modules/dedent/dist/dedent.mjs
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+const dedent = createDedent({});
+/* harmony default export */ const dist_dedent = (dedent);
+function createDedent(options) {
+  dedent.withOptions = newOptions => createDedent(_objectSpread(_objectSpread({}, options), newOptions));
+  return dedent;
+  function dedent(strings, ...values) {
+    const raw = typeof strings === "string" ? [strings] : strings.raw;
+    const {
+      alignValues = false,
+      escapeSpecialCharacters = Array.isArray(strings),
+      trimWhitespace = true
+    } = options;
+
+    // first, perform interpolation
+    let result = "";
+    for (let i = 0; i < raw.length; i++) {
+      let next = raw[i];
+      if (escapeSpecialCharacters) {
+        // handle escaped newlines, backticks, and interpolation characters
+        next = next.replace(/\\\n[ \t]*/g, "").replace(/\\`/g, "`").replace(/\\\$/g, "$").replace(/\\\{/g, "{");
+      }
+      result += next;
+      if (i < values.length) {
+        const value = alignValues ? alignValue(values[i], result) : values[i];
+
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        result += value;
+      }
+    }
+
+    // now strip indentation
+    const lines = result.split("\n");
+    let mindent = null;
+    for (const l of lines) {
+      const m = l.match(/^(\s+)\S+/);
+      if (m) {
+        const indent = m[1].length;
+        if (!mindent) {
+          // this is the first indented line
+          mindent = indent;
+        } else {
+          mindent = Math.min(mindent, indent);
+        }
+      }
+    }
+    if (mindent !== null) {
+      const m = mindent; // appease TypeScript
+      result = lines
+      // https://github.com/typescript-eslint/typescript-eslint/issues/7140
+      // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
+      .map(l => l[0] === " " || l[0] === "\t" ? l.slice(m) : l).join("\n");
+    }
+
+    // dedent eats leading and trailing whitespace too
+    if (trimWhitespace) {
+      result = result.trim();
+    }
+
+    // handle escaped newlines at the end to ensure they don't get stripped too
+    if (escapeSpecialCharacters) {
+      result = result.replace(/\\n/g, "\n");
+    }
+
+    // Workaround for Bun issue with Unicode characters
+    // https://github.com/oven-sh/bun/issues/8745
+    if (typeof Bun !== "undefined") {
+      result = result.replace(
+      // Matches e.g. \\u{1f60a} or \\u5F1F
+      /\\u(?:\{([\da-fA-F]{1,6})\}|([\da-fA-F]{4}))/g, (_, braced, unbraced) => {
+        var _ref;
+        const hex = (_ref = braced !== null && braced !== void 0 ? braced : unbraced) !== null && _ref !== void 0 ? _ref : "";
+        return String.fromCodePoint(parseInt(hex, 16));
+      });
+    }
+    return result;
+  }
+}
+
+/**
+ * Adjusts the indentation of a multi-line interpolated value to match the current line.
+ */
+function alignValue(value, precedingText) {
+  if (typeof value !== "string" || !value.includes("\n")) {
+    return value;
+  }
+  const currentLine = precedingText.slice(precedingText.lastIndexOf("\n") + 1);
+  const indentMatch = currentLine.match(/^(\s+)/);
+  if (indentMatch) {
+    const indent = indentMatch[1];
+    return value.replace(/\n/g, `\n${indent}`);
+  }
+  return value;
+}
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/lodash@4.17.23/node_modules/lodash/lodash.js
+var lodash = __webpack_require__(345);
+var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
 ;// ./src/type/preset.en.ts
+
 
 
 
@@ -31653,18 +31842,107 @@ const Preset = strictObject({
         }
     }).describe('提示词列表里已经添加的提示词'),
     prompts_unused: PromptTrees.describe('下拉框里的, 没有添加进提示词列表的提示词'),
-    extensions: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设绑定额外数据'),
+    extensions: Extensions.optional().describe('额外字段: 用于为预设绑定额外数据'),
+});
+
+;// ./src/type/extensions.zh.ts
+
+
+const zh_to_en_map = {
+    正则: 'regex_scripts',
+    酒馆助手: 'tavern_helper',
+    脚本库: 'scripts',
+    变量: 'variables',
+    正则名称: 'script_name',
+    启用: 'enabled',
+    查找表达式: 'find_regex',
+    替换为: 'replace_string',
+    来源: 'source',
+    用户输入: 'user_input',
+    AI输出: 'ai_output',
+    快捷命令: 'slash_command',
+    世界信息: 'world_info',
+    作用于: 'destination',
+    仅格式显示: 'display',
+    仅格式提示词: 'prompt',
+    在编辑时运行: 'run_on_edit',
+    最小深度: 'min_depth',
+    最大深度: 'max_depth',
+    类型: 'type',
+    脚本: 'script',
+    文件夹: 'folder',
+    名称: 'name',
+    内容: 'content',
+    介绍: 'info',
+    按钮: 'button',
+    按钮列表: 'buttons',
+    数据: 'data',
+    可见: 'visible',
+};
+const extensions_zh_ScriptButton = object({
+    名称: coerce_string(),
+    可见: schemas_boolean(),
+});
+const extensions_zh_Script = object({
+    类型: literal('脚本'),
+    启用: schemas_boolean(),
+    名称: coerce_string(),
+    id: coerce_string().prefault((uuid_random_default())),
+    内容: coerce_string(),
+    介绍: coerce_string().prefault(''),
+    按钮: object({
+        启用: schemas_boolean().prefault(true),
+        按钮列表: array(extensions_zh_ScriptButton).prefault([]),
+    })
+        .prefault({}),
+    数据: record(schemas_string(), any()).prefault({}).catch({}),
+});
+const extensions_zh_ScriptFolder = object({
+    类型: literal('文件夹'),
+    启用: schemas_boolean(),
+    名称: coerce_string(),
+    id: coerce_string().prefault((uuid_random_default())),
+    图标: schemas_string().prefault('fa-solid fa-folder'),
+    颜色: schemas_string().prefault('#DBDBD6'),
+    脚本库: array(extensions_zh_Script).prefault([]).catch([]),
+});
+const extensions_zh_ScriptTree = discriminatedUnion('类型', [extensions_zh_Script, extensions_zh_ScriptFolder]);
+const extensions_zh_Extensions = looseObject({
+    正则: array(object({
+        id: schemas_string().prefault((uuid_random_default())),
+        正则名称: schemas_string(),
+        启用: schemas_boolean(),
+        查找表达式: schemas_string(),
+        替换为: schemas_string(),
+        来源: object({
+            用户输入: schemas_boolean(),
+            AI输出: schemas_boolean(),
+            快捷命令: schemas_boolean().prefault(false),
+            世界信息: schemas_boolean().prefault(false),
+        }),
+        作用于: object({
+            仅格式显示: schemas_boolean(),
+            仅格式提示词: schemas_boolean(),
+        }),
+        在编辑时运行: schemas_boolean().prefault(false),
+        最小深度: union([schemas_number(), schemas_null()]).prefault(null),
+        最大深度: union([schemas_number(), schemas_null()]).prefault(null),
+    }))
+        .prefault([])
+        .catch([]),
+    酒馆助手: object({
+        脚本库: array(extensions_zh_ScriptTree).prefault([]).catch([]),
+        变量: record(schemas_string(), any()).prefault({}).catch({}),
+    }),
 });
 
 ;// ./src/type/preset.zh.ts
 
 
 
-const zh_to_en_map = {
-    名称: 'name',
-    启用: 'enabled',
+
+const preset_zh_zh_to_en_map = {
     插入位置: 'position',
-    类型: 'type',
     相对: 'relative',
     聊天中: 'in_chat',
     深度: 'depth',
@@ -31673,7 +31951,6 @@ const zh_to_en_map = {
     系统: 'system',
     用户: 'user',
     AI: 'assistant',
-    内容: 'content',
     文件: 'file',
     额外字段: 'extra',
     角色定义之前: 'world_info_before',
@@ -31684,7 +31961,6 @@ const zh_to_en_map = {
     角色定义之后: 'world_info_after',
     对话示例: 'dialogue_examples',
     聊天记录: 'chat_history',
-    文件夹: 'folder',
     条目: 'entries',
     设置: 'settings',
     上下文长度: 'max_context',
@@ -31720,6 +31996,7 @@ const zh_to_en_map = {
     提示词: 'prompts',
     未添加的提示词: 'prompts_unused',
     扩展字段: 'extensions',
+    ...zh_to_en_map,
 };
 function is_zh(data) {
     return _.has(data, '提示词');
@@ -31927,58 +32204,116 @@ const preset_zh_Preset = strictObject({
         }
     }).describe('提示词列表里已经添加的提示词'),
     未添加的提示词: preset_zh_PromptTrees.describe('下拉框里的, 没有添加进提示词列表的提示词'),
-    扩展字段: any().optional().describe('扩展字段: 用于为预设绑定额外数据'),
+    扩展字段: extensions_zh_Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),
 });
 
+;// external "path"
+const external_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire_require("path");
 ;// ./src/type/settings.en.ts
 
-const Config_type = schemas_enum(['worldbook', 'preset']);
+
+
+const Config_type = schemas_enum(['character', 'worldbook', 'preset']);
 const Config = strictObject({
     type: Config_type,
-    name: schemas_string().describe('世界书/预设在酒馆中的名称'),
+    name: schemas_string().describe('角色卡/世界书/预设在酒馆中的名称'),
     file: schemas_string()
         .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
-        .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
-    export_file: schemas_string()
+        .describe('角色卡/世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
+    bundle_file: schemas_string()
         .optional()
-        .transform(string => (string !== undefined && !string.endsWith('.json') ? string + '.json' : string))
-        .describe('当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文件的同目录下'),
+        .describe('当使用 `node tavern_sync.mjs bundle 配置名称` 打包角色卡/世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认打包到角色卡/世界书/预设配置文件的同目录下'),
 });
 const Settings = strictObject({
     user_name: schemas_string().regex(/^\S+$/).optional(),
-    configs: record(schemas_string(), Config),
+    configs: record(schemas_string(), Config).transform(data => {
+        return lodash_default().mapValues(data, (value, key) => {
+            if (value.bundle_file !== undefined) {
+                switch (value.type) {
+                    case 'character':
+                        value.bundle_file = value.bundle_file.endsWith('.png') ? value.bundle_file : value.bundle_file + '.png';
+                        break;
+                    case 'worldbook':
+                    case 'preset':
+                        value.bundle_file = value.bundle_file.endsWith('.json') ? value.bundle_file : value.bundle_file + '.json';
+                        break;
+                }
+            }
+            else {
+                switch (value.type) {
+                    case 'character':
+                        value.bundle_file = (0,external_path_namespaceObject.resolve)((0,external_path_namespaceObject.dirname)((0,external_path_namespaceObject.resolve)(__webpack_dirname__, value.file)), `${key}.png`);
+                        break;
+                    case 'worldbook':
+                    case 'preset':
+                        value.bundle_file = (0,external_path_namespaceObject.resolve)((0,external_path_namespaceObject.dirname)((0,external_path_namespaceObject.resolve)(__webpack_dirname__, value.file)), `${key}.json`);
+                        break;
+                }
+            }
+            return value;
+        });
+    }),
 });
 
 ;// ./src/type/settings.zh.ts
+
+
 
 const settings_zh_zh_to_en_map = {
     user名称: 'user_name',
     配置: 'configs',
     类型: 'type',
+    角色卡: 'character',
     世界书: 'worldbook',
     预设: 'preset',
     酒馆中的名称: 'name',
     本地文件路径: 'file',
+    导出文件路径: 'bundle_file',
 };
 function settings_zh_is_zh(data) {
     return _.has(data, '配置');
 }
-const settings_zh_Config_type = schemas_enum(['世界书', '预设']);
+const settings_zh_Config_type = schemas_enum(['角色卡', '世界书', '预设']);
 const settings_zh_Config = strictObject({
     类型: settings_zh_Config_type,
     酒馆中的名称: schemas_string()
-        .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
+        .describe('角色卡/世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
     本地文件路径: schemas_string()
         .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
-        .describe('世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
+        .describe('角色卡/世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
     导出文件路径: schemas_string()
         .optional()
-        .transform(string => (string !== undefined && !string.endsWith('.json') ? string + '.json' : string))
-        .describe('当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认导出到世界书/预设配置文的同目录下'),
+        .describe('当使用 `node tavern_sync.mjs bundle 配置名称` 打包角色卡/世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认打包到角色卡/世界书/预设配置文件的同目录下'),
 });
 const settings_zh_Settings = strictObject({
     user名称: schemas_string().regex(/^\S+$/).optional(),
-    配置: record(schemas_string(), settings_zh_Config),
+    配置: record(schemas_string(), settings_zh_Config).transform(data => {
+        return lodash_default().mapValues(data, (value, key) => {
+            if (value.导出文件路径 !== undefined) {
+                switch (value.类型) {
+                    case '角色卡':
+                        value.导出文件路径 = (0,external_path_namespaceObject.resolve)(__webpack_dirname__, value.导出文件路径.endsWith('.png') ? value.导出文件路径 : value.导出文件路径 + '.png');
+                        break;
+                    case '世界书':
+                    case '预设':
+                        value.导出文件路径 = (0,external_path_namespaceObject.resolve)(__webpack_dirname__, value.导出文件路径.endsWith('.json') ? value.导出文件路径 : value.导出文件路径 + '.json');
+                        break;
+                }
+            }
+            else {
+                switch (value.类型) {
+                    case '角色卡':
+                        value.导出文件路径 = (0,external_path_namespaceObject.resolve)((0,external_path_namespaceObject.dirname)((0,external_path_namespaceObject.resolve)(__webpack_dirname__, value.本地文件路径)), `${key}.png`);
+                        break;
+                    case '世界书':
+                    case '预设':
+                        value.导出文件路径 = (0,external_path_namespaceObject.resolve)((0,external_path_namespaceObject.dirname)((0,external_path_namespaceObject.resolve)(__webpack_dirname__, value.本地文件路径)), `${key}.json`);
+                        break;
+                }
+            }
+            return value;
+        });
+    }),
 });
 
 ;// ./src/type/worldbook.en.ts
