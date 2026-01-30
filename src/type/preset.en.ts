@@ -1,3 +1,4 @@
+import { Extensions } from '@type/extensions.en';
 import dedent from 'dedent';
 import _ from 'lodash';
 import * as z from 'zod';
@@ -255,5 +256,5 @@ export const Preset = z.strictObject({
   }).describe('提示词列表里已经添加的提示词'),
   prompts_unused: PromptTrees.describe('下拉框里的, 没有添加进提示词列表的提示词'),
 
-  extensions: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设绑定额外数据'),
+  extensions: Extensions.optional().describe('额外字段: 用于为预设绑定额外数据'),
 });

@@ -20,7 +20,6 @@ export interface Pull_options {
 
 export interface Push_options {
   should_force: boolean;
-  should_export: boolean;
 }
 
 export interface Watch_options {
@@ -33,7 +32,7 @@ export abstract class Syncer_interface {
   config_name: string;
   name: string;
   file: string;
-  export_file: string;
+  bundle_file: string;
   dir: string;
 
   en_type: ZodType<any>;
@@ -48,7 +47,7 @@ export abstract class Syncer_interface {
     config_name: string,
     name: string,
     file: string,
-    export_file: string | undefined,
+    bundle_file: string,
     en_type: ZodType<any>,
     zh_type: ZodType<any>,
     zh_to_en_map: Record<string, string>,
@@ -61,7 +60,7 @@ export abstract class Syncer_interface {
     this.name = name;
     this.file = resolve(__dirname, file);
     this.dir = dirname(this.file);
-    this.export_file = export_file ? resolve(__dirname, export_file) : resolve(this.dir, `${this.config_name}.json`);
+    this.bundle_file = bundle_file;
 
     this.en_type = en_type;
     this.zh_type = zh_type;
@@ -121,7 +120,7 @@ export abstract class Syncer_interface {
     files: {
       name: string;
       path: string;
-      content: string;
+      content: string | Buffer;
     }[];
   };
   protected abstract do_beautify_config(tavern_data: Record<string, any>, language: 'zh' | 'en'): string;
@@ -184,7 +183,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
     result_data: Record<string, any>;
     error_data: Record<string, any>;
   };
-  private async push_once({ should_force, should_export }: Push_options): Promise<void> {
+  private async push_once({ should_force }: Push_options): Promise<void> {
     const local_data = this.get_parsed_local();
     if (typeof local_data === 'string') {
       throw Error(`推送${this.type_zh} '${this.name}' 失败: ${local_data}`);
@@ -194,7 +193,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
       const tavern_data = await this.get_parsed_tavern({ queit: true });
       if (typeof tavern_data === 'string') {
         throw Error(
-          `推送${this.type_zh} '${this.name}' 失败: ${tavern_data}; 如果想直接创建预设, 请在命令尾部添加 '-f' 或 '--force' 选项, 如: 'node tavern_sync.mjs push 猴子打字机 -f'`,
+          `推送${this.type_zh} '${this.name}' 失败: ${tavern_data};\n如果想直接创建角色卡/世界书/预设, 请在命令尾部添加 '-f' 或 '--force' 选项, 如: 'node tavern_sync.mjs push 猴子打字机 -f'`,
         );
       }
 
@@ -217,16 +216,6 @@ ${this.do_beautify_config(tavern_data, language)}`;
       name: this.name,
       data: result_data,
     });
-
-    if (should_export) {
-      const result = await socket.emitWithAck(`export_${this.type}`, {
-        name: this.name,
-      });
-      if (typeof result === 'string') {
-        throw Error(`导出${this.type_zh} '${this.name}' 失败: ${result}`);
-      }
-      write_file_recursively(this.dir, this.export_file, JSON.stringify(result, null, 2));
-    }
   }
 
   async push(options: Push_options) {
@@ -250,13 +239,13 @@ ${this.do_beautify_config(tavern_data, language)}`;
     };
     const watcher = watch_on(get_watch_files_from_data());
 
-    await this.push_once({ ...options, should_export: false });
+    await this.push_once(options);
     console.info(`初始化推送完毕, 开始监听${this.type_zh} '${this.name}'`);
 
     watcher.on('all', async (_event, path) => {
       console.info(`检测到文件 '${path}' 发生变化, 进行推送...`);
       try {
-        await this.push_once({ ...options, should_export: false });
+        await this.push_once(options);
         console.info(`推送成功`);
       } catch (err) {
         const error = err as Error;
@@ -278,7 +267,11 @@ ${this.do_beautify_config(tavern_data, language)}`;
     if (!_.isEmpty(error_data)) {
       exit_on_error(YAML.stringify({ [`打包${this.type_zh} '${this.name}' 失败`]: error_data }));
     }
-    write_file_recursively(this.dir, this.export_file, JSON.stringify(result_data, null, 2));
-    console.info(`成功将${this.type_zh} '${this.name}' 打包到 '${resolve(this.dir, this.export_file)}' 中`);
+    write_file_recursively(
+      this.dir,
+      this.bundle_file,
+      Buffer.isBuffer(result_data) ? result_data : JSON.stringify(result_data, null, 2),
+    );
+    console.info(`成功将${this.type_zh} '${this.name}' 打包到 '${resolve(this.dir, this.bundle_file)}' 中`);
   }
 }

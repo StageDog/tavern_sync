@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
-export function write_file_recursively(base: string, file: string, content: string) {
+export function write_file_recursively(base: string, file: string, content: string | Buffer) {
   try {
     mkdirSync(resolve(base, dirname(file)), { recursive: true });
     writeFileSync(resolve(base, file), content);

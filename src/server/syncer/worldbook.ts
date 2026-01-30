@@ -25,14 +25,14 @@ import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Worldbook_syncer extends Syncer_interface {
-  constructor(config_name: string, name: string, file: string, export_file: string | undefined) {
+  constructor(config_name: string, name: string, file: string, bundle_file: string) {
     super(
       'worldbook',
       _.invert(zh_to_en_map)['worldbook'],
       config_name,
       name,
       file,
-      export_file,
+      bundle_file,
       Worldbook_en,
       Worldbook_zh,
       worldbook_zh_to_en_map,
@@ -95,6 +95,8 @@ export class Worldbook_syncer extends Syncer_interface {
     }
 
     tavern_data.entries.forEach(entry => {
+      _.set(entry, 'content', replace_user_name(entry.content ?? ''));
+
       const handle_file = (entry: Worldbook_tavern['entries'][number], file: string) => {
         let file_to_write = '';
         let file_to_set = '';

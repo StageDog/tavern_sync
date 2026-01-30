@@ -21,14 +21,14 @@ import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Preset_syncer extends Syncer_interface {
-  constructor(config_name: string, name: string, file: string, export_file: string | undefined) {
+  constructor(config_name: string, name: string, file: string, bundle_file: string) {
     super(
       'preset',
       _.invert(zh_to_en_map)['preset'],
       config_name,
       name,
       file,
-      export_file,
+      bundle_file,
       Preset_en,
       Preset_zh,
       preset_zh_to_en_map,
@@ -106,6 +106,7 @@ export class Preset_syncer extends Syncer_interface {
         if (_.has(prompt, 'id')) {
           return;
         }
+        _.set(prompt, 'content', replace_user_name(prompt.content ?? ''));
 
         const handle_file = (prompt: Preset_tavern['prompts'][number], file: string) => {
           let file_to_write = '';
@@ -152,13 +153,33 @@ export class Preset_syncer extends Syncer_interface {
     const document = new YAML.Document(
       language === 'zh' ? translate(tavern_data, _.invert(this.zh_to_en_map)) : tavern_data,
     );
-    ['提示词', '未添加的提示词', 'prompts', 'prompts_unused'].forEach(key =>
-      YAML.visit(document.get(key) as YAML.Node, (key, node) => {
+    [
+      ['提示词'],
+      ['未添加的提示词'],
+      ['扩展字段', '正则'],
+      ['扩展字段', '酒馆助手', '脚本库'],
+      ['prompts'],
+      ['prompts_unused'],
+      ['extensions', 'regex_scripts'],
+      ['extensions', 'tavern_helper', 'scripts'],
+    ].forEach(key =>
+      YAML.visit(document.getIn(key) as YAML.Node, (key, node) => {
         if (key === null) {
           return;
         }
         if ((key as number) > 0) {
           (node as YAML.Node).spaceBefore = true;
+        }
+        return YAML.visit.SKIP;
+      }),
+    );
+    [['扩展字段'], ['扩展字段', '酒馆助手'], ['extensions'], ['extensions', 'tavern_helper']].forEach(key =>
+      YAML.visit(document.getIn(key) as YAML.Node, (key, node) => {
+        if (key === null) {
+          return;
+        }
+        if (YAML.isPair(node) && (key as number) > 0) {
+          (node.key as YAML.Node).spaceBefore = true;
         }
         return YAML.visit.SKIP;
       }),

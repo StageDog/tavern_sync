@@ -1,3 +1,4 @@
+import { Extensions } from '@server/tavern/extensions';
 import { prompt_placeholder_ids, prompt_unrolable_placeholder_ids } from '@type/preset.en';
 import _ from 'lodash';
 import * as z from 'zod';
@@ -92,7 +93,7 @@ export const Preset = z
         ),
       ),
 
-    extensions: z.record(z.string(), z.any()).optional(),
+    extensions: Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),
   })
   .transform(data => {
     if (data.settings.reply_count === 1) {

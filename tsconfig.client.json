@@ -15,6 +15,12 @@
     "paths": {
       "@client/*": [
         "client/*"
+      ],
+      "@server/*": [
+        "server/*"
+      ],
+      "@type/*": [
+        "type/*"
       ]
     },
     "moduleDetection": "auto",
@@ -35,6 +41,8 @@
   "include": [
     "@types",
     "src/client",
+    "src/server",
+    "src/type",
     "global.d.ts",
   ],
   "exclude": [

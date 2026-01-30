@@ -64,7 +64,7 @@ type _OriginalWorldbookEntry = {
 
   extra?: Record<string, any>;
 };
-function to_original_worldbook_entry(entry: Worldbook_entry, index: number): _OriginalWorldbookEntry {
+export function to_original_worldbook_entry(entry: Worldbook_entry, index: number): _OriginalWorldbookEntry {
   let result = _({})
     .set('uid', index)
     .set('displayIndex', index)

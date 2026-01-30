@@ -1,5 +1,4 @@
 import { get_settings } from '@client/settings';
-
 import { io, Socket } from 'socket.io-client';
 
 let socket: Socket | null = null;

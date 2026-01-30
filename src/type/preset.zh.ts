@@ -1,12 +1,10 @@
+import { Extensions, zh_to_en_map as extensions_zh_to_en_map } from '@type/extensions.zh';
 import dedent from 'dedent';
 import _ from 'lodash';
 import * as z from 'zod';
 
 export const zh_to_en_map = {
-  名称: 'name',
-  启用: 'enabled',
   插入位置: 'position',
-  类型: 'type',
   相对: 'relative',
   聊天中: 'in_chat',
   深度: 'depth',
@@ -15,7 +13,6 @@ export const zh_to_en_map = {
   系统: 'system',
   用户: 'user',
   AI: 'assistant',
-  内容: 'content',
   文件: 'file',
   额外字段: 'extra',
 
@@ -28,7 +25,6 @@ export const zh_to_en_map = {
   对话示例: 'dialogue_examples',
   聊天记录: 'chat_history',
 
-  文件夹: 'folder',
   条目: 'entries',
 
   设置: 'settings',
@@ -67,6 +63,7 @@ export const zh_to_en_map = {
   未添加的提示词: 'prompts_unused',
 
   扩展字段: 'extensions',
+  ...extensions_zh_to_en_map,
 } as const;
 export function is_zh(data: Record<string, any>): boolean {
   return _.has(data, '提示词');
@@ -321,5 +318,5 @@ export const Preset = z.strictObject({
   }).describe('提示词列表里已经添加的提示词'),
   未添加的提示词: PromptTrees.describe('下拉框里的, 没有添加进提示词列表的提示词'),
 
-  扩展字段: z.any().optional().describe('扩展字段: 用于为预设绑定额外数据'),
+  扩展字段: Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),
 });

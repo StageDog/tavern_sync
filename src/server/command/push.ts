@@ -14,19 +14,12 @@ export function add_push_command(): Command {
     '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容',
     false,
   );
-  command.option(
-    '-e, --export',
-    "导出结果: 将推送结果导出为 JSON 文件, 存放在配置文件中 '导出文件路径 (export_file)' 所指定路径下; 如果没有填写 '导出文件路径', 则存放在与 '本地文件路径 (file)' 同目录下",
-    false,
-  );
 
-  command.action(async (syncers: Syncer_interface[], options: { force: boolean; export: boolean }) => {
+  command.action(async (syncers: Syncer_interface[], options: { force: boolean }) => {
     const update_abort_controller = new AbortController();
     check_update_silently(update_abort_controller.signal);
     try {
-      await Promise.all(
-        syncers.map(syncer => syncer.push({ should_force: options.force, should_export: options.export })),
-      );
+      await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force })));
     } finally {
       update_abort_controller.abort();
     }
