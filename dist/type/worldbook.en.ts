@@ -19,7 +19,7 @@ export const Worldbook_entry = z
         `),
         ),
         keys: z
-          .array(z.string())
+          .array(z.coerce.string())
           .min(1)
           .optional()
           .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
@@ -34,7 +34,7 @@ export const Worldbook_entry = z
               - not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到
             `),
             ),
-            keys: z.array(z.string()).min(1),
+            keys: z.array(z.coerce.string()).min(1),
           })
           .optional()
           .describe(
@@ -140,7 +140,7 @@ export const Worldbook_entry = z
 
     group: z
       .strictObject({
-        labels: z.array(z.string()).min(1).describe('组标签'),
+        labels: z.array(z.coerce.string()).min(1).describe('组标签'),
         use_priority: z.boolean().default(false).describe('使用优先级'),
         weight: z.number().default(100).describe('权重'),
         use_scoring: z
@@ -155,7 +155,7 @@ export const Worldbook_entry = z
     extra: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 
     content: z.coerce.string().optional().describe('内嵌的提示词内容'),
-    file: z.string().optional().describe('外链的提示词文件路径'),
+    file: z.coerce.string().optional().describe('外链的提示词文件路径'),
   })
   .transform(data => {
     if (data.group !== undefined) {
@@ -198,7 +198,7 @@ export const Worldbook_entry = z
 
 const Wolrdbook_leaf = Worldbook_entry;
 const Wolrdbook_branch = z.object({
-  folder: z.string(),
+  folder: z.coerce.string(),
   entries: z.array(Wolrdbook_leaf),
 });
 const Wolrdbook_tree = z.union([Wolrdbook_leaf, Wolrdbook_branch]);

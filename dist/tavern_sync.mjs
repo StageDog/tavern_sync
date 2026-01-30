@@ -62595,7 +62595,7 @@ config(en());
 const Config_type = schemas_enum(['character', 'worldbook', 'preset']);
 const Config = strictObject({
     type: Config_type,
-    name: schemas_string().describe('角色卡/世界书/预设在酒馆中的名称'),
+    name: coerce_string().describe('角色卡/世界书/预设在酒馆中的名称'),
     file: schemas_string()
         .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
         .describe('角色卡/世界书/预设的配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径'),
@@ -62604,7 +62604,7 @@ const Config = strictObject({
         .describe('当使用 `node tavern_sync.mjs bundle 配置名称` 打包角色卡/世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认打包到角色卡/世界书/预设配置文件的同目录下'),
 });
 const Settings = strictObject({
-    user_name: schemas_string().regex(/^\S+$/).optional(),
+    user_name: coerce_string().regex(/^\S+$/).optional(),
     configs: record(schemas_string(), Config).transform(data => {
         return lodash_default().mapValues(data, (value, key) => {
             if (value.bundle_file !== undefined) {
@@ -62665,7 +62665,7 @@ const settings_zh_Config = strictObject({
         .describe('当使用 `node tavern_sync.mjs bundle 配置名称` 打包角色卡/世界书/预设文件时, 要将它存放在哪个文件中; 不填则默认打包到角色卡/世界书/预设配置文件的同目录下'),
 });
 const settings_zh_Settings = strictObject({
-    user名称: schemas_string().regex(/^\S+$/).optional(),
+    user名称: coerce_string().regex(/^\S+$/).optional(),
     配置: record(schemas_string(), settings_zh_Config).transform(data => {
         return lodash_default().mapValues(data, (value, key) => {
             if (value.导出文件路径 !== undefined) {
@@ -65662,18 +65662,18 @@ const ScriptFolder = object({
     enabled: schemas_boolean(),
     name: coerce_string(),
     id: coerce_string().prefault((uuid_random_default())),
-    icon: schemas_string().prefault('fa-solid fa-folder'),
-    color: schemas_string().prefault('rgba(219, 219, 214, 1)'),
+    icon: coerce_string().prefault('fa-solid fa-folder'),
+    color: coerce_string().prefault('rgba(219, 219, 214, 1)'),
     scripts: array(Script).prefault([]).catch([]),
 });
 const ScriptTree = discriminatedUnion('type', [Script, ScriptFolder]);
 const Extensions = looseObject({
     regex_scripts: array(object({
-        id: schemas_string().prefault((uuid_random_default())),
-        script_name: schemas_string(),
+        id: coerce_string().prefault((uuid_random_default())),
+        script_name: coerce_string(),
         enabled: schemas_boolean(),
-        find_regex: schemas_string(),
-        replace_string: schemas_string(),
+        find_regex: coerce_string(),
+        replace_string: coerce_string(),
         source: object({
             user_input: schemas_boolean(),
             ai_output: schemas_boolean(),
@@ -66050,7 +66050,7 @@ const worldbook_en_Worldbook_entry = strictObject({
           - selective: 可选项🟢, 俗称绿灯. 除了蓝灯条件, 还需要满足 \`keys\` 扫描条件
           - vectorized: 向量化🔗. 一般不使用
         `)),
-        keys: array(schemas_string())
+        keys: array(coerce_string())
             .min(1)
             .optional()
             .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
@@ -66062,7 +66062,7 @@ const worldbook_en_Worldbook_entry = strictObject({
               - not_all: 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到
               - not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到
             `)),
-            keys: array(schemas_string()).min(1),
+            keys: array(coerce_string()).min(1),
         })
             .optional()
             .describe('次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`'),
@@ -66152,7 +66152,7 @@ const worldbook_en_Worldbook_entry = strictObject({
         .partial()
         .optional(),
     group: strictObject({
-        labels: array(schemas_string()).min(1).describe('组标签'),
+        labels: array(coerce_string()).min(1).describe('组标签'),
         use_priority: schemas_boolean().default(false).describe('使用优先级'),
         weight: schemas_number().default(100).describe('权重'),
         use_scoring: union([schemas_boolean(), literal('same_as_global')])
@@ -66164,7 +66164,7 @@ const worldbook_en_Worldbook_entry = strictObject({
         .describe('包含组'),
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
     content: coerce_string().optional().describe('内嵌的提示词内容'),
-    file: schemas_string().optional().describe('外链的提示词文件路径'),
+    file: coerce_string().optional().describe('外链的提示词文件路径'),
 })
     .transform(data => {
     if (data.group !== undefined) {
@@ -66202,7 +66202,7 @@ const worldbook_en_Worldbook_entry = strictObject({
 });
 const Wolrdbook_leaf = worldbook_en_Worldbook_entry;
 const Wolrdbook_branch = object({
-    folder: schemas_string(),
+    folder: coerce_string(),
     entries: array(Wolrdbook_leaf),
 });
 const Wolrdbook_tree = union([Wolrdbook_leaf, Wolrdbook_branch]);
@@ -66226,13 +66226,13 @@ const worldbook_en_Worldbook = strictObject({
 
 
 const character_en_Character = strictObject({
-    avatar: schemas_string(),
-    version: schemas_string(),
-    creator: schemas_string(),
-    creator_notes: schemas_string(),
+    avatar: coerce_string(),
+    version: coerce_string(),
+    creator: coerce_string(),
+    creator_notes: coerce_string(),
     first_messages: array(object({
         content: coerce_string().optional().describe('内嵌的提示词内容'),
-        file: schemas_string().optional().describe('外链的提示词文件路径'),
+        file: coerce_string().optional().describe('外链的提示词文件路径'),
     })
         .superRefine((data, context) => {
         if (data.content === undefined && data.file === undefined) {
@@ -66252,9 +66252,9 @@ const character_en_Character = strictObject({
     })
         .default({ content: '' }))
         .prefault([{}]),
-    description: schemas_string().default(''),
+    description: coerce_string().default(''),
     anchors: worldbook_en_Worldbook.shape.anchors,
-    worldbook: schemas_string(),
+    worldbook: coerce_string(),
     entries: worldbook_en_Worldbook.shape.entries,
     extensions: Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),
 });
@@ -66316,18 +66316,18 @@ const extensions_zh_ScriptFolder = object({
     启用: schemas_boolean(),
     名称: coerce_string(),
     id: coerce_string().prefault((uuid_random_default())),
-    图标: schemas_string().prefault('fa-solid fa-folder'),
-    颜色: schemas_string().prefault('#DBDBD6'),
+    图标: coerce_string().prefault('fa-solid fa-folder'),
+    颜色: coerce_string().prefault('#DBDBD6'),
     脚本库: array(extensions_zh_Script).prefault([]).catch([]),
 });
 const extensions_zh_ScriptTree = discriminatedUnion('类型', [extensions_zh_Script, extensions_zh_ScriptFolder]);
 const extensions_zh_Extensions = looseObject({
     正则: array(object({
-        id: schemas_string().prefault((uuid_random_default())),
-        正则名称: schemas_string(),
+        id: coerce_string().prefault((uuid_random_default())),
+        正则名称: coerce_string(),
         启用: schemas_boolean(),
-        查找表达式: schemas_string(),
-        替换为: schemas_string(),
+        查找表达式: coerce_string(),
+        替换为: coerce_string(),
         来源: object({
             用户输入: schemas_boolean(),
             AI输出: schemas_boolean(),
@@ -66419,7 +66419,7 @@ const worldbook_zh_Worldbook_entry = strictObject({
           - 绿灯: 可选项🟢 (selective). 除了蓝灯条件, 还需要满足 \`关键字\` 扫描条件
           - 向量化: 向量化🔗 (vectorized). 一般不使用
         `)),
-        关键字: array(schemas_string())
+        关键字: array(coerce_string())
             .min(1)
             .optional()
             .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
@@ -66509,7 +66509,7 @@ const worldbook_zh_Worldbook_entry = strictObject({
         .partial()
         .optional(),
     群组: strictObject({
-        组标签: array(schemas_string()).min(1).describe('组标签'),
+        组标签: array(coerce_string()).min(1).describe('组标签'),
         使用优先级: schemas_boolean().default(false).describe('使用优先级'),
         权重: schemas_number().default(100).describe('权重'),
         使用评分: union([schemas_boolean(), literal('same_as_global')])
@@ -66521,7 +66521,7 @@ const worldbook_zh_Worldbook_entry = strictObject({
         .describe('包含组'),
     额外字段: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
     内容: coerce_string().optional().describe('内嵌的提示词内容'),
-    文件: schemas_string().optional().describe('外链的提示词文件路径'),
+    文件: coerce_string().optional().describe('外链的提示词文件路径'),
 })
     .transform(data => {
     if (data.群组 !== undefined) {
@@ -66559,7 +66559,7 @@ const worldbook_zh_Worldbook_entry = strictObject({
 });
 const worldbook_zh_Wolrdbook_leaf = worldbook_zh_Worldbook_entry;
 const worldbook_zh_Wolrdbook_branch = object({
-    文件夹: schemas_string(),
+    文件夹: coerce_string(),
     条目: array(worldbook_zh_Wolrdbook_leaf),
 });
 const worldbook_zh_Wolrdbook_tree = union([worldbook_zh_Wolrdbook_leaf, worldbook_zh_Wolrdbook_branch]);
@@ -66598,13 +66598,13 @@ function character_zh_is_zh(data) {
     return _.has(data, '头像');
 }
 const character_zh_Character = strictObject({
-    头像: schemas_string(),
-    版本: schemas_string(),
-    作者: schemas_string(),
-    备注: schemas_string(),
+    头像: coerce_string(),
+    版本: coerce_string(),
+    作者: coerce_string(),
+    备注: coerce_string(),
     第一条消息: array(object({
         内容: coerce_string().optional().describe('内嵌的提示词内容'),
-        文件: schemas_string().optional().describe('外链的提示词文件路径'),
+        文件: coerce_string().optional().describe('外链的提示词文件路径'),
     })
         .superRefine((data, context) => {
         if (data.内容 === undefined && data.文件 === undefined) {
@@ -66624,9 +66624,9 @@ const character_zh_Character = strictObject({
     })
         .default({ 内容: '' }))
         .prefault([{}]),
-    角色描述: schemas_string().default(''),
+    角色描述: coerce_string().default(''),
     锚点: worldbook_zh_Worldbook.shape.锚点,
-    世界书名称: schemas_string(),
+    世界书名称: coerce_string(),
     条目: worldbook_zh_Worldbook.shape.条目,
     扩展字段: extensions_zh_Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),
 });
@@ -67041,7 +67041,7 @@ const Prompt_normal = strictObject({
         .describe('插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度'),
     role: schemas_enum(['system', 'user', 'assistant']).prefault('system'),
     content: coerce_string().optional().describe('内嵌的提示词内容'),
-    file: schemas_string().optional().describe('外链的提示词文件路径'),
+    file: coerce_string().optional().describe('外链的提示词文件路径'),
     extra: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 })
     .superRefine((data, context) => {
@@ -67139,7 +67139,7 @@ const Prompt_placeholder = strictObject({
     .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
 const PromptLeaf = union([Prompt_normal, Prompt_placeholder]);
 const PromptBranch = object({
-    folder: schemas_string(),
+    folder: coerce_string(),
     get entries() {
         return array(union([PromptLeaf, PromptBranch]));
     },
@@ -67408,7 +67408,7 @@ const preset_zh_Prompt_normal = strictObject({
         .describe('插入位置: `相对`则按提示词相对位置插入, `聊天中`则插入到聊天记录中的对应深度'),
     角色: schemas_enum(['系统', '用户', 'AI']).prefault('系统'),
     内容: coerce_string().optional().describe('内嵌的提示词内容'),
-    文件: schemas_string().optional().describe('外链的提示词文件路径'),
+    文件: coerce_string().optional().describe('外链的提示词文件路径'),
     额外字段: record(schemas_string(), any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 })
     .superRefine((data, context) => {
@@ -67506,7 +67506,7 @@ const preset_zh_Prompt_placeholder = strictObject({
     .describe('预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词');
 const preset_zh_PromptLeaf = union([preset_zh_Prompt_normal, preset_zh_Prompt_placeholder]);
 const preset_zh_PromptBranch = object({
-    文件夹: schemas_string(),
+    文件夹: coerce_string(),
     get 条目() {
         return array(union([preset_zh_PromptLeaf, preset_zh_PromptBranch]));
     },

@@ -40,7 +40,7 @@ export const Config = z.strictObject({
 
 export type Settings = z.infer<typeof Settings>;
 export const Settings = z.strictObject({
-  user名称: z.string().regex(/^\S+$/).optional(),
+  user名称: z.coerce.string().regex(/^\S+$/).optional(),
   配置: z.record(z.string(), Config).transform(data => {
     return _.mapValues(data, (value, key) => {
       if (value.导出文件路径 !== undefined) {
