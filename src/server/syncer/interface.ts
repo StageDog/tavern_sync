@@ -47,7 +47,7 @@ export abstract class Syncer_interface {
     config_name: string,
     name: string,
     file: string,
-    bundle_file: string,
+    bundle_file: string | undefined,
     en_type: ZodType<any>,
     zh_type: ZodType<any>,
     zh_to_en_map: Record<string, string>,
@@ -60,7 +60,7 @@ export abstract class Syncer_interface {
     this.name = name;
     this.file = resolve(__dirname, file);
     this.dir = dirname(this.file);
-    this.bundle_file = bundle_file;
+    this.bundle_file = bundle_file ? resolve(__dirname, bundle_file) : resolve(this.dir, `${this.config_name}.json`);
 
     this.en_type = en_type;
     this.zh_type = zh_type;
@@ -269,7 +269,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
     }
     write_file_recursively(
       this.dir,
-      this.bundle_file,
+      Buffer.isBuffer(result_data) ? this.bundle_file.replace('.json', '.png') : this.bundle_file,
       Buffer.isBuffer(result_data) ? result_data : JSON.stringify(result_data, null, 2),
     );
     console.info(`成功将${this.type_zh} '${this.name}' 打包到 '${resolve(this.dir, this.bundle_file)}' 中`);

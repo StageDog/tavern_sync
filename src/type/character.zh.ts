@@ -20,7 +20,7 @@ export function is_zh(data: Record<string, any>): boolean {
 
 export type Character = z.infer<typeof Character>;
 export const Character = z.strictObject({
-  头像: z.coerce.string(),
+  头像: z.coerce.string().optional(),
   版本: z.coerce.string(),
   作者: z.coerce.string(),
   备注: z.coerce.string(),

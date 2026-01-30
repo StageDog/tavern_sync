@@ -27,7 +27,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Character_syncer extends Syncer_interface {
-  constructor(config_name: string, name: string, file: string, bundle_file: string) {
+  constructor(config_name: string, name: string, file: string, bundle_file: string | undefined) {
     super(
       'character',
       _.invert(zh_to_en_map)['character'],
@@ -267,15 +267,17 @@ export class Character_syncer extends Syncer_interface {
 
     // 头像
     {
-      const avatar = _.get(_.invert(this.zh_to_en_map), local_data.avatar, local_data.avatar);
-      const paths = glob_file(this.dir, avatar);
-      if (paths.length === 0) {
-        error_data.未能找到以下外链头像文件.push(avatar);
-      } else if (paths.length > 1) {
-        error_data.通过补全文件后缀找到了多个文件.push({ 头像: paths });
-      } else {
-        const content = readFileSync(paths[0]);
-        _.set(local_data, 'avatar', content);
+      if (local_data.avatar) {
+        const avatar = _.get(_.invert(this.zh_to_en_map), local_data.avatar, local_data.avatar);
+        const paths = glob_file(this.dir, avatar);
+        if (paths.length === 0) {
+          error_data.未能找到以下外链头像文件.push(avatar);
+        } else if (paths.length > 1) {
+          error_data.通过补全文件后缀找到了多个文件.push({ 头像: paths });
+        } else {
+          const content = readFileSync(paths[0]);
+          _.set(local_data, 'avatar', content);
+        }
       }
     }
 
@@ -364,6 +366,7 @@ export class Character_syncer extends Syncer_interface {
 
   protected do_bundle(local_data: Character_en): { result_data: Record<string, any>; error_data: Record<string, any> } {
     const { result_data, error_data } = this.do_push(local_data);
+    // @ts-expect-error TODO: 修复类型
     return { result_data: bundle_character(this.name, result_data), error_data };
   }
 }

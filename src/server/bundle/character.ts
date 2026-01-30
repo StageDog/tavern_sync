@@ -244,6 +244,9 @@ export function write(image: Buffer, data: string) {
 }
 
 export function bundle_character(name: string, character: Omit<Character, 'avatar'> & { avatar: Buffer }) {
-  return to_original_character(name, character);
-  return write(character.avatar, JSON.stringify(to_original_character(name, character)));
+  const original_character = to_original_character(name, character);
+  if (character.avatar) {
+    return write(character.avatar, JSON.stringify(original_character));
+  }
+  return original_character;
 }

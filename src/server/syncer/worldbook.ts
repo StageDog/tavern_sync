@@ -25,7 +25,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import YAML from 'yaml';
 
 export class Worldbook_syncer extends Syncer_interface {
-  constructor(config_name: string, name: string, file: string, bundle_file: string) {
+  constructor(config_name: string, name: string, file: string, bundle_file: string | undefined) {
     super(
       'worldbook',
       _.invert(zh_to_en_map)['worldbook'],
