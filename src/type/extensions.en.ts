@@ -7,10 +7,10 @@ const ScriptButton = z.object({
 });
 
 const Script = z.object({
-  type: z.literal('script'),
-  enabled: z.boolean(),
   name: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
+  enabled: z.boolean(),
+  type: z.literal('script'),
   content: z.coerce.string(),
   info: z.coerce.string().prefault(''),
   button: z
@@ -23,10 +23,10 @@ const Script = z.object({
 });
 
 const ScriptFolder = z.object({
-  type: z.literal('folder'),
-  enabled: z.boolean(),
   name: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
+  enabled: z.boolean(),
+  type: z.literal('folder'),
   icon: z.coerce.string().prefault('fa-solid fa-folder'),
   color: z.coerce.string().prefault('rgba(219, 219, 214, 1)'),
   scripts: z.array(Script).prefault([]).catch([]),
@@ -38,8 +38,8 @@ export type Extensions = z.infer<typeof Extensions>;
 export const Extensions = z.looseObject({
   regex_scripts: z.array(
     z.object({
-      id: z.coerce.string().prefault(uuid),
       script_name: z.coerce.string(),
+      id: z.coerce.string().prefault(uuid),
       enabled: z.boolean(),
 
       find_regex: z.coerce.string(),

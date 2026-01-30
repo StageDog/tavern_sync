@@ -41,10 +41,10 @@ const ScriptButton = z.object({
 });
 
 const Script = z.object({
-  类型: z.literal('脚本'),
-  启用: z.boolean(),
   名称: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
+  启用: z.boolean(),
+  类型: z.literal('脚本'),
   内容: z.coerce.string(),
   介绍: z.coerce.string().prefault(''),
   按钮: z
@@ -57,10 +57,10 @@ const Script = z.object({
 });
 
 const ScriptFolder = z.object({
-  类型: z.literal('文件夹'),
-  启用: z.boolean(),
   名称: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
+  启用: z.boolean(),
+  类型: z.literal('文件夹'),
   图标: z.coerce.string().prefault('fa-solid fa-folder'),
   颜色: z.coerce.string().prefault('#DBDBD6'),
   脚本库: z.array(Script).prefault([]).catch([]),
@@ -73,8 +73,8 @@ export const Extensions = z.looseObject({
   正则: z
     .array(
       z.object({
-        id: z.coerce.string().prefault(uuid),
         正则名称: z.coerce.string(),
+        id: z.coerce.string().prefault(uuid),
         启用: z.boolean(),
 
         查找表达式: z.coerce.string(),
