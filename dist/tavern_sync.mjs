@@ -66229,7 +66229,7 @@ const worldbook_en_Worldbook = strictObject({
 
 
 const character_en_Character = strictObject({
-    avatar: coerce_string().optional(),
+    avatar: union([coerce_string(), schemas_null()]),
     version: coerce_string(),
     creator: coerce_string(),
     creator_notes: coerce_string(),
@@ -66601,7 +66601,7 @@ function character_zh_is_zh(data) {
     return _.has(data, '头像');
 }
 const character_zh_Character = strictObject({
-    头像: coerce_string().optional(),
+    头像: union([coerce_string(), schemas_null()]),
     版本: coerce_string(),
     作者: coerce_string(),
     备注: coerce_string(),

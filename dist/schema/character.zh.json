@@ -3,7 +3,14 @@
   "type": "object",
   "properties": {
     "头像": {
-      "type": "string"
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "版本": {
       "type": "string"
@@ -79,6 +86,7 @@
     }
   },
   "required": [
+    "头像",
     "版本",
     "作者",
     "备注",
@@ -462,7 +470,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "default": "bbe856f2-a822-446e-a11f-747c40b5a761",
+                "default": "ba84fe00-cde1-4cd7-9809-48f76a8b7b2a",
                 "type": "string"
               },
               "正则名称": {
@@ -572,7 +580,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "0f044659-bbaf-4b4b-bafe-d315c90df4d9",
+                        "default": "f213c216-e344-4b1f-9a08-6fef3101b777",
                         "type": "string"
                       },
                       "图标": {
@@ -630,7 +638,7 @@
           "type": "string"
         },
         "id": {
-          "default": "b3dc681d-0e90-4923-a7ac-40e1d3659a4b",
+          "default": "7c26a318-b16e-4d1f-b11d-620520866f7c",
           "type": "string"
         },
         "内容": {

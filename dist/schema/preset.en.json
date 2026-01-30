@@ -491,7 +491,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "default": "dbec8abd-b3ed-4445-9a34-95f3200a40f0",
+                "default": "2d4e771a-bf38-47c2-80e7-598c944c64b8",
                 "type": "string"
               },
               "script_name": {
@@ -601,7 +601,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "3f9d2f13-7002-4c8d-80f5-3c5c6dd7ad03",
+                        "default": "d84406c7-d70c-466f-b9ee-a385fad6817f",
                         "type": "string"
                       },
                       "icon": {
@@ -660,7 +660,7 @@
           "type": "string"
         },
         "id": {
-          "default": "2f485f5d-a293-414b-ad72-208b44f8a2d5",
+          "default": "ba8d41d8-f293-4f03-8fcc-937955a4c773",
           "type": "string"
         },
         "content": {
