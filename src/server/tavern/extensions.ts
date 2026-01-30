@@ -11,10 +11,10 @@ export const Extensions = Extensions_en.transform(data => {
     if (script.destination.display || script.destination.prompt) {
       _.unset(script, 'run_on_edit');
     }
-    if (script.min_depth) {
+    if (!script.min_depth) {
       _.unset(script, 'min_depth');
     }
-    if (script.max_depth) {
+    if (!script.max_depth) {
       _.unset(script, 'max_depth');
     }
     return script;
