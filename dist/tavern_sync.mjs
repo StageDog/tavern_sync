@@ -48404,8 +48404,8 @@ exports.LineCounter = LineCounter;
 /***/ 9890
 (__unused_webpack_module, exports, __webpack_require__) {
 
-/* unused reexport */ __webpack_require__(4162)
-/* unused reexport */ __webpack_require__(5118)
+exports.encode = __webpack_require__(4162)
+exports.decode = __webpack_require__(5118)
 
 
 /***/ },
@@ -63261,7 +63261,7 @@ let crc32_TABLE = [
 if (typeof Int32Array !== 'undefined') {
     crc32_TABLE = new Int32Array(crc32_TABLE);
 }
-const crc32_crc32 = (current, previous) => {
+const crc32 = (current, previous) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     let crc = previous === 0 ? 0 : ~~previous ^ -1;
     for (let index = 0; index < current.length; index++) {
@@ -63269,7 +63269,7 @@ const crc32_crc32 = (current, previous) => {
     }
     return crc ^ -1;
 };
-/* harmony default export */ const calculators_crc32 = (crc32_crc32);
+/* harmony default export */ const calculators_crc32 = (crc32);
 
 ;// ./node_modules/.pnpm/crc@4.3.2/node_modules/crc/mjs/crc32.js
 
@@ -63429,6 +63429,7 @@ const crcjam = (current, previous = -1) => {
 var png_chunk_text = __webpack_require__(9890);
 // EXTERNAL MODULE: ./node_modules/.pnpm/png-chunks-extract@1.0.0/node_modules/png-chunks-extract/index.js
 var png_chunks_extract = __webpack_require__(3074);
+var png_chunks_extract_default = /*#__PURE__*/__webpack_require__.n(png_chunks_extract);
 ;// ./src/server/bundle/character.ts
 
 
@@ -63579,7 +63580,7 @@ function character_encode(chunks) {
         for (let j = 0; j < size;) {
             output[idx++] = data[j++];
         }
-        const crc = crc32(Buffer.from(data), crc32(Buffer.from(nameChars)));
+        const crc = mjs_crc32(Buffer.from(data), mjs_crc32(Buffer.from(nameChars)));
         int32[0] = crc;
         output[idx++] = uint8[3];
         output[idx++] = uint8[2];
@@ -63590,18 +63591,18 @@ function character_encode(chunks) {
 }
 // https://github.com/SillyTavern/SillyTavern/blob/bba43f33219e41de7331b61f6872f5c7227503a3/src/character-card-parser.js#L15
 function write(image, data) {
-    const chunks = extract(new Uint8Array(image));
+    const chunks = png_chunks_extract_default()(new Uint8Array(image));
     const tEXtChunks = chunks.filter(chunk => chunk.name === 'tEXt');
     // Remove existing tEXt chunks
     for (const tEXtChunk of tEXtChunks) {
-        const data = PNGtext.decode(tEXtChunk.data);
+        const data = png_chunk_text.decode(tEXtChunk.data);
         if (data.keyword.toLowerCase() === 'chara' || data.keyword.toLowerCase() === 'ccv3') {
             chunks.splice(chunks.indexOf(tEXtChunk), 1);
         }
     }
     // Add new v2 chunk before the IEND chunk
     const base64EncodedData = Buffer.from(data, 'utf8').toString('base64');
-    chunks.splice(-1, 0, PNGtext.encode('chara', base64EncodedData));
+    chunks.splice(-1, 0, png_chunk_text.encode('chara', base64EncodedData));
     // Try adding v3 chunk before the IEND chunk
     try {
         //change v2 format to v3
@@ -63609,7 +63610,7 @@ function write(image, data) {
         v3Data.spec = 'chara_card_v3';
         v3Data.spec_version = '3.0';
         const base64EncodedData = Buffer.from(JSON.stringify(v3Data), 'utf8').toString('base64');
-        chunks.splice(-1, 0, PNGtext.encode('ccv3', base64EncodedData));
+        chunks.splice(-1, 0, png_chunk_text.encode('ccv3', base64EncodedData));
     }
     catch (error) {
         // Ignore errors when adding v3 chunk
@@ -63618,9 +63619,11 @@ function write(image, data) {
     return newBuffer;
 }
 function bundle_character(name, character) {
-    return to_original_character(name, character);
-    // removed by dead control flow
-
+    const original_character = to_original_character(name, character);
+    if (character.avatar) {
+        return write(character.avatar, JSON.stringify(original_character));
+    }
+    return original_character;
 }
 
 ;// ./src/server/component/collection_file.ts
@@ -65477,7 +65480,7 @@ class Syncer_interface {
         this.name = name;
         this.file = (0,external_node_path_.resolve)(__webpack_dirname__, file);
         this.dir = (0,external_node_path_.dirname)(this.file);
-        this.bundle_file = bundle_file;
+        this.bundle_file = bundle_file ? (0,external_node_path_.resolve)(__webpack_dirname__, bundle_file) : (0,external_node_path_.resolve)(this.dir, `${this.config_name}.json`);
         this.en_type = en_type;
         this.zh_type = zh_type;
         this.zh_to_en_map = zh_to_en_map;
@@ -65628,7 +65631,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
         if (!lodash_default().isEmpty(error_data)) {
             exit_on_error(dist.stringify({ [`打包${this.type_zh} '${this.name}' 失败`]: error_data }));
         }
-        write_file_recursively(this.dir, this.bundle_file, Buffer.isBuffer(result_data) ? result_data : JSON.stringify(result_data, null, 2));
+        write_file_recursively(this.dir, Buffer.isBuffer(result_data) ? this.bundle_file.replace('.json', '.png') : this.bundle_file, Buffer.isBuffer(result_data) ? result_data : JSON.stringify(result_data, null, 2));
         console.info(`成功将${this.type_zh} '${this.name}' 打包到 '${(0,external_node_path_.resolve)(this.dir, this.bundle_file)}' 中`);
     }
 }
@@ -66226,7 +66229,7 @@ const worldbook_en_Worldbook = strictObject({
 
 
 const character_en_Character = strictObject({
-    avatar: coerce_string(),
+    avatar: coerce_string().optional(),
     version: coerce_string(),
     creator: coerce_string(),
     creator_notes: coerce_string(),
@@ -66598,7 +66601,7 @@ function character_zh_is_zh(data) {
     return _.has(data, '头像');
 }
 const character_zh_Character = strictObject({
-    头像: coerce_string(),
+    头像: coerce_string().optional(),
     版本: coerce_string(),
     作者: coerce_string(),
     备注: coerce_string(),
@@ -66846,17 +66849,19 @@ class Character_syncer extends Syncer_interface {
         };
         // 头像
         {
-            const avatar = lodash_default().get(lodash_default().invert(this.zh_to_en_map), local_data.avatar, local_data.avatar);
-            const paths = glob_file(this.dir, avatar);
-            if (paths.length === 0) {
-                error_data.未能找到以下外链头像文件.push(avatar);
-            }
-            else if (paths.length > 1) {
-                error_data.通过补全文件后缀找到了多个文件.push({ 头像: paths });
-            }
-            else {
-                const content = (0,external_node_fs_.readFileSync)(paths[0]);
-                lodash_default().set(local_data, 'avatar', content);
+            if (local_data.avatar) {
+                const avatar = lodash_default().get(lodash_default().invert(this.zh_to_en_map), local_data.avatar, local_data.avatar);
+                const paths = glob_file(this.dir, avatar);
+                if (paths.length === 0) {
+                    error_data.未能找到以下外链头像文件.push(avatar);
+                }
+                else if (paths.length > 1) {
+                    error_data.通过补全文件后缀找到了多个文件.push({ 头像: paths });
+                }
+                else {
+                    const content = (0,external_node_fs_.readFileSync)(paths[0]);
+                    lodash_default().set(local_data, 'avatar', content);
+                }
             }
         }
         // 第一条消息
@@ -66936,6 +66941,7 @@ class Character_syncer extends Syncer_interface {
     }
     do_bundle(local_data) {
         const { result_data, error_data } = this.do_push(local_data);
+        // @ts-expect-error TODO: 修复类型
         return { result_data: bundle_character(this.name, result_data), error_data };
     }
 }

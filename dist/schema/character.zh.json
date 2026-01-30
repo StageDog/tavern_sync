@@ -79,7 +79,6 @@
     }
   },
   "required": [
-    "头像",
     "版本",
     "作者",
     "备注",
@@ -463,7 +462,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "default": "a6c7f0d7-0084-4c0e-8317-b6226e91ddc7",
+                "default": "bbe856f2-a822-446e-a11f-747c40b5a761",
                 "type": "string"
               },
               "正则名称": {
@@ -573,7 +572,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "b1154a99-22b4-4fae-891e-00e85d96015b",
+                        "default": "0f044659-bbaf-4b4b-bafe-d315c90df4d9",
                         "type": "string"
                       },
                       "图标": {
@@ -631,7 +630,7 @@
           "type": "string"
         },
         "id": {
-          "default": "9a4e8321-3f9a-4c78-9fcb-869f15431127",
+          "default": "b3dc681d-0e90-4923-a7ac-40e1d3659a4b",
           "type": "string"
         },
         "内容": {

@@ -4,7 +4,7 @@ import * as z from 'zod';
 
 export type Character = z.infer<typeof Character>;
 export const Character = z.strictObject({
-  avatar: z.coerce.string(),
+  avatar: z.coerce.string().optional(),
   version: z.coerce.string(),
   creator: z.coerce.string(),
   creator_notes: z.coerce.string(),

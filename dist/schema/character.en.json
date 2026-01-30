@@ -79,7 +79,6 @@
     }
   },
   "required": [
-    "avatar",
     "version",
     "creator",
     "creator_notes",
@@ -463,7 +462,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "default": "f210e48e-6d65-47f2-868c-e9177c9f63af",
+                "default": "46679ec7-9981-4f8d-a299-2fce34b1c1fc",
                 "type": "string"
               },
               "script_name": {
@@ -573,7 +572,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "514a4fae-5436-4d56-a6ae-682cf2aa3fb0",
+                        "default": "59a3dc11-90d2-4b1d-bac5-b951135b7d41",
                         "type": "string"
                       },
                       "icon": {
@@ -632,7 +631,7 @@
           "type": "string"
         },
         "id": {
-          "default": "9e38cf27-3061-4ac6-903c-9500600fc53b",
+          "default": "f94d5d48-44d9-407f-b14d-44e816f10e38",
           "type": "string"
         },
         "content": {
