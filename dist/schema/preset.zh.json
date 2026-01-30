@@ -498,7 +498,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "default": "fd5c8097-7498-47a9-982e-991f991d9aaa",
+                "default": "3a73a424-e648-466f-a1f5-cb22e14f108d",
                 "type": "string"
               },
               "正则名称": {
@@ -608,7 +608,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "12fa897d-51e0-446f-8093-68c5d3c87637",
+                        "default": "afcc8df3-1e85-40b4-a504-a2a86a213173",
                         "type": "string"
                       },
                       "图标": {
@@ -666,7 +666,7 @@
           "type": "string"
         },
         "id": {
-          "default": "c1b227b6-5fd0-4720-9cca-497c2a0307bb",
+          "default": "1e8e9a57-c30b-4c3c-8b73-3e2df0a01bc7",
           "type": "string"
         },
         "内容": {
