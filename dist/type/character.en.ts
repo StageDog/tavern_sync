@@ -4,7 +4,10 @@ import * as z from 'zod';
 
 export type Character = z.infer<typeof Character>;
 export const Character = z.strictObject({
-  avatar: z.union([z.coerce.string(), z.null()]),
+  avatar: z.coerce
+    .string()
+    .nullish()
+    .describe('角色卡头像: 填写角色卡头像图片路径, 填为 `null` 或不设置该字段则打包时会打包为 JSON 文件'),
   version: z.coerce.string(),
   creator: z.coerce.string(),
   creator_notes: z.coerce.string(),
@@ -44,7 +47,7 @@ export const Character = z.strictObject({
 
   anchors: Worldbook.shape.anchors,
 
-  worldbook: z.coerce.string(),
+  worldbook: z.coerce.string().nullish().describe('世界书名称: 填为 `null` 或不设置该字段则与角色卡名称相同'),
   entries: Worldbook.shape.entries,
 
   extensions: Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),

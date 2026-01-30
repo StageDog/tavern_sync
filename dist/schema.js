@@ -31819,7 +31819,9 @@ const Worldbook = strictObject({
 
 
 const Character = strictObject({
-    avatar: union([coerce_string(), schemas_null()]),
+    avatar: coerce_string()
+        .nullish()
+        .describe('角色卡头像: 填写角色卡头像图片路径, 填为 `null` 或不设置该字段则打包时会打包为 JSON 文件'),
     version: coerce_string(),
     creator: coerce_string(),
     creator_notes: coerce_string(),
@@ -31847,7 +31849,7 @@ const Character = strictObject({
         .prefault([{}]),
     description: coerce_string().default(''),
     anchors: Worldbook.shape.anchors,
-    worldbook: coerce_string(),
+    worldbook: coerce_string().nullish().describe('世界书名称: 填为 `null` 或不设置该字段则与角色卡名称相同'),
     entries: Worldbook.shape.entries,
     extensions: Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),
 });
@@ -32191,7 +32193,9 @@ function character_zh_is_zh(data) {
     return _.has(data, '头像');
 }
 const character_zh_Character = strictObject({
-    头像: union([coerce_string(), schemas_null()]),
+    头像: coerce_string()
+        .nullish()
+        .describe('角色卡头像: 填写角色卡头像图片路径, 填为 `null` 或不设置该字段则打包时会打包为 JSON 文件'),
     版本: coerce_string(),
     作者: coerce_string(),
     备注: coerce_string(),
@@ -32219,7 +32223,7 @@ const character_zh_Character = strictObject({
         .prefault([{}]),
     角色描述: coerce_string().default(''),
     锚点: worldbook_zh_Worldbook.shape.锚点,
-    世界书名称: coerce_string(),
+    世界书名称: coerce_string().nullish().describe('世界书名称: 填为 `null` 或不设置该字段则与角色卡名称相同'),
     条目: worldbook_zh_Worldbook.shape.条目,
     扩展字段: extensions_zh_Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),
 });

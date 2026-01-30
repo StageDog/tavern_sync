@@ -3,14 +3,8 @@
   "type": "object",
   "properties": {
     "avatar": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "description": "角色卡头像: 填写角色卡头像图片路径, 填为 `null` 或不设置该字段则打包时会打包为 JSON 文件",
+      "$ref": "#/$defs/__schema0"
     },
     "version": {
       "type": "string"
@@ -33,10 +27,10 @@
         "type": "object",
         "properties": {
           "content": {
-            "$ref": "#/$defs/__schema0"
+            "$ref": "#/$defs/__schema1"
           },
           "file": {
-            "$ref": "#/$defs/__schema2"
+            "$ref": "#/$defs/__schema3"
           }
         }
       }
@@ -47,17 +41,18 @@
     },
     "anchors": {
       "description": "用于存放 YAML 锚点, 不会被实际使用",
-      "$ref": "#/$defs/__schema4"
+      "$ref": "#/$defs/__schema5"
     },
     "worldbook": {
-      "type": "string"
+      "description": "世界书名称: 填为 `null` 或不设置该字段则与角色卡名称相同",
+      "$ref": "#/$defs/__schema6"
     },
     "entries": {
       "type": "array",
       "items": {
         "anyOf": [
           {
-            "$ref": "#/$defs/__schema5"
+            "$ref": "#/$defs/__schema7"
           },
           {
             "type": "object",
@@ -68,7 +63,7 @@
               "entries": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/$defs/__schema5"
+                  "$ref": "#/$defs/__schema7"
                 }
               }
             },
@@ -82,38 +77,56 @@
     },
     "extensions": {
       "description": "扩展字段: 用于为预设绑定额外数据",
-      "$ref": "#/$defs/__schema36"
+      "$ref": "#/$defs/__schema38"
     }
   },
   "required": [
-    "avatar",
     "version",
     "creator",
     "creator_notes",
-    "worldbook",
     "entries"
   ],
   "additionalProperties": false,
   "$defs": {
     "__schema0": {
-      "description": "内嵌的提示词内容",
-      "$ref": "#/$defs/__schema1"
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "__schema1": {
-      "type": "string"
+      "description": "内嵌的提示词内容",
+      "$ref": "#/$defs/__schema2"
     },
     "__schema2": {
-      "description": "外链的提示词文件路径",
-      "$ref": "#/$defs/__schema3"
-    },
-    "__schema3": {
       "type": "string"
     },
-    "__schema4": {},
-    "__schema5": {
-      "$ref": "#/$defs/__schema6"
+    "__schema3": {
+      "description": "外链的提示词文件路径",
+      "$ref": "#/$defs/__schema4"
     },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {},
     "__schema6": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
       "type": "object",
       "properties": {
         "name": {
@@ -121,7 +134,7 @@
         },
         "uid": {
           "description": "该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的",
-          "$ref": "#/$defs/__schema7"
+          "$ref": "#/$defs/__schema9"
         },
         "enabled": {
           "type": "boolean"
@@ -130,16 +143,16 @@
           "type": "object",
           "properties": {
             "type": {
-              "$ref": "#/$defs/__schema8"
+              "$ref": "#/$defs/__schema10"
             },
             "keys": {
-              "$ref": "#/$defs/__schema9"
+              "$ref": "#/$defs/__schema11"
             },
             "keys_secondary": {
-              "$ref": "#/$defs/__schema12"
+              "$ref": "#/$defs/__schema14"
             },
             "scan_depth": {
-              "$ref": "#/$defs/__schema15"
+              "$ref": "#/$defs/__schema17"
             }
           },
           "required": [
@@ -152,16 +165,16 @@
           "type": "object",
           "properties": {
             "type": {
-              "$ref": "#/$defs/__schema17"
+              "$ref": "#/$defs/__schema19"
             },
             "role": {
-              "$ref": "#/$defs/__schema18"
-            },
-            "depth": {
               "$ref": "#/$defs/__schema20"
             },
-            "order": {
+            "depth": {
               "$ref": "#/$defs/__schema22"
+            },
+            "order": {
+              "$ref": "#/$defs/__schema24"
             }
           },
           "required": [
@@ -178,7 +191,7 @@
         },
         "recursion": {
           "description": "递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目",
-          "$ref": "#/$defs/__schema23"
+          "$ref": "#/$defs/__schema25"
         },
         "effect": {
           "type": "object",
@@ -186,7 +199,7 @@
             "sticky": {
               "anyOf": [
                 {
-                  "$ref": "#/$defs/__schema25"
+                  "$ref": "#/$defs/__schema27"
                 },
                 {
                   "type": "null"
@@ -197,7 +210,7 @@
             "cooldown": {
               "anyOf": [
                 {
-                  "$ref": "#/$defs/__schema26"
+                  "$ref": "#/$defs/__schema28"
                 },
                 {
                   "type": "null"
@@ -208,7 +221,7 @@
             "delay": {
               "anyOf": [
                 {
-                  "$ref": "#/$defs/__schema27"
+                  "$ref": "#/$defs/__schema29"
                 },
                 {
                   "type": "null"
@@ -221,19 +234,19 @@
         },
         "group": {
           "description": "包含组",
-          "$ref": "#/$defs/__schema28"
+          "$ref": "#/$defs/__schema30"
         },
         "extra": {
           "description": "额外字段: 用于为预设提示词绑定额外数据",
-          "$ref": "#/$defs/__schema33"
+          "$ref": "#/$defs/__schema35"
         },
         "content": {
           "description": "内嵌的提示词内容",
-          "$ref": "#/$defs/__schema34"
+          "$ref": "#/$defs/__schema36"
         },
         "file": {
           "description": "外链的提示词文件路径",
-          "$ref": "#/$defs/__schema35"
+          "$ref": "#/$defs/__schema37"
         }
       },
       "required": [
@@ -244,10 +257,10 @@
       ],
       "additionalProperties": false
     },
-    "__schema7": {
+    "__schema9": {
       "type": "number"
     },
-    "__schema8": {
+    "__schema10": {
       "type": "string",
       "enum": [
         "constant",
@@ -256,25 +269,25 @@
       ],
       "description": "激活策略类型:\n- constant: 常量🔵, 俗称蓝灯. 只需要满足 \"启用\"、\"激活概率%\" 等别的要求即可.\n- selective: 可选项🟢, 俗称绿灯. 除了蓝灯条件, 还需要满足 `keys` 扫描条件\n- vectorized: 向量化🔗. 一般不使用"
     },
-    "__schema9": {
+    "__schema11": {
       "description": "关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活",
-      "$ref": "#/$defs/__schema10"
+      "$ref": "#/$defs/__schema12"
     },
-    "__schema10": {
+    "__schema12": {
       "minItems": 1,
       "type": "array",
       "items": {
-        "$ref": "#/$defs/__schema11"
+        "$ref": "#/$defs/__schema13"
       }
     },
-    "__schema11": {
+    "__schema13": {
       "type": "string"
     },
-    "__schema12": {
+    "__schema14": {
       "description": "次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`",
-      "$ref": "#/$defs/__schema13"
+      "$ref": "#/$defs/__schema15"
     },
-    "__schema13": {
+    "__schema15": {
       "type": "object",
       "properties": {
         "logic": {
@@ -291,7 +304,7 @@
           "minItems": 1,
           "type": "array",
           "items": {
-            "$ref": "#/$defs/__schema14"
+            "$ref": "#/$defs/__schema16"
           }
         }
       },
@@ -301,14 +314,14 @@
       ],
       "additionalProperties": false
     },
-    "__schema14": {
+    "__schema16": {
       "type": "string"
     },
-    "__schema15": {
+    "__schema17": {
       "description": "扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推",
-      "$ref": "#/$defs/__schema16"
+      "$ref": "#/$defs/__schema18"
     },
-    "__schema16": {
+    "__schema18": {
       "anyOf": [
         {
           "type": "string",
@@ -320,7 +333,7 @@
         }
       ]
     },
-    "__schema17": {
+    "__schema19": {
       "type": "string",
       "enum": [
         "before_character_definition",
@@ -333,11 +346,11 @@
       ],
       "description": "插入位置类型:\n- before_character_definition: 角色定义之前\n- after_character_definition: 角色定义之后\n- before_example_messages: 示例消息之前\n- after_example_messages: 示例消息之后\n- before_author_note: 作者注释之前\n- after_author_note: 作者注释之后\n- at_depth: 插入到指定深度"
     },
-    "__schema18": {
+    "__schema20": {
       "description": "该条目的消息身份, 仅位置类型为 `'at_depth'` 时有效",
-      "$ref": "#/$defs/__schema19"
+      "$ref": "#/$defs/__schema21"
     },
-    "__schema19": {
+    "__schema21": {
       "type": "string",
       "enum": [
         "system",
@@ -345,17 +358,17 @@
         "user"
       ]
     },
-    "__schema20": {
-      "description": "该条目要插入的深度, 仅位置类型为 `'at_depth'` 时有效",
-      "$ref": "#/$defs/__schema21"
-    },
-    "__schema21": {
-      "type": "number"
-    },
     "__schema22": {
-      "type": "number"
+      "description": "该条目要插入的深度, 仅位置类型为 `'at_depth'` 时有效",
+      "$ref": "#/$defs/__schema23"
     },
     "__schema23": {
+      "type": "number"
+    },
+    "__schema24": {
+      "type": "number"
+    },
+    "__schema25": {
       "type": "object",
       "properties": {
         "prevent_incoming": {
@@ -369,7 +382,7 @@
         "delay_until": {
           "anyOf": [
             {
-              "$ref": "#/$defs/__schema24"
+              "$ref": "#/$defs/__schema26"
             },
             {
               "type": "null"
@@ -380,14 +393,6 @@
       },
       "additionalProperties": false
     },
-    "__schema24": {
-      "type": "number",
-      "minimum": 1
-    },
-    "__schema25": {
-      "type": "number",
-      "minimum": 1
-    },
     "__schema26": {
       "type": "number",
       "minimum": 1
@@ -397,29 +402,37 @@
       "minimum": 1
     },
     "__schema28": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema29": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema30": {
       "type": "object",
       "properties": {
         "labels": {
           "minItems": 1,
           "type": "array",
           "items": {
-            "$ref": "#/$defs/__schema29"
+            "$ref": "#/$defs/__schema31"
           },
           "description": "组标签"
         },
         "use_priority": {
           "default": false,
           "description": "使用优先级",
-          "$ref": "#/$defs/__schema30"
+          "$ref": "#/$defs/__schema32"
         },
         "weight": {
           "default": 100,
           "description": "权重",
-          "$ref": "#/$defs/__schema31"
+          "$ref": "#/$defs/__schema33"
         },
         "use_scoring": {
           "description": "使用评分",
-          "$ref": "#/$defs/__schema32"
+          "$ref": "#/$defs/__schema34"
         }
       },
       "required": [
@@ -427,16 +440,16 @@
       ],
       "additionalProperties": false
     },
-    "__schema29": {
+    "__schema31": {
       "type": "string"
     },
-    "__schema30": {
+    "__schema32": {
       "type": "boolean"
     },
-    "__schema31": {
+    "__schema33": {
       "type": "number"
     },
-    "__schema32": {
+    "__schema34": {
       "default": "same_as_global",
       "anyOf": [
         {
@@ -448,20 +461,20 @@
         }
       ]
     },
-    "__schema33": {
+    "__schema35": {
       "type": "object",
       "propertyNames": {
         "type": "string"
       },
       "additionalProperties": {}
     },
-    "__schema34": {
-      "type": "string"
-    },
-    "__schema35": {
-      "type": "string"
-    },
     "__schema36": {
+      "type": "string"
+    },
+    "__schema37": {
+      "type": "string"
+    },
+    "__schema38": {
       "type": "object",
       "properties": {
         "regex_scripts": {
@@ -470,7 +483,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "default": "a67886aa-3e56-4c3c-be93-ee228d0f3c61",
+                "default": "5ad99648-14de-4439-a1d5-6f928bc35b64",
                 "type": "string"
               },
               "script_name": {
@@ -564,7 +577,7 @@
               "items": {
                 "oneOf": [
                   {
-                    "$ref": "#/$defs/__schema37"
+                    "$ref": "#/$defs/__schema39"
                   },
                   {
                     "type": "object",
@@ -580,7 +593,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "c12d308a-c378-4658-afa4-40c1ece49f47",
+                        "default": "fb1e6538-024a-4c24-9973-4041c8bc993a",
                         "type": "string"
                       },
                       "icon": {
@@ -595,7 +608,7 @@
                         "default": [],
                         "type": "array",
                         "items": {
-                          "$ref": "#/$defs/__schema37"
+                          "$ref": "#/$defs/__schema39"
                         }
                       }
                     },
@@ -625,7 +638,7 @@
       ],
       "additionalProperties": {}
     },
-    "__schema37": {
+    "__schema39": {
       "type": "object",
       "properties": {
         "type": {
@@ -639,7 +652,7 @@
           "type": "string"
         },
         "id": {
-          "default": "42d235ba-3a3e-4a9a-84a8-81c9ea100f37",
+          "default": "fc336e87-b72d-4ab6-b6e6-7580373312cd",
           "type": "string"
         },
         "content": {
