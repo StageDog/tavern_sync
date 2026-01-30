@@ -9,7 +9,6 @@ import { append_yaml_endline } from '@server/util/append_yaml_endline';
 import { detect_extension } from '@server/util/detect_extension';
 import { extract_file_content } from '@server/util/extract_file_content';
 import { glob_file } from '@server/util/glob_file';
-import { is_parent } from '@server/util/is_parent';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { translate } from '@server/util/translate';
 import { trim_yaml_endline } from '@server/util/trim_yaml_endline';
@@ -362,20 +361,16 @@ export class Character_syncer extends Syncer_interface {
 
   protected do_watch(local_data: Character_en): string[] {
     return _(
-      _(local_data.entries)
+      _(local_data.first_messages)
+        .concat(local_data.entries)
         .filter(entry => entry.file !== undefined)
         .map(entry => resolve(this.dir, entry.file!))
         .value(),
     )
       .map(path => dirname(path))
-      .reduce((result: string[], path: string) => {
-        if (result.some(parent => is_parent(parent, path))) {
-          return result;
-        }
-        result.push(path);
-        return result;
-      }, [])
-      .concat(this.file);
+      .concat(this.dir)
+      .concat(this.file)
+      .value();
   }
 
   protected do_bundle(local_data: Character_en): { result_data: Record<string, any>; error_data: Record<string, any> } {

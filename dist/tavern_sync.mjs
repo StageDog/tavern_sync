@@ -65448,7 +65448,15 @@ function exit_on_error(error) {
     (0,external_node_process_.exit)(1);
 }
 
+;// ./src/server/util/is_parent.ts
+
+function is_parent(parent_path, possible_child_path) {
+    const result = (0,external_path_.relative)(parent_path, possible_child_path);
+    return Boolean(result) && !result.startsWith('..') && !(0,external_path_.isAbsolute)(result);
+}
+
 ;// ./src/server/syncer/interface.ts
+
 
 
 
@@ -65605,7 +65613,16 @@ ${this.do_beautify_config(tavern_data, language)}`;
             if (typeof local_data === 'string') {
                 exit_on_error(`监听${this.type_zh} '${this.name}' 失败: ${local_data}`);
             }
-            return this.do_watch(local_data);
+            return lodash_default()(this.do_watch(local_data).reduce((result, path) => {
+                if (result.some(parent => is_parent(parent, path))) {
+                    return result;
+                }
+                result.push(path);
+                return result;
+            }, []))
+                .sort()
+                .sortedUniq()
+                .value();
         };
         const watcher = watch_on(get_watch_files_from_data());
         await this.push_once(options);
@@ -65910,13 +65927,6 @@ function extract_file_content(path) {
 
 function glob_file(base, file) {
     return (0,external_node_fs_.globSync)((0,external_node_path_.resolve)(base, file).replaceAll(/[\[\]\{\}]/g, '[$&]') + '{.*,}');
-}
-
-;// ./src/server/util/is_parent.ts
-
-function is_parent(parent_path, possible_child_path) {
-    const result = (0,external_path_.relative)(parent_path, possible_child_path);
-    return Boolean(result) && !result.startsWith('..') && !(0,external_path_.isAbsolute)(result);
 }
 
 ;// ./src/server/util/sanitize_filename.ts
@@ -66660,7 +66670,6 @@ const character_zh_Character = strictObject({
 
 
 
-
 class Character_syncer extends Syncer_interface {
     constructor(config_name, name, file, bundle_file) {
         super('character', lodash_default().invert(zh_to_en_map)['character'], config_name, name, file, bundle_file, character_en_Character, character_zh_Character, character_zh_zh_to_en_map, character_zh_is_zh, Character);
@@ -66941,19 +66950,15 @@ class Character_syncer extends Syncer_interface {
         };
     }
     do_watch(local_data) {
-        return lodash_default()(lodash_default()(local_data.entries)
+        return lodash_default()(lodash_default()(local_data.first_messages)
+            .concat(local_data.entries)
             .filter(entry => entry.file !== undefined)
             .map(entry => (0,external_node_path_.resolve)(this.dir, entry.file))
             .value())
             .map(path => (0,external_node_path_.dirname)(path))
-            .reduce((result, path) => {
-            if (result.some(parent => is_parent(parent, path))) {
-                return result;
-            }
-            result.push(path);
-            return result;
-        }, [])
-            .concat(this.file);
+            .concat(this.dir)
+            .concat(this.file)
+            .value();
     }
     do_bundle(local_data) {
         const { result_data, error_data } = this.do_push(local_data);
@@ -67634,7 +67639,6 @@ const preset_zh_Preset = strictObject({
 
 
 
-
 class Preset_syncer extends Syncer_interface {
     constructor(config_name, name, file, bundle_file) {
         super('preset', lodash_default().invert(zh_to_en_map)['preset'], config_name, name, file, bundle_file, Preset, preset_zh_Preset, preset_zh_zh_to_en_map, preset_zh_is_zh, preset_Preset);
@@ -67838,14 +67842,7 @@ class Preset_syncer extends Syncer_interface {
             .map(prompt => (0,external_node_path_.resolve)(this.dir, prompt.file))
             .value())
             .map(path => (0,external_node_path_.dirname)(path))
-            .reduce((result, path) => {
-            if (result.some(parent => is_parent(parent, path))) {
-                return result;
-            }
-            result.push(path);
-            return result;
-        }, [])
-            .concat(this.file);
+            .value();
     }
     do_bundle(local_data) {
         const { result_data, error_data } = this.do_push(local_data);
@@ -67854,7 +67851,6 @@ class Preset_syncer extends Syncer_interface {
 }
 
 ;// ./src/server/syncer/worldbook.ts
-
 
 
 
@@ -68022,14 +68018,9 @@ class Worldbook_syncer extends Syncer_interface {
             .map(entry => (0,external_node_path_.resolve)(this.dir, entry.file))
             .value())
             .map(path => (0,external_node_path_.dirname)(path))
-            .reduce((result, path) => {
-            if (result.some(parent => is_parent(parent, path))) {
-                return result;
-            }
-            result.push(path);
-            return result;
-        }, [])
-            .concat(this.file);
+            .concat(this.dir)
+            .concat(this.file)
+            .value();
     }
     do_bundle(local_data) {
         const { result_data, error_data } = this.do_push(local_data);

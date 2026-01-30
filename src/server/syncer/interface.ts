@@ -2,6 +2,7 @@ import { is_collection_file } from '@server/component/collection_file';
 import { watch_on } from '@server/component/watch_on';
 import { wait_socket } from '@server/server';
 import { exit_on_error } from '@server/util/exit_on_error';
+import { is_parent } from '@server/util/is_parent';
 import { detailed_parse } from '@server/util/prettified_parse';
 import { translate } from '@server/util/translate';
 import { write_file_recursively } from '@server/util/write_file_recursively';
@@ -235,7 +236,18 @@ ${this.do_beautify_config(tavern_data, language)}`;
       if (typeof local_data === 'string') {
         exit_on_error(`监听${this.type_zh} '${this.name}' 失败: ${local_data}`);
       }
-      return this.do_watch(local_data);
+      return _(
+        this.do_watch(local_data).reduce((result: string[], path: string) => {
+          if (result.some(parent => is_parent(parent, path))) {
+            return result;
+          }
+          result.push(path);
+          return result;
+        }, []),
+      )
+        .sort()
+        .sortedUniq()
+        .value();
     };
     const watcher = watch_on(get_watch_files_from_data());
 
