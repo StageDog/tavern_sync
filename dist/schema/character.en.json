@@ -1,0 +1,690 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "avatar": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "creator": {
+      "type": "string"
+    },
+    "creator_notes": {
+      "type": "string"
+    },
+    "first_messages": {
+      "default": [
+        {}
+      ],
+      "type": "array",
+      "items": {
+        "default": {
+          "content": ""
+        },
+        "type": "object",
+        "properties": {
+          "content": {
+            "$ref": "#/$defs/__schema0"
+          },
+          "file": {
+            "$ref": "#/$defs/__schema2"
+          }
+        }
+      }
+    },
+    "description": {
+      "default": "",
+      "type": "string"
+    },
+    "anchors": {
+      "description": "用于存放 YAML 锚点, 不会被实际使用",
+      "$ref": "#/$defs/__schema4"
+    },
+    "worldbook": {
+      "type": "string"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/__schema5"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string"
+              },
+              "entries": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema5"
+                }
+              }
+            },
+            "required": [
+              "folder",
+              "entries"
+            ]
+          }
+        ]
+      }
+    },
+    "extensions": {
+      "description": "扩展字段: 用于为预设绑定额外数据",
+      "$ref": "#/$defs/__schema36"
+    }
+  },
+  "required": [
+    "avatar",
+    "version",
+    "creator",
+    "creator_notes",
+    "worldbook",
+    "entries"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "description": "内嵌的提示词内容",
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {
+      "description": "外链的提示词文件路径",
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {},
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "uid": {
+          "description": "该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的",
+          "$ref": "#/$defs/__schema7"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "strategy": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "$ref": "#/$defs/__schema8"
+            },
+            "keys": {
+              "$ref": "#/$defs/__schema9"
+            },
+            "keys_secondary": {
+              "$ref": "#/$defs/__schema12"
+            },
+            "scan_depth": {
+              "$ref": "#/$defs/__schema15"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "description": "激活策略: 条目应该何时激活"
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema18"
+            },
+            "depth": {
+              "$ref": "#/$defs/__schema20"
+            },
+            "order": {
+              "$ref": "#/$defs/__schema22"
+            }
+          },
+          "required": [
+            "type",
+            "order"
+          ],
+          "additionalProperties": false,
+          "description": "插入位置: 如果条目激活应该插入到什么地方"
+        },
+        "probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "recursion": {
+          "description": "递归表示某世界书条目被激活后, 该条目的提示词又激活了其他条目",
+          "$ref": "#/$defs/__schema23"
+        },
+        "effect": {
+          "type": "object",
+          "properties": {
+            "sticky": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/__schema25"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "黏性: 条目激活后, 在之后 n 条消息内始终激活, 无视激活策略、激活概率%"
+            },
+            "cooldown": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/__schema26"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "冷却: 条目激活后, 在之后 n 条消息内不能再激活"
+            },
+            "delay": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/__schema27"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "延迟: 聊天中至少有 n 楼消息时, 才能激活条目"
+            }
+          },
+          "additionalProperties": false
+        },
+        "group": {
+          "description": "包含组",
+          "$ref": "#/$defs/__schema28"
+        },
+        "extra": {
+          "description": "额外字段: 用于为预设提示词绑定额外数据",
+          "$ref": "#/$defs/__schema33"
+        },
+        "content": {
+          "description": "内嵌的提示词内容",
+          "$ref": "#/$defs/__schema34"
+        },
+        "file": {
+          "description": "外链的提示词文件路径",
+          "$ref": "#/$defs/__schema35"
+        }
+      },
+      "required": [
+        "name",
+        "enabled",
+        "strategy",
+        "position"
+      ],
+      "additionalProperties": false
+    },
+    "__schema7": {
+      "type": "number"
+    },
+    "__schema8": {
+      "type": "string",
+      "enum": [
+        "constant",
+        "selective",
+        "vectorized"
+      ],
+      "description": "激活策略类型:\n- constant: 常量🔵, 俗称蓝灯. 只需要满足 \"启用\"、\"激活概率%\" 等别的要求即可.\n- selective: 可选项🟢, 俗称绿灯. 除了蓝灯条件, 还需要满足 `keys` 扫描条件\n- vectorized: 向量化🔗. 一般不使用"
+    },
+    "__schema9": {
+      "description": "关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活",
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema11"
+      }
+    },
+    "__schema11": {
+      "type": "string"
+    },
+    "__schema12": {
+      "description": "次要关键字: 如果设置了次要关键字, 则条目除了在 `keys` 中匹配到任意一个关键字外, 还需要按次要关键字的 `logic` 满足次要关键字的 `keys`",
+      "$ref": "#/$defs/__schema13"
+    },
+    "__schema13": {
+      "type": "object",
+      "properties": {
+        "logic": {
+          "type": "string",
+          "enum": [
+            "and_any",
+            "and_all",
+            "not_all",
+            "not_any"
+          ],
+          "description": "次要关键字逻辑:\n- and_any: 次要关键字中任意一个关键字能在欲扫描文本中匹配到\n- and_all: 次要关键字中所有关键字都能在欲扫描文本中匹配到\n- not_all: 次要关键字中至少有一个关键字没能在欲扫描文本中匹配到\n- not_any: 次要关键字中所有关键字都没能欲扫描文本中匹配到"
+        },
+        "keys": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema14"
+          }
+        }
+      },
+      "required": [
+        "logic",
+        "keys"
+      ],
+      "additionalProperties": false
+    },
+    "__schema14": {
+      "type": "string"
+    },
+    "__schema15": {
+      "description": "扫描深度: 1 为仅扫描最后一个楼层, 2 为扫描最后两个楼层, 以此类推",
+      "$ref": "#/$defs/__schema16"
+    },
+    "__schema16": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "same_as_global"
+        },
+        {
+          "type": "number",
+          "minimum": 1
+        }
+      ]
+    },
+    "__schema17": {
+      "type": "string",
+      "enum": [
+        "before_character_definition",
+        "after_character_definition",
+        "before_example_messages",
+        "after_example_messages",
+        "before_author_note",
+        "after_author_note",
+        "at_depth"
+      ],
+      "description": "插入位置类型:\n- before_character_definition: 角色定义之前\n- after_character_definition: 角色定义之后\n- before_example_messages: 示例消息之前\n- after_example_messages: 示例消息之后\n- before_author_note: 作者注释之前\n- after_author_note: 作者注释之后\n- at_depth: 插入到指定深度"
+    },
+    "__schema18": {
+      "description": "该条目的消息身份, 仅位置类型为 `'at_depth'` 时有效",
+      "$ref": "#/$defs/__schema19"
+    },
+    "__schema19": {
+      "type": "string",
+      "enum": [
+        "system",
+        "assistant",
+        "user"
+      ]
+    },
+    "__schema20": {
+      "description": "该条目要插入的深度, 仅位置类型为 `'at_depth'` 时有效",
+      "$ref": "#/$defs/__schema21"
+    },
+    "__schema21": {
+      "type": "number"
+    },
+    "__schema22": {
+      "type": "number"
+    },
+    "__schema23": {
+      "type": "object",
+      "properties": {
+        "prevent_incoming": {
+          "type": "boolean",
+          "description": "禁止其他条目递归激活本条目"
+        },
+        "prevent_outgoing": {
+          "type": "boolean",
+          "description": "禁止本条目递归激活其他条目"
+        },
+        "delay_until": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/__schema24"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "延迟到第 n 级递归检查时才能激活本条目"
+        }
+      },
+      "additionalProperties": false
+    },
+    "__schema24": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema25": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema26": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema27": {
+      "type": "number",
+      "minimum": 1
+    },
+    "__schema28": {
+      "type": "object",
+      "properties": {
+        "labels": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema29"
+          },
+          "description": "组标签"
+        },
+        "use_priority": {
+          "default": false,
+          "description": "使用优先级",
+          "$ref": "#/$defs/__schema30"
+        },
+        "weight": {
+          "default": 100,
+          "description": "权重",
+          "$ref": "#/$defs/__schema31"
+        },
+        "use_scoring": {
+          "description": "使用评分",
+          "$ref": "#/$defs/__schema32"
+        }
+      },
+      "required": [
+        "labels"
+      ],
+      "additionalProperties": false
+    },
+    "__schema29": {
+      "type": "string"
+    },
+    "__schema30": {
+      "type": "boolean"
+    },
+    "__schema31": {
+      "type": "number"
+    },
+    "__schema32": {
+      "default": "same_as_global",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "const": "same_as_global"
+        }
+      ]
+    },
+    "__schema33": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    },
+    "__schema34": {
+      "type": "string"
+    },
+    "__schema35": {
+      "type": "string"
+    },
+    "__schema36": {
+      "type": "object",
+      "properties": {
+        "regex_scripts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "default": "693c91fd-3206-4381-b236-3f6c815d9829",
+                "type": "string"
+              },
+              "script_name": {
+                "type": "string"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "find_regex": {
+                "type": "string"
+              },
+              "replace_string": {
+                "type": "string"
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "user_input": {
+                    "type": "boolean"
+                  },
+                  "ai_output": {
+                    "type": "boolean"
+                  },
+                  "slash_command": {
+                    "type": "boolean"
+                  },
+                  "world_info": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "user_input",
+                  "ai_output"
+                ]
+              },
+              "destination": {
+                "type": "object",
+                "properties": {
+                  "display": {
+                    "type": "boolean"
+                  },
+                  "prompt": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "display",
+                  "prompt"
+                ]
+              },
+              "run_on_edit": {
+                "type": "boolean"
+              },
+              "min_depth": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "max_depth": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "script_name",
+              "enabled",
+              "find_regex",
+              "replace_string",
+              "source",
+              "destination"
+            ]
+          }
+        },
+        "tavern_helper": {
+          "type": "object",
+          "properties": {
+            "scripts": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/__schema37"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "folder"
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "default": "8cb0d3ff-cd3e-4c54-a349-f5ec41ed9e48",
+                        "type": "string"
+                      },
+                      "icon": {
+                        "default": "fa-solid fa-folder",
+                        "type": "string"
+                      },
+                      "color": {
+                        "default": "rgba(219, 219, 214, 1)",
+                        "type": "string"
+                      },
+                      "scripts": {
+                        "default": [],
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/__schema37"
+                        }
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "enabled",
+                      "name"
+                    ]
+                  }
+                ]
+              }
+            },
+            "variables": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          }
+        }
+      },
+      "required": [
+        "regex_scripts",
+        "tavern_helper"
+      ],
+      "additionalProperties": {}
+    },
+    "__schema37": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "script"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "id": {
+          "default": "5b1fd8c4-02e9-4b2d-97eb-c8ca29e7f880",
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "info": {
+          "type": "string"
+        },
+        "button": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "type": "boolean"
+            },
+            "buttons": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "visible": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "visible"
+                ]
+              }
+            }
+          }
+        },
+        "data": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "type",
+        "enabled",
+        "name",
+        "content"
+      ]
+    }
+  }
+}
