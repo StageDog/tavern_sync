@@ -63518,6 +63518,7 @@ const ignored_fields = {
         },
         group_only_greetings: [],
     },
+    create_date: '',
 };
 function to_original_character(name, character) {
     return lodash_default().merge({
@@ -63541,7 +63542,6 @@ function to_original_character(name, character) {
             },
             character_book: to_character_book(character.worldbook, character.entries.map((entry, index) => to_original_worldbook_entry(entry, index))),
         },
-        create_date: new Date().toISOString(),
     }, ignored_fields);
 }
 // https://github.com/SillyTavern/SillyTavern/blob/bba43f33219e41de7331b61f6872f5c7227503a3/src/png/encode.js#L9-L69

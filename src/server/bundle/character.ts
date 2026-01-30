@@ -88,6 +88,7 @@ const ignored_fields = {
     },
     group_only_greetings: [],
   },
+  create_date: '',
 } as const;
 type _OriginalCharacter = {
   name: string;
@@ -103,18 +104,15 @@ type _OriginalCharacter = {
     character_version: string;
     alternate_greetings: string[];
     extensions: {
-      // TODO: 记录世界书名称
       world: string;
       regex_scripts: Record<string, any>[];
       tavern_helper: Record<string, any>;
     };
     character_book: {
       entries: Record<string, any>[];
-      // TODO: 记录世界书名称
       name: string;
     };
   };
-  create_date: string;
 };
 
 function to_original_character(
@@ -136,17 +134,16 @@ function to_original_character(
         character_version: character.version,
         alternate_greetings: character.first_messages.slice(1).map(message => message.content ?? ''),
         extensions: {
-          world: character.worldbook,
+          world: character.worldbook!,
           regex_scripts: character.extensions?.regex_scripts?.map((script: any) => from_tavern_regex(script)) ?? [],
           tavern_helper: character.extensions?.tavern_helper ?? {},
           ..._.omit(character.extensions, 'regex_scripts', 'tavern_helper'),
         },
         character_book: to_character_book(
-          character.worldbook,
+          character.worldbook!,
           character.entries.map((entry, index) => to_original_worldbook_entry(entry, index)),
         ),
       },
-      create_date: new Date().toISOString(),
     },
     ignored_fields,
   );
