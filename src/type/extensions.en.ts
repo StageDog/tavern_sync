@@ -1,12 +1,12 @@
 import uuid from 'uuid-random';
 import * as z from 'zod';
 
-const ScriptButton = z.object({
+const ScriptButton = z.strictObject({
   name: z.coerce.string(),
   visible: z.boolean(),
 });
 
-const Script = z.object({
+const Script = z.strictObject({
   name: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
   enabled: z.boolean(),
@@ -22,7 +22,7 @@ const Script = z.object({
   data: z.record(z.string(), z.any()).prefault({}).catch({}),
 });
 
-const ScriptFolder = z.object({
+const ScriptFolder = z.strictObject({
   name: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
   enabled: z.boolean(),
@@ -37,7 +37,7 @@ const ScriptTree = z.discriminatedUnion('type', [Script, ScriptFolder]);
 export type Extensions = z.infer<typeof Extensions>;
 export const Extensions = z.looseObject({
   regex_scripts: z.array(
-    z.object({
+    z.strictObject({
       script_name: z.coerce.string(),
       id: z.coerce.string().prefault(uuid),
       enabled: z.boolean(),
@@ -45,14 +45,14 @@ export const Extensions = z.looseObject({
       find_regex: z.coerce.string(),
       replace_string: z.coerce.string(),
 
-      source: z.object({
+      source: z.strictObject({
         user_input: z.boolean(),
         ai_output: z.boolean(),
         slash_command: z.boolean().prefault(false),
         world_info: z.boolean().prefault(false),
       }),
 
-      destination: z.object({
+      destination: z.strictObject({
         display: z.boolean(),
         prompt: z.boolean(),
       }),
@@ -62,7 +62,7 @@ export const Extensions = z.looseObject({
       max_depth: z.union([z.number(), z.null()]).prefault(null),
     }),
   ),
-  tavern_helper: z.object({
+  tavern_helper: z.strictObject({
     scripts: z.array(ScriptTree).prefault([]).catch([]),
     variables: z.record(z.string(), z.any()).prefault({}).catch({}),
   }),
