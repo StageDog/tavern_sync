@@ -1,3 +1,5 @@
+import { Character as Character_en } from '@type/character.en';
+import { Character as Character_zh } from '@type/character.zh';
 import { Preset as Preset_en } from '@type/preset.en';
 import { Preset as Preset_zh } from '@type/preset.zh';
 import { Settings as Settings_en } from '@type/settings.en';
@@ -17,6 +19,8 @@ function write_json_schema(name: string, schema: z.ZodType) {
 }
 
 mkdirSync(join(__dirname, 'schema'), { recursive: true });
+write_json_schema('character.en', Character_en);
+write_json_schema('character.zh', Character_zh);
 write_json_schema('preset.en', Preset_en);
 write_json_schema('preset.zh', Preset_zh);
 write_json_schema('settings.en', Settings_en);
