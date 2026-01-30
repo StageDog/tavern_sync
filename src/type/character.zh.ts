@@ -20,7 +20,10 @@ export function is_zh(data: Record<string, any>): boolean {
 
 export type Character = z.infer<typeof Character>;
 export const Character = z.strictObject({
-  头像: z.union([z.coerce.string(), z.null()]),
+  头像: z.coerce
+    .string()
+    .nullish()
+    .describe('角色卡头像: 填写角色卡头像图片路径, 填为 `null` 或不设置该字段则打包时会打包为 JSON 文件'),
   版本: z.coerce.string(),
   作者: z.coerce.string(),
   备注: z.coerce.string(),
@@ -60,7 +63,7 @@ export const Character = z.strictObject({
 
   锚点: Worldbook.shape.锚点,
 
-  世界书名称: z.coerce.string(),
+  世界书名称: z.coerce.string().nullish().describe('世界书名称: 填为 `null` 或不设置该字段则与角色卡名称相同'),
   条目: Worldbook.shape.条目,
 
   扩展字段: Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),

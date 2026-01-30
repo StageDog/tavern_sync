@@ -144,6 +144,13 @@ export class Character_syncer extends Syncer_interface {
       });
     }
 
+    // 世界书名称
+    {
+      if (tavern_data.worldbook === this.name) {
+        _.set(tavern_data, 'worldbook', null);
+      }
+    }
+
     // 条目
     {
       const states: { name: string; content?: string; file?: string }[] = local_data === null ? [] : local_data.entries;
@@ -304,6 +311,11 @@ export class Character_syncer extends Syncer_interface {
       local_data.first_messages.forEach(entry => {
         _.set(entry, 'content', replace_raw_string(replace_user_name(entry.content)));
       });
+    }
+
+    // 世界书名称
+    {
+      local_data.worldbook ??= this.name;
     }
 
     // 条目
