@@ -35,16 +35,16 @@ export const zh_to_en_map = {
   可见: 'visible',
 };
 
-const ScriptButton = z.object({
+const ScriptButton = z.strictObject({
   名称: z.coerce.string(),
   可见: z.boolean(),
 });
 
-const Script = z.object({
-  类型: z.literal('脚本'),
-  启用: z.boolean(),
+const Script = z.strictObject({
   名称: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
+  启用: z.boolean(),
+  类型: z.literal('脚本'),
   内容: z.coerce.string(),
   介绍: z.coerce.string().prefault(''),
   按钮: z
@@ -56,11 +56,11 @@ const Script = z.object({
   数据: z.record(z.string(), z.any()).prefault({}).catch({}),
 });
 
-const ScriptFolder = z.object({
-  类型: z.literal('文件夹'),
-  启用: z.boolean(),
+const ScriptFolder = z.strictObject({
   名称: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
+  启用: z.boolean(),
+  类型: z.literal('文件夹'),
   图标: z.coerce.string().prefault('fa-solid fa-folder'),
   颜色: z.coerce.string().prefault('#DBDBD6'),
   脚本库: z.array(Script).prefault([]).catch([]),
@@ -72,22 +72,22 @@ export type Extensions = z.infer<typeof Extensions>;
 export const Extensions = z.looseObject({
   正则: z
     .array(
-      z.object({
-        id: z.coerce.string().prefault(uuid),
+      z.strictObject({
         正则名称: z.coerce.string(),
+        id: z.coerce.string().prefault(uuid),
         启用: z.boolean(),
 
         查找表达式: z.coerce.string(),
         替换为: z.coerce.string(),
 
-        来源: z.object({
+        来源: z.strictObject({
           用户输入: z.boolean(),
           AI输出: z.boolean(),
           快捷命令: z.boolean().prefault(false),
           世界信息: z.boolean().prefault(false),
         }),
 
-        作用于: z.object({
+        作用于: z.strictObject({
           仅格式显示: z.boolean(),
           仅格式提示词: z.boolean(),
         }),
@@ -99,7 +99,7 @@ export const Extensions = z.looseObject({
     )
     .prefault([])
     .catch([]),
-  酒馆助手: z.object({
+  酒馆助手: z.strictObject({
     脚本库: z.array(ScriptTree).prefault([]).catch([]),
     变量: z.record(z.string(), z.any()).prefault({}).catch({}),
   }),

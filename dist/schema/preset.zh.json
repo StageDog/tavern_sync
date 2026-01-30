@@ -497,11 +497,11 @@
           "items": {
             "type": "object",
             "properties": {
-              "id": {
-                "default": "5c8817ae-3843-4a83-be80-7c9bdde69fc5",
+              "正则名称": {
                 "type": "string"
               },
-              "正则名称": {
+              "id": {
+                "default": "45ee3403-7285-40cc-ac88-9c5749f10b21",
                 "type": "string"
               },
               "启用": {
@@ -532,7 +532,8 @@
                 "required": [
                   "用户输入",
                   "AI输出"
-                ]
+                ],
+                "additionalProperties": false
               },
               "作用于": {
                 "type": "object",
@@ -547,7 +548,8 @@
                 "required": [
                   "仅格式显示",
                   "仅格式提示词"
-                ]
+                ],
+                "additionalProperties": false
               },
               "在编辑时运行": {
                 "type": "boolean"
@@ -580,7 +582,8 @@
               "替换为",
               "来源",
               "作用于"
-            ]
+            ],
+            "additionalProperties": false
           }
         },
         "酒馆助手": {
@@ -597,19 +600,19 @@
                   {
                     "type": "object",
                     "properties": {
-                      "类型": {
-                        "type": "string",
-                        "const": "文件夹"
-                      },
-                      "启用": {
-                        "type": "boolean"
-                      },
                       "名称": {
                         "type": "string"
                       },
                       "id": {
-                        "default": "f783ad58-94a2-444d-a8e9-13fbcfa0935e",
+                        "default": "9d41a2c7-9498-4a91-a7f8-8c9d73f22d90",
                         "type": "string"
+                      },
+                      "启用": {
+                        "type": "boolean"
+                      },
+                      "类型": {
+                        "type": "string",
+                        "const": "文件夹"
                       },
                       "图标": {
                         "default": "fa-solid fa-folder",
@@ -628,10 +631,11 @@
                       }
                     },
                     "required": [
-                      "类型",
+                      "名称",
                       "启用",
-                      "名称"
-                    ]
+                      "类型"
+                    ],
+                    "additionalProperties": false
                   }
                 ]
               }
@@ -644,7 +648,8 @@
               },
               "additionalProperties": {}
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -655,19 +660,19 @@
     "__schema41": {
       "type": "object",
       "properties": {
-        "类型": {
-          "type": "string",
-          "const": "脚本"
-        },
-        "启用": {
-          "type": "boolean"
-        },
         "名称": {
           "type": "string"
         },
         "id": {
-          "default": "2c60b8dd-4b26-404b-b82b-8a2a6ca435fe",
+          "default": "79430f96-74e7-41db-959e-9451cbb389ab",
           "type": "string"
+        },
+        "启用": {
+          "type": "boolean"
+        },
+        "类型": {
+          "type": "string",
+          "const": "脚本"
         },
         "内容": {
           "type": "string"
@@ -699,7 +704,8 @@
                 "required": [
                   "名称",
                   "可见"
-                ]
+                ],
+                "additionalProperties": false
               }
             }
           }
@@ -714,11 +720,12 @@
         }
       },
       "required": [
-        "类型",
-        "启用",
         "名称",
+        "启用",
+        "类型",
         "内容"
-      ]
+      ],
+      "additionalProperties": false
     }
   }
 }

@@ -65642,15 +65642,15 @@ var uuid_random_default = /*#__PURE__*/__webpack_require__.n(uuid_random);
 ;// ./src/type/extensions.en.ts
 
 
-const ScriptButton = object({
+const ScriptButton = strictObject({
     name: coerce_string(),
     visible: schemas_boolean(),
 });
-const Script = object({
-    type: literal('script'),
-    enabled: schemas_boolean(),
+const Script = strictObject({
     name: coerce_string(),
     id: coerce_string().prefault((uuid_random_default())),
+    enabled: schemas_boolean(),
+    type: literal('script'),
     content: coerce_string(),
     info: coerce_string().prefault(''),
     button: object({
@@ -65660,30 +65660,30 @@ const Script = object({
         .prefault({}),
     data: record(schemas_string(), any()).prefault({}).catch({}),
 });
-const ScriptFolder = object({
-    type: literal('folder'),
-    enabled: schemas_boolean(),
+const ScriptFolder = strictObject({
     name: coerce_string(),
     id: coerce_string().prefault((uuid_random_default())),
+    enabled: schemas_boolean(),
+    type: literal('folder'),
     icon: coerce_string().prefault('fa-solid fa-folder'),
     color: coerce_string().prefault('rgba(219, 219, 214, 1)'),
     scripts: array(Script).prefault([]).catch([]),
 });
 const ScriptTree = discriminatedUnion('type', [Script, ScriptFolder]);
 const Extensions = looseObject({
-    regex_scripts: array(object({
-        id: coerce_string().prefault((uuid_random_default())),
+    regex_scripts: array(strictObject({
         script_name: coerce_string(),
+        id: coerce_string().prefault((uuid_random_default())),
         enabled: schemas_boolean(),
         find_regex: coerce_string(),
         replace_string: coerce_string(),
-        source: object({
+        source: strictObject({
             user_input: schemas_boolean(),
             ai_output: schemas_boolean(),
             slash_command: schemas_boolean().prefault(false),
             world_info: schemas_boolean().prefault(false),
         }),
-        destination: object({
+        destination: strictObject({
             display: schemas_boolean(),
             prompt: schemas_boolean(),
         }),
@@ -65691,7 +65691,7 @@ const Extensions = looseObject({
         min_depth: union([schemas_number(), schemas_null()]).prefault(null),
         max_depth: union([schemas_number(), schemas_null()]).prefault(null),
     })),
-    tavern_helper: object({
+    tavern_helper: strictObject({
         scripts: array(ScriptTree).prefault([]).catch([]),
         variables: record(schemas_string(), any()).prefault({}).catch({}),
     }),
@@ -65710,10 +65710,10 @@ const extensions_Extensions = Extensions.transform(data => {
         if (script.destination.display || script.destination.prompt) {
             _.unset(script, 'run_on_edit');
         }
-        if (script.min_depth) {
+        if (!script.min_depth) {
             _.unset(script, 'min_depth');
         }
-        if (script.max_depth) {
+        if (!script.max_depth) {
             _.unset(script, 'max_depth');
         }
         return script;
@@ -66298,15 +66298,15 @@ const extensions_zh_zh_to_en_map = {
     数据: 'data',
     可见: 'visible',
 };
-const extensions_zh_ScriptButton = object({
+const extensions_zh_ScriptButton = strictObject({
     名称: coerce_string(),
     可见: schemas_boolean(),
 });
-const extensions_zh_Script = object({
-    类型: literal('脚本'),
-    启用: schemas_boolean(),
+const extensions_zh_Script = strictObject({
     名称: coerce_string(),
     id: coerce_string().prefault((uuid_random_default())),
+    启用: schemas_boolean(),
+    类型: literal('脚本'),
     内容: coerce_string(),
     介绍: coerce_string().prefault(''),
     按钮: object({
@@ -66316,30 +66316,30 @@ const extensions_zh_Script = object({
         .prefault({}),
     数据: record(schemas_string(), any()).prefault({}).catch({}),
 });
-const extensions_zh_ScriptFolder = object({
-    类型: literal('文件夹'),
-    启用: schemas_boolean(),
+const extensions_zh_ScriptFolder = strictObject({
     名称: coerce_string(),
     id: coerce_string().prefault((uuid_random_default())),
+    启用: schemas_boolean(),
+    类型: literal('文件夹'),
     图标: coerce_string().prefault('fa-solid fa-folder'),
     颜色: coerce_string().prefault('#DBDBD6'),
     脚本库: array(extensions_zh_Script).prefault([]).catch([]),
 });
 const extensions_zh_ScriptTree = discriminatedUnion('类型', [extensions_zh_Script, extensions_zh_ScriptFolder]);
 const extensions_zh_Extensions = looseObject({
-    正则: array(object({
-        id: coerce_string().prefault((uuid_random_default())),
+    正则: array(strictObject({
         正则名称: coerce_string(),
+        id: coerce_string().prefault((uuid_random_default())),
         启用: schemas_boolean(),
         查找表达式: coerce_string(),
         替换为: coerce_string(),
-        来源: object({
+        来源: strictObject({
             用户输入: schemas_boolean(),
             AI输出: schemas_boolean(),
             快捷命令: schemas_boolean().prefault(false),
             世界信息: schemas_boolean().prefault(false),
         }),
-        作用于: object({
+        作用于: strictObject({
             仅格式显示: schemas_boolean(),
             仅格式提示词: schemas_boolean(),
         }),
@@ -66349,7 +66349,7 @@ const extensions_zh_Extensions = looseObject({
     }))
         .prefault([])
         .catch([]),
-    酒馆助手: object({
+    酒馆助手: strictObject({
         脚本库: array(extensions_zh_ScriptTree).prefault([]).catch([]),
         变量: record(schemas_string(), any()).prefault({}).catch({}),
     }),

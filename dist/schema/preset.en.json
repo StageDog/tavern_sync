@@ -490,11 +490,11 @@
           "items": {
             "type": "object",
             "properties": {
-              "id": {
-                "default": "f43bd22f-16ea-4e5d-b956-4ff42fac8c4f",
+              "script_name": {
                 "type": "string"
               },
-              "script_name": {
+              "id": {
+                "default": "11d64338-7f24-45e5-bf13-5250f9d4652f",
                 "type": "string"
               },
               "enabled": {
@@ -525,7 +525,8 @@
                 "required": [
                   "user_input",
                   "ai_output"
-                ]
+                ],
+                "additionalProperties": false
               },
               "destination": {
                 "type": "object",
@@ -540,7 +541,8 @@
                 "required": [
                   "display",
                   "prompt"
-                ]
+                ],
+                "additionalProperties": false
               },
               "run_on_edit": {
                 "type": "boolean"
@@ -573,7 +575,8 @@
               "replace_string",
               "source",
               "destination"
-            ]
+            ],
+            "additionalProperties": false
           }
         },
         "tavern_helper": {
@@ -590,19 +593,19 @@
                   {
                     "type": "object",
                     "properties": {
-                      "type": {
-                        "type": "string",
-                        "const": "folder"
-                      },
-                      "enabled": {
-                        "type": "boolean"
-                      },
                       "name": {
                         "type": "string"
                       },
                       "id": {
-                        "default": "89374dce-6a84-4339-aead-c9d98f38429d",
+                        "default": "ce667c1b-8edd-4bde-a909-99fd9c6c11ea",
                         "type": "string"
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "folder"
                       },
                       "icon": {
                         "default": "fa-solid fa-folder",
@@ -621,10 +624,11 @@
                       }
                     },
                     "required": [
-                      "type",
+                      "name",
                       "enabled",
-                      "name"
-                    ]
+                      "type"
+                    ],
+                    "additionalProperties": false
                   }
                 ]
               }
@@ -637,7 +641,8 @@
               },
               "additionalProperties": {}
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -649,19 +654,19 @@
     "__schema41": {
       "type": "object",
       "properties": {
-        "type": {
-          "type": "string",
-          "const": "script"
-        },
-        "enabled": {
-          "type": "boolean"
-        },
         "name": {
           "type": "string"
         },
         "id": {
-          "default": "5d37a4c1-b422-4f85-9440-1a532ad62a2c",
+          "default": "635a663b-3c0b-49cf-b004-60932d08033f",
           "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "const": "script"
         },
         "content": {
           "type": "string"
@@ -693,7 +698,8 @@
                 "required": [
                   "name",
                   "visible"
-                ]
+                ],
+                "additionalProperties": false
               }
             }
           }
@@ -708,11 +714,12 @@
         }
       },
       "required": [
-        "type",
-        "enabled",
         "name",
+        "enabled",
+        "type",
         "content"
-      ]
+      ],
+      "additionalProperties": false
     }
   }
 }
