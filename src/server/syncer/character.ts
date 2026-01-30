@@ -147,7 +147,7 @@ export class Character_syncer extends Syncer_interface {
     // 世界书名称
     {
       if (tavern_data.worldbook === this.name) {
-        _.set(tavern_data, 'worldbook', null);
+        _.set(tavern_data, 'worldbook', '与角色卡名称相同');
       }
     }
 
@@ -315,7 +315,9 @@ export class Character_syncer extends Syncer_interface {
 
     // 世界书名称
     {
-      local_data.worldbook ??= this.name;
+      if (!local_data.worldbook || local_data.worldbook === '与角色卡名称相同') {
+        _.set(local_data, 'worldbook', this.name);
+      }
     }
 
     // 条目
