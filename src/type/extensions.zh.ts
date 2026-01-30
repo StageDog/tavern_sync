@@ -61,8 +61,8 @@ const ScriptFolder = z.object({
   启用: z.boolean(),
   名称: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
-  图标: z.string().prefault('fa-solid fa-folder'),
-  颜色: z.string().prefault('#DBDBD6'),
+  图标: z.coerce.string().prefault('fa-solid fa-folder'),
+  颜色: z.coerce.string().prefault('#DBDBD6'),
   脚本库: z.array(Script).prefault([]).catch([]),
 });
 
@@ -73,12 +73,12 @@ export const Extensions = z.looseObject({
   正则: z
     .array(
       z.object({
-        id: z.string().prefault(uuid),
-        正则名称: z.string(),
+        id: z.coerce.string().prefault(uuid),
+        正则名称: z.coerce.string(),
         启用: z.boolean(),
 
-        查找表达式: z.string(),
-        替换为: z.string(),
+        查找表达式: z.coerce.string(),
+        替换为: z.coerce.string(),
 
         来源: z.object({
           用户输入: z.boolean(),

@@ -95,7 +95,7 @@ const Prompt_normal = z
 
     角色: z.enum(['系统', '用户', 'AI']).prefault('系统'),
     内容: z.coerce.string().optional().describe('内嵌的提示词内容'),
-    文件: z.string().optional().describe('外链的提示词文件路径'),
+    文件: z.coerce.string().optional().describe('外链的提示词文件路径'),
 
     额外字段: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
   })
@@ -209,7 +209,7 @@ const Prompt_placeholder = z
 
 const PromptLeaf = z.union([Prompt_normal, Prompt_placeholder]);
 const PromptBranch = z.object({
-  文件夹: z.string(),
+  文件夹: z.coerce.string(),
   get 条目() {
     return z.array(z.union([PromptLeaf, PromptBranch]));
   },

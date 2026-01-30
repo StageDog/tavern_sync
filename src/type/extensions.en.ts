@@ -27,8 +27,8 @@ const ScriptFolder = z.object({
   enabled: z.boolean(),
   name: z.coerce.string(),
   id: z.coerce.string().prefault(uuid),
-  icon: z.string().prefault('fa-solid fa-folder'),
-  color: z.string().prefault('rgba(219, 219, 214, 1)'),
+  icon: z.coerce.string().prefault('fa-solid fa-folder'),
+  color: z.coerce.string().prefault('rgba(219, 219, 214, 1)'),
   scripts: z.array(Script).prefault([]).catch([]),
 });
 
@@ -38,12 +38,12 @@ export type Extensions = z.infer<typeof Extensions>;
 export const Extensions = z.looseObject({
   regex_scripts: z.array(
     z.object({
-      id: z.string().prefault(uuid),
-      script_name: z.string(),
+      id: z.coerce.string().prefault(uuid),
+      script_name: z.coerce.string(),
       enabled: z.boolean(),
 
-      find_regex: z.string(),
-      replace_string: z.string(),
+      find_regex: z.coerce.string(),
+      replace_string: z.coerce.string(),
 
       source: z.object({
         user_input: z.boolean(),

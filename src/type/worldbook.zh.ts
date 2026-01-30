@@ -85,7 +85,7 @@ const Worldbook_entry = z
         `),
         ),
         关键字: z
-          .array(z.string())
+          .array(z.coerce.string())
           .min(1)
           .optional()
           .describe('关键字: 绿灯条目必须在欲扫描文本中扫描到其中任意一个关键字才能激活'),
@@ -190,7 +190,7 @@ const Worldbook_entry = z
 
     群组: z
       .strictObject({
-        组标签: z.array(z.string()).min(1).describe('组标签'),
+        组标签: z.array(z.coerce.string()).min(1).describe('组标签'),
         使用优先级: z.boolean().default(false).describe('使用优先级'),
         权重: z.number().default(100).describe('权重'),
         使用评分: z
@@ -205,7 +205,7 @@ const Worldbook_entry = z
     额外字段: z.record(z.string(), z.any()).optional().describe('额外字段: 用于为预设提示词绑定额外数据'),
 
     内容: z.coerce.string().optional().describe('内嵌的提示词内容'),
-    文件: z.string().optional().describe('外链的提示词文件路径'),
+    文件: z.coerce.string().optional().describe('外链的提示词文件路径'),
   })
   .transform(data => {
     if (data.群组 !== undefined) {
@@ -248,7 +248,7 @@ const Worldbook_entry = z
 
 const Wolrdbook_leaf = Worldbook_entry;
 const Wolrdbook_branch = z.object({
-  文件夹: z.string(),
+  文件夹: z.coerce.string(),
   条目: z.array(Wolrdbook_leaf),
 });
 const Wolrdbook_tree = z.union([Wolrdbook_leaf, Wolrdbook_branch]);

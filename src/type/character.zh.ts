@@ -20,17 +20,17 @@ export function is_zh(data: Record<string, any>): boolean {
 
 export type Character = z.infer<typeof Character>;
 export const Character = z.strictObject({
-  头像: z.string(),
-  版本: z.string(),
-  作者: z.string(),
-  备注: z.string(),
+  头像: z.coerce.string(),
+  版本: z.coerce.string(),
+  作者: z.coerce.string(),
+  备注: z.coerce.string(),
 
   第一条消息: z
     .array(
       z
         .object({
           内容: z.coerce.string().optional().describe('内嵌的提示词内容'),
-          文件: z.string().optional().describe('外链的提示词文件路径'),
+          文件: z.coerce.string().optional().describe('外链的提示词文件路径'),
         })
         .superRefine((data, context) => {
           if (data.内容 === undefined && data.文件 === undefined) {
@@ -56,11 +56,11 @@ export const Character = z.strictObject({
     )
     .prefault([{}]),
 
-  角色描述: z.string().default(''),
+  角色描述: z.coerce.string().default(''),
 
   锚点: Worldbook.shape.锚点,
 
-  世界书名称: z.string(),
+  世界书名称: z.coerce.string(),
   条目: Worldbook.shape.条目,
 
   扩展字段: Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),

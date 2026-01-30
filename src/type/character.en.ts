@@ -4,17 +4,17 @@ import * as z from 'zod';
 
 export type Character = z.infer<typeof Character>;
 export const Character = z.strictObject({
-  avatar: z.string(),
-  version: z.string(),
-  creator: z.string(),
-  creator_notes: z.string(),
+  avatar: z.coerce.string(),
+  version: z.coerce.string(),
+  creator: z.coerce.string(),
+  creator_notes: z.coerce.string(),
 
   first_messages: z
     .array(
       z
         .object({
           content: z.coerce.string().optional().describe('内嵌的提示词内容'),
-          file: z.string().optional().describe('外链的提示词文件路径'),
+          file: z.coerce.string().optional().describe('外链的提示词文件路径'),
         })
         .superRefine((data, context) => {
           if (data.content === undefined && data.file === undefined) {
@@ -40,11 +40,11 @@ export const Character = z.strictObject({
     )
     .prefault([{}]),
 
-  description: z.string().default(''),
+  description: z.coerce.string().default(''),
 
   anchors: Worldbook.shape.anchors,
 
-  worldbook: z.string(),
+  worldbook: z.coerce.string(),
   entries: Worldbook.shape.entries,
 
   extensions: Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),

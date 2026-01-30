@@ -8,7 +8,7 @@ const Config_type = z.enum(['character', 'worldbook', 'preset']);
 export type Config = z.infer<typeof Config>;
 export const Config = z.strictObject({
   type: Config_type,
-  name: z.string().describe('角色卡/世界书/预设在酒馆中的名称'),
+  name: z.coerce.string().describe('角色卡/世界书/预设在酒馆中的名称'),
   file: z
     .string()
     .transform(string => (string.endsWith('.yaml') ? string : string + '.yaml'))
@@ -22,7 +22,7 @@ export const Config = z.strictObject({
 });
 export type Settings = z.infer<typeof Settings>;
 export const Settings = z.strictObject({
-  user_name: z.string().regex(/^\S+$/).optional(),
+  user_name: z.coerce.string().regex(/^\S+$/).optional(),
   configs: z.record(z.string(), Config).transform(data => {
     return _.mapValues(data, (value, key) => {
       if (value.bundle_file !== undefined) {
