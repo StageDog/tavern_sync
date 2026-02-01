@@ -65865,9 +65865,7 @@ const Worldbook_entry = object({
     }
     return data;
 });
-const Worldbook = array(Worldbook_entry)
-    .min(1)
-    .transform(entries => ({
+const Worldbook = array(Worldbook_entry).transform(entries => ({
     anchors: {},
     entries,
 }));
