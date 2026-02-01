@@ -40,8 +40,5 @@ export const Extensions = Extensions_en.transform(data => {
     }
     return script;
   });
-  if (_.isEmpty(data.tavern_helper.variables)) {
-    _.unset(data, 'tavern_helper.variables');
-  }
   return data;
 });

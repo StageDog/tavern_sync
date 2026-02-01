@@ -31490,7 +31490,7 @@ const Script = strictObject({
         buttons: array(ScriptButton).prefault([]),
     })
         .prefault({}),
-    data: record(schemas_string(), any()).prefault({}).catch({}),
+    data: record(schemas_string(), any()).prefault({}),
 });
 const ScriptFolder = strictObject({
     name: coerce_string(),
@@ -31499,7 +31499,7 @@ const ScriptFolder = strictObject({
     type: literal('folder'),
     icon: coerce_string().prefault('fa-solid fa-folder'),
     color: coerce_string().prefault('rgba(219, 219, 214, 1)'),
-    scripts: array(Script).prefault([]).catch([]),
+    scripts: array(Script).prefault([]),
 });
 const ScriptTree = discriminatedUnion('type', [Script, ScriptFolder]);
 const Extensions = looseObject({
@@ -31522,11 +31522,13 @@ const Extensions = looseObject({
         run_on_edit: schemas_boolean().prefault(false),
         min_depth: union([schemas_number(), schemas_null()]).prefault(null),
         max_depth: union([schemas_number(), schemas_null()]).prefault(null),
-    })),
+    }))
+        .prefault([]),
     tavern_helper: strictObject({
-        scripts: array(ScriptTree).prefault([]).catch([]),
-        variables: record(schemas_string(), any()).prefault({}).catch({}),
-    }),
+        scripts: array(ScriptTree).prefault([]),
+        variables: record(schemas_string(), any()).prefault({}),
+    })
+        .prefault({}),
 });
 
 ;// ./node_modules/.pnpm/dedent@1.7.1/node_modules/dedent/dist/dedent.mjs
@@ -31904,7 +31906,7 @@ const extensions_zh_Script = strictObject({
         按钮列表: array(extensions_zh_ScriptButton).prefault([]),
     })
         .prefault({}),
-    数据: record(schemas_string(), any()).prefault({}).catch({}),
+    数据: record(schemas_string(), any()).prefault({}),
 });
 const extensions_zh_ScriptFolder = strictObject({
     名称: coerce_string(),
@@ -31913,7 +31915,7 @@ const extensions_zh_ScriptFolder = strictObject({
     类型: literal('文件夹'),
     图标: coerce_string().prefault('fa-solid fa-folder'),
     颜色: coerce_string().prefault('#DBDBD6'),
-    脚本库: array(extensions_zh_Script).prefault([]).catch([]),
+    脚本库: array(extensions_zh_Script).prefault([]),
 });
 const extensions_zh_ScriptTree = discriminatedUnion('类型', [extensions_zh_Script, extensions_zh_ScriptFolder]);
 const extensions_zh_Extensions = looseObject({
@@ -31937,12 +31939,12 @@ const extensions_zh_Extensions = looseObject({
         最小深度: union([schemas_number(), schemas_null()]).prefault(null),
         最大深度: union([schemas_number(), schemas_null()]).prefault(null),
     }))
-        .prefault([])
-        .catch([]),
+        .prefault([]),
     酒馆助手: strictObject({
-        脚本库: array(extensions_zh_ScriptTree).prefault([]).catch([]),
-        变量: record(schemas_string(), any()).prefault({}).catch({}),
-    }),
+        脚本库: array(extensions_zh_ScriptTree).prefault([]),
+        变量: record(schemas_string(), any()).prefault({}),
+    })
+        .prefault({}),
 });
 
 ;// ./src/type/worldbook.zh.ts
