@@ -118,10 +118,7 @@ export const Worldbook_entry = z
   });
 
 export type Worldbook = z.infer<typeof Worldbook>;
-export const Worldbook = z
-  .array(Worldbook_entry)
-  .min(1)
-  .transform(entries => ({
-    anchors: {},
-    entries,
-  }));
+export const Worldbook = z.array(Worldbook_entry).transform(entries => ({
+  anchors: {},
+  entries,
+}));
