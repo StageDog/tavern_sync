@@ -53,7 +53,7 @@ const Script = z.strictObject({
       按钮列表: z.array(ScriptButton).prefault([]),
     })
     .prefault({}),
-  数据: z.record(z.string(), z.any()).prefault({}).catch({}),
+  数据: z.record(z.string(), z.any()).prefault({}),
 });
 
 const ScriptFolder = z.strictObject({
@@ -63,7 +63,7 @@ const ScriptFolder = z.strictObject({
   类型: z.literal('文件夹'),
   图标: z.coerce.string().prefault('fa-solid fa-folder'),
   颜色: z.coerce.string().prefault('#DBDBD6'),
-  脚本库: z.array(Script).prefault([]).catch([]),
+  脚本库: z.array(Script).prefault([]),
 });
 
 const ScriptTree = z.discriminatedUnion('类型', [Script, ScriptFolder]);
@@ -97,10 +97,11 @@ export const Extensions = z.looseObject({
         最大深度: z.union([z.number(), z.null()]).prefault(null),
       }),
     )
-    .prefault([])
-    .catch([]),
-  酒馆助手: z.strictObject({
-    脚本库: z.array(ScriptTree).prefault([]).catch([]),
-    变量: z.record(z.string(), z.any()).prefault({}).catch({}),
-  }),
+    .prefault([]),
+  酒馆助手: z
+    .strictObject({
+      脚本库: z.array(ScriptTree).prefault([]),
+      变量: z.record(z.string(), z.any()).prefault({}),
+    })
+    .prefault({}),
 });

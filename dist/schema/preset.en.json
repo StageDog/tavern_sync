@@ -486,6 +486,7 @@
       "type": "object",
       "properties": {
         "regex_scripts": {
+          "default": [],
           "type": "array",
           "items": {
             "type": "object",
@@ -494,7 +495,7 @@
                 "type": "string"
               },
               "id": {
-                "default": "879e0f79-446c-4018-8661-bcf81dde2398",
+                "default": "a113f33b-564e-47e9-8eb3-d7769d780e26",
                 "type": "string"
               },
               "enabled": {
@@ -580,6 +581,7 @@
           }
         },
         "tavern_helper": {
+          "default": {},
           "type": "object",
           "properties": {
             "scripts": {
@@ -597,7 +599,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "85b5a264-b0c3-4bb4-9d01-cc09a91c4af8",
+                        "default": "27266d09-0d53-48ae-bfca-64b39455dc2a",
                         "type": "string"
                       },
                       "enabled": {
@@ -645,10 +647,6 @@
           "additionalProperties": false
         }
       },
-      "required": [
-        "regex_scripts",
-        "tavern_helper"
-      ],
       "additionalProperties": {}
     },
     "__schema41": {
@@ -658,7 +656,7 @@
           "type": "string"
         },
         "id": {
-          "default": "30925000-3244-48f4-9d0d-27f64104892f",
+          "default": "75de921a-4245-4701-bf5d-4a69117c03f4",
           "type": "string"
         },
         "enabled": {

@@ -501,7 +501,7 @@
                 "type": "string"
               },
               "id": {
-                "default": "00b1856e-fa0b-4c4c-a09f-54517b028f79",
+                "default": "81c1511a-d85c-4c9f-b918-2d05f88ed838",
                 "type": "string"
               },
               "启用": {
@@ -587,6 +587,7 @@
           }
         },
         "酒馆助手": {
+          "default": {},
           "type": "object",
           "properties": {
             "脚本库": {
@@ -604,7 +605,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "1ea378c6-14f4-4ab9-9140-d788c652cf97",
+                        "default": "fac4bb27-4007-4a18-aae1-902684c93072",
                         "type": "string"
                       },
                       "启用": {
@@ -652,9 +653,6 @@
           "additionalProperties": false
         }
       },
-      "required": [
-        "酒馆助手"
-      ],
       "additionalProperties": {}
     },
     "__schema41": {
@@ -664,7 +662,7 @@
           "type": "string"
         },
         "id": {
-          "default": "8899ce04-5ea1-4d66-a3a4-15ad982cf184",
+          "default": "4ee98545-8b40-4f19-b9e5-1803b08307ad",
           "type": "string"
         },
         "启用": {
