@@ -67084,13 +67084,6 @@ const Prompt_normal = strictObject({
         }));
     }
 })
-    .transform(data => {
-    const unique_id = lodash_default().uniqueId();
-    return {
-        ...data,
-        id: unique_id === '1' ? 'main' : unique_id,
-    };
-})
     .describe('手动在预设中添加的提示词');
 const prompt_rolable_placeholder_ids = [
     'world_info_before',
@@ -67249,6 +67242,14 @@ const Preset = strictObject({
     }).describe('提示词列表里已经添加的提示词'),
     prompts_unused: PromptTrees.describe('下拉框里的, 没有添加进提示词列表的提示词'),
     extensions: Extensions.optional().describe('额外字段: 用于为预设绑定额外数据'),
+})
+    .transform(data => {
+    lodash_default().concat(data.prompts, data.prompts_unused)
+        .filter(prompt => prompt.id === undefined)
+        .forEach((prompt, index) => {
+        lodash_default().set(prompt, 'id', index === 0 ? 'main' : String(index));
+    });
+    return data;
 });
 
 ;// ./src/server/tavern/preset.ts
@@ -67451,13 +67452,6 @@ const preset_zh_Prompt_normal = strictObject({
         }));
     }
 })
-    .transform(data => {
-    const unique_id = lodash_default().uniqueId();
-    return {
-        ...data,
-        id: unique_id === '1' ? 'main' : unique_id,
-    };
-})
     .describe('手动在预设中添加的提示词');
 const preset_zh_prompt_rolable_placeholder_ids = [
     '角色定义之前',
@@ -67614,6 +67608,14 @@ const preset_zh_Preset = strictObject({
     }).describe('提示词列表里已经添加的提示词'),
     未添加的提示词: preset_zh_PromptTrees.describe('下拉框里的, 没有添加进提示词列表的提示词'),
     扩展字段: extensions_zh_Extensions.optional().describe('扩展字段: 用于为预设绑定额外数据'),
+})
+    .transform(data => {
+    lodash_default().concat(data.提示词, data.未添加的提示词)
+        .filter(prompt => prompt.id === undefined)
+        .forEach((prompt, index) => {
+        lodash_default().set(prompt, 'id', index === 0 ? 'main' : String(index));
+    });
+    return data;
 });
 
 ;// ./src/server/syncer/preset.ts
