@@ -1,5 +1,4 @@
-// import { bundle_character } from '@server/bundle/character';
-import { bundle_character } from '@server/bundle/character';
+import encode, { bundle_character } from '@server/bundle/character';
 import { is_collection_file, parse_collection_file } from '@server/component/collection_file';
 import { replace_raw_string } from '@server/component/replace_raw_string';
 import { replace_user_name } from '@server/component/replace_user_name';
@@ -19,6 +18,8 @@ import {
   zh_to_en_map as character_zh_to_en_map,
 } from '@type/character.zh';
 import { zh_to_en_map } from '@type/settings.zh';
+import PNGtext from 'png-chunk-text';
+import extract from 'png-chunks-extract';
 
 import _ from 'lodash';
 import { readFileSync } from 'node:fs';
@@ -91,10 +92,21 @@ export class Character_syncer extends Syncer_interface {
         file_to_set = file;
       }
 
+      const chunks = extract(new Uint8Array(tavern_data.avatar));
+      const tEXtChunks = chunks.filter(chunk => chunk.name === 'tEXt');
+
+      // Remove existing tEXt chunks
+      for (const tEXtChunk of tEXtChunks) {
+        const data = PNGtext.decode(tEXtChunk.data);
+        if (data.keyword.toLowerCase() === 'chara' || data.keyword.toLowerCase() === 'ccv3') {
+          chunks.splice(chunks.indexOf(tEXtChunk), 1);
+        }
+      }
+
       files.push({
         name: '!头像',
         path: file_to_write,
-        content: tavern_data.avatar,
+        content: Buffer.from(encode(chunks)),
       });
       _.set(tavern_data, 'avatar', file_to_set);
     }
