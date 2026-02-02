@@ -68181,7 +68181,7 @@ function add_bundle_command() {
         const update_abort_controller = new AbortController();
         check_update_silently(update_abort_controller.signal);
         try {
-            await Promise.all(syncers.map(syncer => syncer.bundle()));
+            await Promise.allSettled(syncers.map(syncer => syncer.bundle()));
         }
         finally {
             update_abort_controller.abort();
@@ -68216,7 +68216,7 @@ function add_pull_command() {
         const update_abort_controller = new AbortController();
         check_update_silently(update_abort_controller.signal);
         try {
-            await Promise.all(syncers.map(syncer => syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force })));
+            await Promise.allSettled(syncers.map(syncer => syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force })));
         }
         finally {
             update_abort_controller.abort();
@@ -68239,7 +68239,7 @@ function add_push_command() {
         const update_abort_controller = new AbortController();
         check_update_silently(update_abort_controller.signal);
         try {
-            await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force })));
+            await Promise.allSettled(syncers.map(syncer => syncer.push({ should_force: options.force })));
         }
         finally {
             update_abort_controller.abort();
