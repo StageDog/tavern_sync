@@ -13,7 +13,7 @@ export function add_bundle_command(): Command {
     const update_abort_controller = new AbortController();
     check_update_silently(update_abort_controller.signal);
     try {
-      await Promise.all(syncers.map(syncer => syncer.bundle()));
+      await Promise.allSettled(syncers.map(syncer => syncer.bundle()));
     } finally {
       update_abort_controller.abort();
     }

@@ -26,7 +26,7 @@ export function add_pull_command(): Command {
       const update_abort_controller = new AbortController();
       check_update_silently(update_abort_controller.signal);
       try {
-        await Promise.all(
+        await Promise.allSettled(
           syncers.map(syncer =>
             syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force }),
           ),

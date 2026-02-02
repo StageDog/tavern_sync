@@ -19,7 +19,7 @@ export function add_push_command(): Command {
     const update_abort_controller = new AbortController();
     check_update_silently(update_abort_controller.signal);
     try {
-      await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force })));
+      await Promise.allSettled(syncers.map(syncer => syncer.push({ should_force: options.force })));
     } finally {
       update_abort_controller.abort();
     }
