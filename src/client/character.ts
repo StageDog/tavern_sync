@@ -21,7 +21,7 @@ async function update_character(name: string, data: Character) {
   if (getCharacterNames().includes(name)) {
     await updateCharacterWith(name, character => {
       if (_.isNil(data.extensions)) {
-        return { ...data, extensions: character.extensions };
+        return { ...data, extensions: character.extensions } as any;
       }
       return data;
     });
@@ -43,14 +43,11 @@ export function register_character() {
     try {
       const character = await getCharacter(data.name);
       _.set(character, 'avatar', await fetch(getCharAvatarPath(data.name) as string).then(res => res.blob()));
+      if (character.worldbook !== null && !getWorldbookNames().includes(character.worldbook)) {
+        throw Error(`未能找到角色卡绑定的世界书 '${character.worldbook}', 请确认已经导入到酒馆中`);
+      }
       _.set(character, 'worldbook', character.worldbook ?? data.name);
-      _.set(
-        character,
-        'entries',
-        character.worldbook !== null && getWorldbookNames().includes(character.worldbook)
-          ? await getWorldbook(character.worldbook)
-          : [],
-      );
+      _.set(character, 'entries', character.worldbook !== null ? await getWorldbook(character.worldbook) : []);
       if (_.has(character, 'extensions.tavern_helper')) {
         _.update(character, 'extensions.tavern_helper', tavern_helper =>
           Array.isArray(tavern_helper) ? Object.fromEntries(tavern_helper) : tavern_helper,
