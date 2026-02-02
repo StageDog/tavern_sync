@@ -148,15 +148,15 @@
     },
     "prompts": {
       "description": "提示词列表里已经添加的提示词",
-      "$ref": "#/$defs/__schema39"
+      "$ref": "#/$defs/__schema38"
     },
     "prompts_unused": {
       "description": "下拉框里的, 没有添加进提示词列表的提示词",
-      "$ref": "#/$defs/__schema39"
+      "$ref": "#/$defs/__schema38"
     },
     "extensions": {
       "description": "额外字段: 用于为预设绑定额外数据",
-      "$ref": "#/$defs/__schema40"
+      "$ref": "#/$defs/__schema39"
     }
   },
   "required": [
@@ -223,7 +223,7 @@
             "$ref": "#/$defs/__schema13"
           },
           {
-            "$ref": "#/$defs/__schema38"
+            "$ref": "#/$defs/__schema37"
           }
         ]
       }
@@ -231,66 +231,63 @@
     "__schema13": {
       "anyOf": [
         {
-          "description": "手动在预设中添加的提示词",
-          "$ref": "#/$defs/__schema14"
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/__schema14"
+            },
+            "id": {
+              "$ref": "#/$defs/__schema15"
+            },
+            "enabled": {
+              "$ref": "#/$defs/__schema16"
+            },
+            "position": {
+              "$ref": "#/$defs/__schema17"
+            },
+            "role": {
+              "$ref": "#/$defs/__schema19"
+            },
+            "content": {
+              "$ref": "#/$defs/__schema20"
+            },
+            "file": {
+              "$ref": "#/$defs/__schema22"
+            },
+            "extra": {
+              "$ref": "#/$defs/__schema24"
+            }
+          },
+          "required": [
+            "name",
+            "enabled"
+          ],
+          "additionalProperties": false,
+          "description": "手动在预设中添加的提示词"
         },
         {
           "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词",
-          "$ref": "#/$defs/__schema27"
+          "$ref": "#/$defs/__schema26"
         }
       ]
     },
     "__schema14": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "$ref": "#/$defs/__schema15"
-        },
-        "id": {
-          "$ref": "#/$defs/__schema16"
-        },
-        "enabled": {
-          "$ref": "#/$defs/__schema17"
-        },
-        "position": {
-          "$ref": "#/$defs/__schema18"
-        },
-        "role": {
-          "$ref": "#/$defs/__schema20"
-        },
-        "content": {
-          "$ref": "#/$defs/__schema21"
-        },
-        "file": {
-          "$ref": "#/$defs/__schema23"
-        },
-        "extra": {
-          "$ref": "#/$defs/__schema25"
-        }
-      },
-      "required": [
-        "name",
-        "enabled"
-      ],
-      "additionalProperties": false
-    },
-    "__schema15": {
       "type": "string"
     },
-    "__schema16": {
+    "__schema15": {
       "not": {}
     },
-    "__schema17": {
+    "__schema16": {
       "type": "boolean"
     },
-    "__schema18": {
+    "__schema17": {
       "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
       "default": {
         "type": "relative"
       },
-      "$ref": "#/$defs/__schema19"
+      "$ref": "#/$defs/__schema18"
     },
-    "__schema19": {
+    "__schema18": {
       "type": "object",
       "properties": {
         "type": {
@@ -312,7 +309,7 @@
       ],
       "additionalProperties": false
     },
-    "__schema20": {
+    "__schema19": {
       "default": "system",
       "type": "string",
       "enum": [
@@ -321,57 +318,57 @@
         "assistant"
       ]
     },
-    "__schema21": {
+    "__schema20": {
       "description": "内嵌的提示词内容",
-      "$ref": "#/$defs/__schema22"
+      "$ref": "#/$defs/__schema21"
+    },
+    "__schema21": {
+      "type": "string"
     },
     "__schema22": {
-      "type": "string"
+      "description": "外链的提示词文件路径",
+      "$ref": "#/$defs/__schema23"
     },
     "__schema23": {
-      "description": "外链的提示词文件路径",
-      "$ref": "#/$defs/__schema24"
-    },
-    "__schema24": {
       "type": "string"
     },
-    "__schema25": {
+    "__schema24": {
       "description": "额外字段: 用于为预设提示词绑定额外数据",
-      "$ref": "#/$defs/__schema26"
+      "$ref": "#/$defs/__schema25"
     },
-    "__schema26": {
+    "__schema25": {
       "type": "object",
       "propertyNames": {
         "type": "string"
       },
       "additionalProperties": {}
     },
-    "__schema27": {
+    "__schema26": {
       "type": "object",
       "properties": {
         "name": {
-          "$ref": "#/$defs/__schema28"
+          "$ref": "#/$defs/__schema27"
         },
         "id": {
-          "$ref": "#/$defs/__schema29"
+          "$ref": "#/$defs/__schema28"
         },
         "enabled": {
-          "$ref": "#/$defs/__schema30"
+          "$ref": "#/$defs/__schema29"
         },
         "position": {
-          "$ref": "#/$defs/__schema31"
+          "$ref": "#/$defs/__schema30"
         },
         "role": {
-          "$ref": "#/$defs/__schema33"
+          "$ref": "#/$defs/__schema32"
         },
         "content": {
-          "$ref": "#/$defs/__schema34"
+          "$ref": "#/$defs/__schema33"
         },
         "file": {
-          "$ref": "#/$defs/__schema35"
+          "$ref": "#/$defs/__schema34"
         },
         "extra": {
-          "$ref": "#/$defs/__schema36"
+          "$ref": "#/$defs/__schema35"
         }
       },
       "required": [
@@ -380,10 +377,10 @@
       ],
       "additionalProperties": false
     },
-    "__schema28": {
+    "__schema27": {
       "not": {}
     },
-    "__schema29": {
+    "__schema28": {
       "type": "string",
       "enum": [
         "world_info_before",
@@ -397,17 +394,17 @@
       ],
       "description": "预设提示词中的占位符提示词, 对应于世界书条目、角色卡、玩家角色、聊天记录等提示词\n- world_info_before: 角色定义之前\n- persona_description: 玩家描述. 创建 user 时填写的提示词\n- char_description: 角色描述. 角色卡侧边栏中填写的提示词\n- char_personality: 角色性格. 角色卡高级定义中的提示词, 一般没人用了\n- scenario: 情景. 角色卡高级定义中的提示词, 一般没人用了\n- world_info_after: 角色定义之后\n- dialogue_examples: 对话示例. 角色卡高级定义中的提示词, 一般没人用了\n- chat_history: 聊天记录"
     },
-    "__schema30": {
+    "__schema29": {
       "type": "boolean"
     },
-    "__schema31": {
+    "__schema30": {
       "description": "插入位置: `relative` 则按提示词相对位置插入, `in_chat` 则插入到聊天记录中的对应深度",
       "default": {
         "type": "relative"
       },
-      "$ref": "#/$defs/__schema32"
+      "$ref": "#/$defs/__schema31"
     },
-    "__schema32": {
+    "__schema31": {
       "type": "object",
       "properties": {
         "type": {
@@ -429,7 +426,7 @@
       ],
       "additionalProperties": false
     },
-    "__schema33": {
+    "__schema32": {
       "type": "string",
       "enum": [
         "system",
@@ -437,24 +434,24 @@
         "assistant"
       ]
     },
+    "__schema33": {
+      "not": {}
+    },
     "__schema34": {
       "not": {}
     },
     "__schema35": {
-      "not": {}
+      "description": "额外字段: 用于为预设提示词绑定额外数据",
+      "$ref": "#/$defs/__schema36"
     },
     "__schema36": {
-      "description": "额外字段: 用于为预设提示词绑定额外数据",
-      "$ref": "#/$defs/__schema37"
-    },
-    "__schema37": {
       "type": "object",
       "propertyNames": {
         "type": "string"
       },
       "additionalProperties": {}
     },
-    "__schema38": {
+    "__schema37": {
       "type": "object",
       "properties": {
         "folder": {
@@ -468,7 +465,7 @@
                 "$ref": "#/$defs/__schema13"
               },
               {
-                "$ref": "#/$defs/__schema38"
+                "$ref": "#/$defs/__schema37"
               }
             ]
           }
@@ -479,10 +476,10 @@
         "entries"
       ]
     },
-    "__schema39": {
+    "__schema38": {
       "$ref": "#/$defs/__schema12"
     },
-    "__schema40": {
+    "__schema39": {
       "type": "object",
       "properties": {
         "regex_scripts": {
@@ -495,7 +492,7 @@
                 "type": "string"
               },
               "id": {
-                "default": "a113f33b-564e-47e9-8eb3-d7769d780e26",
+                "default": "1f93f989-8c53-4ea4-baa8-b636b2b4b52c",
                 "type": "string"
               },
               "enabled": {
@@ -590,7 +587,7 @@
               "items": {
                 "oneOf": [
                   {
-                    "$ref": "#/$defs/__schema41"
+                    "$ref": "#/$defs/__schema40"
                   },
                   {
                     "type": "object",
@@ -599,7 +596,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "27266d09-0d53-48ae-bfca-64b39455dc2a",
+                        "default": "1b9f0ee0-e327-462c-9b82-fcd125b7428a",
                         "type": "string"
                       },
                       "enabled": {
@@ -621,7 +618,7 @@
                         "default": [],
                         "type": "array",
                         "items": {
-                          "$ref": "#/$defs/__schema41"
+                          "$ref": "#/$defs/__schema40"
                         }
                       }
                     },
@@ -649,14 +646,14 @@
       },
       "additionalProperties": {}
     },
-    "__schema41": {
+    "__schema40": {
       "type": "object",
       "properties": {
         "name": {
           "type": "string"
         },
         "id": {
-          "default": "75de921a-4245-4701-bf5d-4a69117c03f4",
+          "default": "217436e7-c0e4-4586-99eb-e496e63b2542",
           "type": "string"
         },
         "enabled": {
