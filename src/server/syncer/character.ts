@@ -121,6 +121,9 @@ export class Character_syncer extends Syncer_interface {
 
       tavern_data.first_messages.forEach((entry, index) => {
         _.set(entry, 'content', replace_user_name(entry.content ?? ''));
+        if (entry.content === '') {
+          return;
+        }
 
         const handle_file = (entry: Character_tavern['first_messages'][number], file: string) => {
           let file_to_write = '';
@@ -190,6 +193,9 @@ export class Character_syncer extends Syncer_interface {
 
       tavern_data.entries.forEach(entry => {
         _.set(entry, 'content', replace_user_name(entry.content ?? ''));
+        if (entry.content === '') {
+          return;
+        }
 
         const handle_file = (entry: Character_tavern['entries'][number], file: string) => {
           let file_to_write = '';
@@ -241,6 +247,9 @@ export class Character_syncer extends Syncer_interface {
 
       tavern_data.extensions?.regex_scripts.forEach(entry => {
         _.set(entry, 'content', replace_user_name(entry.content ?? ''));
+        if (entry.content === '') {
+          return;
+        }
 
         const handle_file = (entry: Extensions['regex_scripts'][number], file: string) => {
           let file_to_write = '';

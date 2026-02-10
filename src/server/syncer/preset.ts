@@ -107,6 +107,9 @@ export class Preset_syncer extends Syncer_interface {
           return;
         }
         _.set(prompt, 'content', replace_user_name(prompt.content ?? ''));
+        if (prompt.content === '') {
+          return;
+        }
 
         const handle_file = (prompt: Preset_tavern['prompts'][number], file: string) => {
           let file_to_write = '';
@@ -157,6 +160,9 @@ export class Preset_syncer extends Syncer_interface {
 
       tavern_data.extensions?.regex_scripts.forEach(entry => {
         _.set(entry, 'content', replace_user_name(entry.content ?? ''));
+        if (entry.content === '') {
+          return;
+        }
 
         const handle_file = (entry: Extensions['regex_scripts'][number], file: string) => {
           let file_to_write = '';
