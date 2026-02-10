@@ -66822,6 +66822,9 @@ class Character_syncer extends Syncer_interface {
                 : local_data.first_messages.map((entry, index) => ({ name: `!!!第一条消息${index}`, ...entry }));
             tavern_data.first_messages.forEach((entry, index) => {
                 lodash_default().set(entry, 'content', replace_user_name(entry.content ?? ''));
+                if (entry.content === '') {
+                    return;
+                }
                 const handle_file = (entry, file) => {
                     let file_to_write = '';
                     let file_to_set = '';
@@ -66886,6 +66889,9 @@ class Character_syncer extends Syncer_interface {
             }
             tavern_data.entries.forEach(entry => {
                 lodash_default().set(entry, 'content', replace_user_name(entry.content ?? ''));
+                if (entry.content === '') {
+                    return;
+                }
                 const handle_file = (entry, file) => {
                     let file_to_write = '';
                     let file_to_set = '';
@@ -66927,6 +66933,9 @@ class Character_syncer extends Syncer_interface {
                     []);
             tavern_data.extensions?.regex_scripts.forEach(entry => {
                 lodash_default().set(entry, 'content', replace_user_name(entry.content ?? ''));
+                if (entry.content === '') {
+                    return;
+                }
                 const handle_file = (entry, file) => {
                     let file_to_write = '';
                     let file_to_set = '';
@@ -67876,6 +67885,9 @@ class Preset_syncer extends Syncer_interface {
                 return;
             }
             lodash_default().set(prompt, 'content', replace_user_name(prompt.content ?? ''));
+            if (prompt.content === '') {
+                return;
+            }
             const handle_file = (prompt, file) => {
                 let file_to_write = '';
                 let file_to_set = '';
@@ -67917,6 +67929,9 @@ class Preset_syncer extends Syncer_interface {
                     []);
             tavern_data.extensions?.regex_scripts.forEach(entry => {
                 lodash_default().set(entry, 'content', replace_user_name(entry.content ?? ''));
+                if (entry.content === '') {
+                    return;
+                }
                 const handle_file = (entry, file) => {
                     let file_to_write = '';
                     let file_to_set = '';
