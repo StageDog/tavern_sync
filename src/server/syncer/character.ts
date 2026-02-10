@@ -21,6 +21,7 @@ import { zh_to_en_map } from '@type/settings.zh';
 import PNGtext from 'png-chunk-text';
 import extract from 'png-chunks-extract';
 
+import { Extensions } from '@type/extensions.en';
 import _ from 'lodash';
 import { readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -58,7 +59,7 @@ export class Character_syncer extends Syncer_interface {
   protected do_pull(
     local_data: Character_en | null,
     tavern_data: Character_tavern,
-    { should_split }: Omit<Pull_options, 'should_force'>,
+    { language, should_split }: Omit<Pull_options, 'should_force'>,
   ): {
     result_data: Record<string, any>;
     error_data: Record<string, any>;
@@ -116,7 +117,7 @@ export class Character_syncer extends Syncer_interface {
       const states: { name: string; content?: string; file?: string }[] =
         local_data === null
           ? []
-          : local_data.first_messages.map((entry, index) => ({ name: `第一条消息${index}`, ...entry }));
+          : local_data.first_messages.map((entry, index) => ({ name: `!!!第一条消息${index}`, ...entry }));
 
       tavern_data.first_messages.forEach((entry, index) => {
         _.set(entry, 'content', replace_user_name(entry.content ?? ''));
@@ -138,7 +139,7 @@ export class Character_syncer extends Syncer_interface {
           }
 
           files.push({
-            name: `!第一条消息${index}`,
+            name: `!!!第一条消息${index}`,
             path: file_to_write,
             content: entry.content,
           });
@@ -146,9 +147,9 @@ export class Character_syncer extends Syncer_interface {
           _.set(entry, 'file', file_to_set);
         };
 
-        const state = states.find(state => state.name === `第一条消息${index}`);
+        const state = states.find(state => state.name === `!!!第一条消息${index}`);
         if (state === undefined && should_split) {
-          handle_file(entry, join('第一条消息', `${index}.txt`));
+          handle_file(entry, join(language === 'zh' ? '第一条消息' : 'first_message', `${index}.txt`));
         } else if (state?.file !== undefined) {
           handle_file(entry, state.file);
         }
@@ -217,10 +218,72 @@ export class Character_syncer extends Syncer_interface {
 
         const state = states.find(state => state.name === entry.name);
         if (state === undefined && should_split) {
-          handle_file(entry, join('世界书', sanitize_filename(entry.name) + detect_extension(entry.content)));
+          handle_file(
+            entry,
+            join(
+              language === 'zh' ? '世界书' : 'worldbook',
+              sanitize_filename(entry.name) + detect_extension(entry.content),
+            ),
+          );
         } else if (state?.file !== undefined) {
           handle_file(entry, state.file);
         }
+      });
+    }
+
+    // 正则
+    {
+      const states: { name: string; content?: string; file?: string }[] =
+        local_data === null
+          ? []
+          : (local_data.extensions?.regex_scripts.map(entry => ({ name: `!!!正则${entry.script_name}`, ...entry })) ??
+            []);
+
+      tavern_data.extensions?.regex_scripts.forEach(entry => {
+        _.set(entry, 'content', replace_user_name(entry.content ?? ''));
+
+        const handle_file = (entry: Extensions['regex_scripts'][number], file: string) => {
+          let file_to_write = '';
+          let file_to_set = '';
+
+          const glob_files = glob_file(this.dir, file);
+          if (glob_files.length === 0) {
+            file_to_write = file.replace(/\.[^\\/.]+$|$/, '.txt');
+            file_to_set = file.replace(/\.[^\\/.]+$/, '');
+          } else if (glob_files.length === 1) {
+            file_to_write = glob_files[0];
+            file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+          } else {
+            file_to_write = file;
+            file_to_set = file;
+          }
+
+          files.push({
+            name: `!!!正则${entry.script_name}`,
+            path: file_to_write,
+            content: entry.content ?? '',
+          });
+          _.unset(entry, 'content');
+          _.set(entry, 'file', file_to_set);
+        };
+
+        const state = states.find(state => state.name === `!!!正则${entry.script_name}`);
+        if (state === undefined && should_split) {
+          handle_file(entry, join(language === 'zh' ? '正则' : 'regex', sanitize_filename(entry.script_name) + '.txt'));
+        } else if (state?.file !== undefined) {
+          handle_file(entry, state.file);
+        }
+      });
+
+      tavern_data.extensions?.regex_scripts.forEach(entry => {
+        ['source', 'destination', 'run_on_edit', 'min_depth', 'max_depth']
+          .filter(key => _.has(entry, key))
+          // 移动它们到 content、file 之后
+          .forEach(key => {
+            const data = _.get(entry, key);
+            _.unset(entry, key);
+            _.set(entry, key, data);
+          });
       });
     }
 
@@ -279,6 +342,7 @@ export class Character_syncer extends Syncer_interface {
       未能找到以下外链头像文件: [] as string[],
       未能找到以下外链第一条消息文件: [] as string[],
       未能找到以下外链提示词文件: [] as string[],
+      未能找到以下外链正则: [] as string[],
       通过补全文件后缀找到了多个文件: [] as Record<string, string[]>[],
       未能从合集文件中找到以下条目: [] as string[],
     };
@@ -362,6 +426,35 @@ export class Character_syncer extends Syncer_interface {
       });
       local_data.entries.forEach(entry => {
         _.set(entry, 'content', replace_raw_string(replace_user_name(entry.content)));
+      });
+    }
+
+    // 正则
+    {
+      local_data.extensions?.regex_scripts.forEach((entry, index) => {
+        if (entry.file === undefined) {
+          return;
+        }
+
+        const paths = glob_file(this.dir, entry.file);
+        if (paths.length === 0) {
+          error_data.未能找到以下外链正则.push(`第 '${index}' 正则 '${entry.script_name}': '${entry.file}'`);
+          return;
+        }
+        if (paths.length > 1) {
+          error_data.通过补全文件后缀找到了多个文件.push({ [`第 '${index}' 正则 '${entry.script_name}'`]: paths });
+          return;
+        }
+        const content = extract_file_content(paths[0]);
+        _.set(entry, 'content', trim_yaml_endline(content));
+        _.unset(entry, 'file');
+      });
+      local_data.extensions?.regex_scripts.forEach(entry => {
+        _.set(entry, 'content', replace_raw_string(replace_user_name(entry.content)));
+      });
+      local_data.extensions?.regex_scripts.forEach(entry => {
+        _.set(entry, 'replace_string', entry.content);
+        _.unset(entry, 'content');
       });
     }
 

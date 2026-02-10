@@ -72,30 +72,60 @@ export type Extensions = z.infer<typeof Extensions>;
 export const Extensions = z.looseObject({
   正则: z
     .array(
-      z.strictObject({
-        正则名称: z.coerce.string(),
-        id: z.coerce.string().prefault(uuid),
-        启用: z.boolean(),
+      z
+        .strictObject({
+          正则名称: z.coerce.string(),
+          id: z.coerce.string().prefault(uuid),
+          启用: z.boolean(),
 
-        查找表达式: z.coerce.string(),
-        替换为: z.coerce.string(),
+          查找表达式: z.coerce.string(),
+          替换为: z.coerce.string().optional().describe(`已弃用, 请使用 '内容' 或 '文件'`),
+          内容: z.coerce.string().optional().describe('要替换为的内容'),
+          文件: z.coerce.string().optional().describe('要替换为的内容所在的文件路径'),
 
-        来源: z.strictObject({
-          用户输入: z.boolean(),
-          AI输出: z.boolean(),
-          快捷命令: z.boolean().prefault(false),
-          世界信息: z.boolean().prefault(false),
+          来源: z.strictObject({
+            用户输入: z.boolean(),
+            AI输出: z.boolean(),
+            快捷命令: z.boolean().prefault(false),
+            世界信息: z.boolean().prefault(false),
+          }),
+
+          作用于: z.strictObject({
+            仅格式显示: z.boolean(),
+            仅格式提示词: z.boolean(),
+          }),
+          在编辑时运行: z.boolean().prefault(false),
+
+          最小深度: z.union([z.number(), z.null()]).prefault(null),
+          最大深度: z.union([z.number(), z.null()]).prefault(null),
+        })
+        .transform(data => {
+          if (data.替换为 !== undefined) {
+            _.set(data, '内容', data.替换为);
+            _.unset(data, '内容');
+          }
+          return data;
+        })
+        .superRefine((data, context) => {
+          if (data.内容 === undefined && data.文件 === undefined) {
+            ['内容', '文件'].forEach(key =>
+              context.addIssue({
+                code: 'custom',
+                path: [key],
+                message: '必须填写`内容`或`文件`',
+              }),
+            );
+          }
+          if (data.内容 !== undefined && data.文件 !== undefined) {
+            ['内容', '文件'].forEach(key =>
+              context.addIssue({
+                code: 'custom',
+                path: [key],
+                message: '不能同时填写`内容`和`文件`',
+              }),
+            );
+          }
         }),
-
-        作用于: z.strictObject({
-          仅格式显示: z.boolean(),
-          仅格式提示词: z.boolean(),
-        }),
-        在编辑时运行: z.boolean().prefault(false),
-
-        最小深度: z.union([z.number(), z.null()]).prefault(null),
-        最大深度: z.union([z.number(), z.null()]).prefault(null),
-      }),
     )
     .prefault([]),
   酒馆助手: z

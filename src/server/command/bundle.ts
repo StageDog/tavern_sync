@@ -1,6 +1,7 @@
 import { add_configs_to_command } from '@server/component/add_configs_to_command';
 import { check_update_silently } from '@server/component/check_update';
 import { Syncer_interface } from '@server/syncer/interface';
+import { exit_on_error } from '@server/util/exit_on_error';
 
 import { Command } from 'commander';
 
@@ -13,7 +14,9 @@ export function add_bundle_command(): Command {
     const update_abort_controller = new AbortController();
     check_update_silently(update_abort_controller.signal);
     try {
-      await Promise.allSettled(syncers.map(syncer => syncer.bundle()));
+      await Promise.all(syncers.map(syncer => syncer.bundle()));
+    } catch (error) {
+      exit_on_error(error as unknown as Error);
     } finally {
       update_abort_controller.abort();
     }

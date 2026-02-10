@@ -2,7 +2,7 @@ import { exit } from 'node:process';
 
 export function exit_on_error(error: Error | string): never {
   if (error instanceof Error) {
-    console.error(error.message);
+    console.error(`${error.message}\n${error.stack}`);
   } else {
     console.error(error);
   }

@@ -11,6 +11,7 @@ import { glob_file } from '@server/util/glob_file';
 import { sanitize_filename } from '@server/util/sanitize_filename';
 import { translate } from '@server/util/translate';
 import { trim_yaml_endline } from '@server/util/trim_yaml_endline';
+import { Extensions } from '@type/extensions.en';
 import { Preset as Preset_en, prompt_placeholder_ids } from '@type/preset.en';
 import { is_zh as preset_is_zh, Preset as Preset_zh, zh_to_en_map as preset_zh_to_en_map } from '@type/preset.zh';
 import { zh_to_en_map } from '@type/settings.zh';
@@ -145,6 +146,63 @@ export class Preset_syncer extends Syncer_interface {
       });
     convert_prompts(tavern_data.prompts, { used: true });
     convert_prompts(tavern_data.prompts_unused, { used: false });
+
+    // 正则
+    {
+      const states: { name: string; content?: string; file?: string }[] =
+        local_data === null
+          ? []
+          : (local_data.extensions?.regex_scripts.map(entry => ({ name: `!!!正则${entry.script_name}`, ...entry })) ??
+            []);
+
+      tavern_data.extensions?.regex_scripts.forEach(entry => {
+        _.set(entry, 'content', replace_user_name(entry.content ?? ''));
+
+        const handle_file = (entry: Extensions['regex_scripts'][number], file: string) => {
+          let file_to_write = '';
+          let file_to_set = '';
+
+          const glob_files = glob_file(this.dir, file);
+          if (glob_files.length === 0) {
+            file_to_write = file.replace(/\.[^\\/.]+$|$/, '.txt');
+            file_to_set = file.replace(/\.[^\\/.]+$/, '');
+          } else if (glob_files.length === 1) {
+            file_to_write = glob_files[0];
+            file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+          } else {
+            file_to_write = file;
+            file_to_set = file;
+          }
+
+          files.push({
+            name: `!!!正则${entry.script_name}`,
+            path: file_to_write,
+            content: entry.content ?? '',
+          });
+          _.unset(entry, 'content');
+          _.set(entry, 'file', file_to_set);
+        };
+
+        const state = states.find(state => state.name === `!!!正则${entry.script_name}`);
+        if (state === undefined && should_split) {
+          handle_file(entry, join(language === 'zh' ? '正则' : 'regex', sanitize_filename(entry.script_name) + '.txt'));
+        } else if (state?.file !== undefined) {
+          handle_file(entry, state.file);
+        }
+      });
+
+      tavern_data.extensions?.regex_scripts.forEach(entry => {
+        ['source', 'destination', 'run_on_edit', 'min_depth', 'max_depth']
+          .filter(key => _.has(entry, key))
+          // 移动它们到 content、file 之后
+          .forEach(key => {
+            const data = _.get(entry, key);
+            _.unset(entry, key);
+            _.set(entry, key, data);
+          });
+      });
+    }
+
     return { result_data: tavern_data, error_data: {}, files };
   }
 
@@ -199,6 +257,7 @@ export class Preset_syncer extends Syncer_interface {
   protected do_push(local_data: Preset_en): { result_data: Preset_en; error_data: Record<string, any> } {
     let error_data = {
       未能找到以下外链提示词文件: [] as string[],
+      未能找到以下外链正则: [] as string[],
       通过补全文件后缀找到了多个文件: [] as Record<string, string[]>[],
       未能从合集文件中找到以下条目: [] as string[],
     };
@@ -250,21 +309,42 @@ export class Preset_syncer extends Syncer_interface {
     handle_file(local_data.prompts, '提示词');
     handle_file(local_data.prompts_unused, '未添加的提示词');
 
-    const handle_user_name = (prompts: Preset_en['prompts']) => {
+    const handle_content = (prompts: Preset_en['prompts']) => {
       prompts.forEach(prompt => {
-        _.set(prompt, 'content', replace_user_name(prompt.content!));
+        _.set(prompt, 'content', replace_raw_string(replace_user_name(prompt.content)));
       });
     };
-    handle_user_name(local_data.prompts);
-    handle_user_name(local_data.prompts_unused);
+    handle_content(local_data.prompts);
+    handle_content(local_data.prompts_unused);
 
-    const handle_raw_string = (prompts: Preset_en['prompts']) => {
-      prompts.forEach(prompt => {
-        _.set(prompt, 'content', replace_raw_string(prompt.content));
+    // 正则
+    {
+      local_data.extensions?.regex_scripts.forEach((entry, index) => {
+        if (entry.file === undefined) {
+          return;
+        }
+
+        const paths = glob_file(this.dir, entry.file);
+        if (paths.length === 0) {
+          error_data.未能找到以下外链正则.push(`第 '${index}' 正则 '${entry.script_name}': '${entry.file}'`);
+          return;
+        }
+        if (paths.length > 1) {
+          error_data.通过补全文件后缀找到了多个文件.push({ [`第 '${index}' 正则 '${entry.script_name}'`]: paths });
+          return;
+        }
+        const content = extract_file_content(paths[0]);
+        _.set(entry, 'content', trim_yaml_endline(content));
+        _.unset(entry, 'file');
       });
-    };
-    handle_raw_string(local_data.prompts);
-    handle_raw_string(local_data.prompts_unused);
+      local_data.extensions?.regex_scripts.forEach(entry => {
+        _.set(entry, 'content', replace_raw_string(replace_user_name(entry.content)));
+      });
+      local_data.extensions?.regex_scripts.forEach(entry => {
+        _.set(entry, 'replace_string', entry.content);
+        _.unset(entry, 'content');
+      });
+    }
 
     return {
       result_data: local_data,
