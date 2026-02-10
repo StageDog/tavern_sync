@@ -492,95 +492,7 @@
           "default": [],
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "正则名称": {
-                "type": "string"
-              },
-              "id": {
-                "default": "d1022a67-781e-42ee-92ad-31b46c28a0cc",
-                "type": "string"
-              },
-              "启用": {
-                "type": "boolean"
-              },
-              "查找表达式": {
-                "type": "string"
-              },
-              "替换为": {
-                "type": "string"
-              },
-              "来源": {
-                "type": "object",
-                "properties": {
-                  "用户输入": {
-                    "type": "boolean"
-                  },
-                  "AI输出": {
-                    "type": "boolean"
-                  },
-                  "快捷命令": {
-                    "type": "boolean"
-                  },
-                  "世界信息": {
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "用户输入",
-                  "AI输出"
-                ],
-                "additionalProperties": false
-              },
-              "作用于": {
-                "type": "object",
-                "properties": {
-                  "仅格式显示": {
-                    "type": "boolean"
-                  },
-                  "仅格式提示词": {
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "仅格式显示",
-                  "仅格式提示词"
-                ],
-                "additionalProperties": false
-              },
-              "在编辑时运行": {
-                "type": "boolean"
-              },
-              "最小深度": {
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "最大深度": {
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            },
-            "required": [
-              "正则名称",
-              "启用",
-              "查找表达式",
-              "替换为",
-              "来源",
-              "作用于"
-            ],
-            "additionalProperties": false
+            "$ref": "#/$defs/__schema40"
           }
         },
         "酒馆助手": {
@@ -593,7 +505,7 @@
               "items": {
                 "oneOf": [
                   {
-                    "$ref": "#/$defs/__schema40"
+                    "$ref": "#/$defs/__schema44"
                   },
                   {
                     "type": "object",
@@ -602,7 +514,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "6b1bc8bf-de33-4748-b44d-a84110e419dd",
+                        "default": "94d5e8e6-9cbb-4646-b570-d620afbb0143",
                         "type": "string"
                       },
                       "启用": {
@@ -624,7 +536,7 @@
                         "default": [],
                         "type": "array",
                         "items": {
-                          "$ref": "#/$defs/__schema40"
+                          "$ref": "#/$defs/__schema44"
                         }
                       }
                     },
@@ -655,11 +567,119 @@
     "__schema40": {
       "type": "object",
       "properties": {
+        "正则名称": {
+          "type": "string"
+        },
+        "id": {
+          "default": "a460d0de-5df2-4b33-8d28-169e975aff42",
+          "type": "string"
+        },
+        "启用": {
+          "type": "boolean"
+        },
+        "查找表达式": {
+          "type": "string"
+        },
+        "替换为": {
+          "description": "已弃用, 请使用 '内容' 或 '文件'",
+          "$ref": "#/$defs/__schema41"
+        },
+        "内容": {
+          "description": "要替换为的内容",
+          "$ref": "#/$defs/__schema42"
+        },
+        "文件": {
+          "description": "要替换为的内容所在的文件路径",
+          "$ref": "#/$defs/__schema43"
+        },
+        "来源": {
+          "type": "object",
+          "properties": {
+            "用户输入": {
+              "type": "boolean"
+            },
+            "AI输出": {
+              "type": "boolean"
+            },
+            "快捷命令": {
+              "type": "boolean"
+            },
+            "世界信息": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "用户输入",
+            "AI输出"
+          ],
+          "additionalProperties": false
+        },
+        "作用于": {
+          "type": "object",
+          "properties": {
+            "仅格式显示": {
+              "type": "boolean"
+            },
+            "仅格式提示词": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "仅格式显示",
+            "仅格式提示词"
+          ],
+          "additionalProperties": false
+        },
+        "在编辑时运行": {
+          "type": "boolean"
+        },
+        "最小深度": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "最大深度": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "正则名称",
+        "启用",
+        "查找表达式",
+        "来源",
+        "作用于"
+      ],
+      "additionalProperties": false
+    },
+    "__schema41": {
+      "type": "string"
+    },
+    "__schema42": {
+      "type": "string"
+    },
+    "__schema43": {
+      "type": "string"
+    },
+    "__schema44": {
+      "type": "object",
+      "properties": {
         "名称": {
           "type": "string"
         },
         "id": {
-          "default": "7823fbac-542f-4786-a7f6-14a62c5b4faa",
+          "default": "57e587d0-9860-4f83-ba48-bea4c309ee5b",
           "type": "string"
         },
         "启用": {

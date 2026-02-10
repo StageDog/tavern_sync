@@ -38,30 +38,60 @@ export type Extensions = z.infer<typeof Extensions>;
 export const Extensions = z.looseObject({
   regex_scripts: z
     .array(
-      z.strictObject({
-        script_name: z.coerce.string(),
-        id: z.coerce.string().prefault(uuid),
-        enabled: z.boolean(),
+      z
+        .strictObject({
+          script_name: z.coerce.string(),
+          id: z.coerce.string().prefault(uuid),
+          enabled: z.boolean(),
 
-        find_regex: z.coerce.string(),
-        replace_string: z.coerce.string(),
+          find_regex: z.coerce.string(),
+          replace_string: z.coerce.string().optional().describe(`已弃用, 请使用 'content' 或 'file'`),
+          content: z.coerce.string().optional().describe('要替换为的内容'),
+          file: z.coerce.string().optional().describe('要替换为的内容所在的文件路径'),
 
-        source: z.strictObject({
-          user_input: z.boolean(),
-          ai_output: z.boolean(),
-          slash_command: z.boolean().prefault(false),
-          world_info: z.boolean().prefault(false),
+          source: z.strictObject({
+            user_input: z.boolean(),
+            ai_output: z.boolean(),
+            slash_command: z.boolean().prefault(false),
+            world_info: z.boolean().prefault(false),
+          }),
+
+          destination: z.strictObject({
+            display: z.boolean(),
+            prompt: z.boolean(),
+          }),
+          run_on_edit: z.boolean().prefault(false),
+
+          min_depth: z.union([z.number(), z.null()]).prefault(null),
+          max_depth: z.union([z.number(), z.null()]).prefault(null),
+        })
+        .transform(data => {
+          if (data.replace_string !== undefined) {
+            _.set(data, 'content', data.replace_string);
+            _.unset(data, 'replace_string');
+          }
+          return data;
+        })
+        .superRefine((data, context) => {
+          if (data.content === undefined && data.file === undefined) {
+            ['content', 'file'].forEach(key =>
+              context.addIssue({
+                code: 'custom',
+                path: [key],
+                message: '必须填写 `content` 或 `file`',
+              }),
+            );
+          }
+          if (data.content !== undefined && data.file !== undefined) {
+            ['content', 'file'].forEach(key =>
+              context.addIssue({
+                code: 'custom',
+                path: [key],
+                message: '不能同时填写 `content` 和 `file`',
+              }),
+            );
+          }
         }),
-
-        destination: z.strictObject({
-          display: z.boolean(),
-          prompt: z.boolean(),
-        }),
-        run_on_edit: z.boolean().prefault(false),
-
-        min_depth: z.union([z.number(), z.null()]).prefault(null),
-        max_depth: z.union([z.number(), z.null()]).prefault(null),
-      }),
     )
     .prefault([]),
   tavern_helper: z

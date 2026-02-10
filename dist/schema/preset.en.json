@@ -486,95 +486,7 @@
           "default": [],
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "script_name": {
-                "type": "string"
-              },
-              "id": {
-                "default": "665ec259-5895-4fb1-bb78-fc15e4c4971e",
-                "type": "string"
-              },
-              "enabled": {
-                "type": "boolean"
-              },
-              "find_regex": {
-                "type": "string"
-              },
-              "replace_string": {
-                "type": "string"
-              },
-              "source": {
-                "type": "object",
-                "properties": {
-                  "user_input": {
-                    "type": "boolean"
-                  },
-                  "ai_output": {
-                    "type": "boolean"
-                  },
-                  "slash_command": {
-                    "type": "boolean"
-                  },
-                  "world_info": {
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "user_input",
-                  "ai_output"
-                ],
-                "additionalProperties": false
-              },
-              "destination": {
-                "type": "object",
-                "properties": {
-                  "display": {
-                    "type": "boolean"
-                  },
-                  "prompt": {
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "display",
-                  "prompt"
-                ],
-                "additionalProperties": false
-              },
-              "run_on_edit": {
-                "type": "boolean"
-              },
-              "min_depth": {
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "max_depth": {
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            },
-            "required": [
-              "script_name",
-              "enabled",
-              "find_regex",
-              "replace_string",
-              "source",
-              "destination"
-            ],
-            "additionalProperties": false
+            "$ref": "#/$defs/__schema40"
           }
         },
         "tavern_helper": {
@@ -587,7 +499,7 @@
               "items": {
                 "oneOf": [
                   {
-                    "$ref": "#/$defs/__schema40"
+                    "$ref": "#/$defs/__schema44"
                   },
                   {
                     "type": "object",
@@ -596,7 +508,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "ba2829e9-81f0-4927-afad-00c46566ee02",
+                        "default": "4a5ef898-5328-4a17-b81c-88520d16cb6d",
                         "type": "string"
                       },
                       "enabled": {
@@ -618,7 +530,7 @@
                         "default": [],
                         "type": "array",
                         "items": {
-                          "$ref": "#/$defs/__schema40"
+                          "$ref": "#/$defs/__schema44"
                         }
                       }
                     },
@@ -649,11 +561,119 @@
     "__schema40": {
       "type": "object",
       "properties": {
+        "script_name": {
+          "type": "string"
+        },
+        "id": {
+          "default": "57aaced0-a8d5-4e7c-948f-c81ee8eeba66",
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "find_regex": {
+          "type": "string"
+        },
+        "replace_string": {
+          "description": "已弃用, 请使用 'content' 或 'file'",
+          "$ref": "#/$defs/__schema41"
+        },
+        "content": {
+          "description": "要替换为的内容",
+          "$ref": "#/$defs/__schema42"
+        },
+        "file": {
+          "description": "要替换为的内容所在的文件路径",
+          "$ref": "#/$defs/__schema43"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "user_input": {
+              "type": "boolean"
+            },
+            "ai_output": {
+              "type": "boolean"
+            },
+            "slash_command": {
+              "type": "boolean"
+            },
+            "world_info": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "user_input",
+            "ai_output"
+          ],
+          "additionalProperties": false
+        },
+        "destination": {
+          "type": "object",
+          "properties": {
+            "display": {
+              "type": "boolean"
+            },
+            "prompt": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "display",
+            "prompt"
+          ],
+          "additionalProperties": false
+        },
+        "run_on_edit": {
+          "type": "boolean"
+        },
+        "min_depth": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "max_depth": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "script_name",
+        "enabled",
+        "find_regex",
+        "source",
+        "destination"
+      ],
+      "additionalProperties": false
+    },
+    "__schema41": {
+      "type": "string"
+    },
+    "__schema42": {
+      "type": "string"
+    },
+    "__schema43": {
+      "type": "string"
+    },
+    "__schema44": {
+      "type": "object",
+      "properties": {
         "name": {
           "type": "string"
         },
         "id": {
-          "default": "361956ed-4ae9-40e6-a193-3b2b44185920",
+          "default": "577e7bd3-7215-4838-abd6-d66893bd8e80",
           "type": "string"
         },
         "enabled": {
