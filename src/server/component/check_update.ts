@@ -10,9 +10,7 @@ function is_abort_error(error: Error): boolean {
 async function download_latest(signal?: AbortSignal): Promise<string> {
   const urls = [
     'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync.mjs',
-    'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.mjs',
-    'https://fastly.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.mjs',
-    'https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.mjs',
+    'https://gitgud.io/StageDog/tavern_sync/-/raw/main/dist/tavern_sync.mjs?inline=false',
   ];
 
   const erorr_data: Record<string, string> = {};
