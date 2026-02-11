@@ -3,32 +3,17 @@ var __webpack_dirname__ = __webpack_fileURLToPath__(import.meta.url.replace(/\/(
 var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "node:module";
 const __WEBPACK_EXTERNAL_createRequire_require = __WEBPACK_EXTERNAL_createRequire(import.meta.url);
-import * as __WEBPACK_EXTERNAL_MODULE_buffer__ from "buffer";
-import * as __WEBPACK_EXTERNAL_MODULE_crypto__ from "crypto";
-import * as __WEBPACK_EXTERNAL_MODULE_events__ from "events";
-import * as __WEBPACK_EXTERNAL_MODULE_fs__ from "fs";
-import * as __WEBPACK_EXTERNAL_MODULE_http__ from "http";
-import * as __WEBPACK_EXTERNAL_MODULE_https__ from "https";
-import * as __WEBPACK_EXTERNAL_MODULE_net__ from "net";
-import * as __WEBPACK_EXTERNAL_MODULE_node_child_process_7aa195c7__ from "node:child_process";
-import * as __WEBPACK_EXTERNAL_MODULE_node_events_819cca76__ from "node:events";
-import * as __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103__ from "node:fs";
-import * as __WEBPACK_EXTERNAL_MODULE_node_path_02319fef__ from "node:path";
-import * as __WEBPACK_EXTERNAL_MODULE_node_process_8d178d73__ from "node:process";
-import * as __WEBPACK_EXTERNAL_MODULE_os__ from "os";
-import * as __WEBPACK_EXTERNAL_MODULE_path__ from "path";
-import * as __WEBPACK_EXTERNAL_MODULE_process__ from "process";
-import * as __WEBPACK_EXTERNAL_MODULE_querystring__ from "querystring";
-import * as __WEBPACK_EXTERNAL_MODULE_stream__ from "stream";
-import * as __WEBPACK_EXTERNAL_MODULE_timers__ from "timers";
-import * as __WEBPACK_EXTERNAL_MODULE_tls__ from "tls";
-import * as __WEBPACK_EXTERNAL_MODULE_tty__ from "tty";
-import * as __WEBPACK_EXTERNAL_MODULE_url__ from "url";
-import * as __WEBPACK_EXTERNAL_MODULE_util__ from "util";
-import * as __WEBPACK_EXTERNAL_MODULE_zlib__ from "zlib";
+import { existsSync as __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_existsSync__, globSync as __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_globSync__, mkdirSync as __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_mkdirSync__, readFileSync as __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__, writeFileSync as __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_writeFileSync__ } from "node:fs";
+import { dirname as __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_dirname__, join as __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_join__, relative as __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__, resolve as __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__, sep as __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_sep__ } from "node:path";
+import { basename as __WEBPACK_EXTERNAL_MODULE_path_basename__, dirname as __WEBPACK_EXTERNAL_MODULE_path_dirname__, extname as __WEBPACK_EXTERNAL_MODULE_path_extname__, isAbsolute as __WEBPACK_EXTERNAL_MODULE_path_isAbsolute__, join as __WEBPACK_EXTERNAL_MODULE_path_join__, normalize as __WEBPACK_EXTERNAL_MODULE_path_normalize__, relative as __WEBPACK_EXTERNAL_MODULE_path_relative__, resolve as __WEBPACK_EXTERNAL_MODULE_path_resolve__ } from "path";
+import { exit as __WEBPACK_EXTERNAL_MODULE_node_process_8d178d73_exit__ } from "node:process";
+import { Buffer as __WEBPACK_EXTERNAL_MODULE_buffer_Buffer__ } from "buffer";
+import { stat as __WEBPACK_EXTERNAL_MODULE_fs_stat__, unwatchFile as __WEBPACK_EXTERNAL_MODULE_fs_unwatchFile__, watch as __WEBPACK_EXTERNAL_MODULE_fs_watch__, watchFile as __WEBPACK_EXTERNAL_MODULE_fs_watchFile__ } from "fs";
 import { lstat as __WEBPACK_EXTERNAL_MODULE_fs_promises_f8dae9d1_lstat__, open as __WEBPACK_EXTERNAL_MODULE_fs_promises_f8dae9d1_open__, readdir as __WEBPACK_EXTERNAL_MODULE_fs_promises_f8dae9d1_readdir__, realpath as __WEBPACK_EXTERNAL_MODULE_fs_promises_f8dae9d1_realpath__, stat as __WEBPACK_EXTERNAL_MODULE_fs_promises_f8dae9d1_stat__ } from "fs/promises";
+import { EventEmitter as __WEBPACK_EXTERNAL_MODULE_events_EventEmitter__ } from "events";
 import { lstat as __WEBPACK_EXTERNAL_MODULE_node_fs_promises_4a3ebc43_lstat__, readdir as __WEBPACK_EXTERNAL_MODULE_node_fs_promises_4a3ebc43_readdir__, realpath as __WEBPACK_EXTERNAL_MODULE_node_fs_promises_4a3ebc43_realpath__, stat as __WEBPACK_EXTERNAL_MODULE_node_fs_promises_4a3ebc43_stat__ } from "node:fs/promises";
 import { Readable as __WEBPACK_EXTERNAL_MODULE_node_stream_62980834_Readable__ } from "node:stream";
+import { type as __WEBPACK_EXTERNAL_MODULE_os_type__ } from "os";
 import { createServer as __WEBPACK_EXTERNAL_MODULE_node_http_b674be28_createServer__ } from "node:http";
 /******/ var __webpack_modules__ = ({
 
@@ -288,7 +273,7 @@ function validMime (type) {
  * Module dependencies
  */
 
-var crypto = __webpack_require__(7823);
+var crypto = __webpack_require__(6982);
 
 /**
  * Constructor
@@ -1741,8 +1726,8 @@ if (typeof process === 'undefined' || process.type === 'renderer' || process.bro
  * Module dependencies.
  */
 
-const tty = __webpack_require__(1285);
-const util = __webpack_require__(5578);
+const tty = __webpack_require__(2018);
+const util = __webpack_require__(9023);
 
 /**
  * This is the Node.js implementation of `debug()`.
@@ -19305,7 +19290,7 @@ module.exports = __webpack_require__(7080)
  */
 
 var db = __webpack_require__(6713)
-var extname = (__webpack_require__(2521).extname)
+var extname = (__webpack_require__(6928).extname)
 
 /**
  * Module variables.
@@ -20610,9 +20595,9 @@ if (typeof runtimeRequire.addon === 'function') { // if the platform supports na
 /***/ 4321
 (module, __unused_webpack_exports, __webpack_require__) {
 
-var fs = __webpack_require__(4421)
-var path = __webpack_require__(2521)
-var os = __webpack_require__(8116)
+var fs = __webpack_require__(9896)
+var path = __webpack_require__(6928)
+var os = __webpack_require__(857)
 
 // Workaround to fix webpack's build warnings: 'the request of a dependency is an expression'
 var runtimeRequire =  true ? __WEBPACK_EXTERNAL_createRequire_require : 0 // eslint-disable-line
@@ -21145,7 +21130,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ClusterAdapterWithHeartbeat = exports.ClusterAdapter = exports.MessageType = void 0;
 const in_memory_adapter_1 = __webpack_require__(5352);
 const debug_1 = __webpack_require__(7181);
-const crypto_1 = __webpack_require__(7823);
+const crypto_1 = __webpack_require__(6982);
 const debug = (0, debug_1.debug)("socket.io-adapter");
 const EMITTER_UID = "emitter";
 const DEFAULT_TIMEOUT = 5000;
@@ -21879,7 +21864,7 @@ for (; i < length; i++)
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SessionAwareAdapter = exports.Adapter = void 0;
-const events_1 = __webpack_require__(8551);
+const events_1 = __webpack_require__(4434);
 const yeast_1 = __webpack_require__(7427);
 const WebSocket = __webpack_require__(7159);
 // @ts-expect-error
@@ -22296,8 +22281,8 @@ Object.defineProperty(exports, "MessageType", ({ enumerable: true, get: function
 (module, __unused_webpack_exports, __webpack_require__) {
 
 
-const os = __webpack_require__(8116);
-const tty = __webpack_require__(1285);
+const os = __webpack_require__(857);
+const tty = __webpack_require__(2018);
 const hasFlag = __webpack_require__(1533);
 
 const {env} = process;
@@ -22567,7 +22552,7 @@ try {
   }
 
   if (true) {
-    crypt0 = crypt0 || __webpack_require__(7823);
+    crypt0 = crypt0 || __webpack_require__(6982);
     module.exports = uuid;
   } else // removed by dead control flow
 {}
@@ -23554,7 +23539,7 @@ module.exports = Limiter;
 
 
 
-const zlib = __webpack_require__(6627);
+const zlib = __webpack_require__(3106);
 
 const bufferUtil = __webpack_require__(8022);
 const Limiter = __webpack_require__(7491);
@@ -24089,7 +24074,7 @@ function inflateOnError(err) {
 
 
 
-const { Writable } = __webpack_require__(702);
+const { Writable } = __webpack_require__(2203);
 
 const PerMessageDeflate = __webpack_require__(431);
 const {
@@ -24804,8 +24789,8 @@ module.exports = Receiver;
 
 
 
-const { Duplex } = __webpack_require__(702);
-const { randomFillSync } = __webpack_require__(7823);
+const { Duplex } = __webpack_require__(2203);
+const { randomFillSync } = __webpack_require__(6982);
 
 const PerMessageDeflate = __webpack_require__(431);
 const { EMPTY_BUFFER, kWebSocket, NOOP } = __webpack_require__(3242);
@@ -25413,7 +25398,7 @@ function onError(sender, err, cb) {
 
 
 const WebSocket = __webpack_require__(2648);
-const { Duplex } = __webpack_require__(702);
+const { Duplex } = __webpack_require__(2203);
 
 /**
  * Emits the `'close'` event on a stream.
@@ -25648,7 +25633,7 @@ module.exports = { parse };
 
 
 
-const { isUtf8 } = __webpack_require__(604);
+const { isUtf8 } = __webpack_require__(181);
 
 const { hasBlob } = __webpack_require__(3242);
 
@@ -25809,10 +25794,10 @@ if (isUtf8) {
 
 
 
-const EventEmitter = __webpack_require__(8551);
-const http = __webpack_require__(3782);
-const { Duplex } = __webpack_require__(702);
-const { createHash } = __webpack_require__(7823);
+const EventEmitter = __webpack_require__(4434);
+const http = __webpack_require__(8611);
+const { Duplex } = __webpack_require__(2203);
+const { createHash } = __webpack_require__(6982);
 
 const extension = __webpack_require__(2626);
 const PerMessageDeflate = __webpack_require__(431);
@@ -26366,14 +26351,14 @@ function abortHandshakeOrEmitwsClientError(
 
 
 
-const EventEmitter = __webpack_require__(8551);
-const https = __webpack_require__(3871);
-const http = __webpack_require__(3782);
-const net = __webpack_require__(4357);
-const tls = __webpack_require__(2207);
-const { randomBytes, createHash } = __webpack_require__(7823);
-const { Duplex, Readable } = __webpack_require__(702);
-const { URL } = __webpack_require__(6887);
+const EventEmitter = __webpack_require__(4434);
+const https = __webpack_require__(5692);
+const http = __webpack_require__(8611);
+const net = __webpack_require__(9278);
+const tls = __webpack_require__(4756);
+const { randomBytes, createHash } = __webpack_require__(6982);
+const { Duplex, Readable } = __webpack_require__(2203);
+const { URL } = __webpack_require__(7016);
 
 const PerMessageDeflate = __webpack_require__(431);
 const Receiver = __webpack_require__(802);
@@ -27754,168 +27739,164 @@ function socketOnError() {
 
 /***/ },
 
-/***/ 604
+/***/ 181
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_buffer__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("buffer");
 
 /***/ },
 
-/***/ 7823
+/***/ 6982
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_crypto__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("crypto");
 
 /***/ },
 
-/***/ 8551
+/***/ 4434
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_events__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("events");
 
 /***/ },
 
-/***/ 4421
+/***/ 9896
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_fs__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
 
 /***/ },
 
-/***/ 3782
+/***/ 8611
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_http__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("http");
 
 /***/ },
 
-/***/ 3871
+/***/ 5692
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_https__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("https");
 
 /***/ },
 
-/***/ 4357
+/***/ 9278
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_net__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("net");
 
 /***/ },
 
-/***/ 6564
+/***/ 1421
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_node_child_process_7aa195c7__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:child_process");
 
 /***/ },
 
-/***/ 2849
-(module, __unused_webpack_exports, __webpack_require__) {
+/***/ 8474
+(module) {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
-} 
-var y = (x) => (() => (x))
-module.exports = x({ ["EventEmitter"]: () => (__WEBPACK_EXTERNAL_MODULE_node_events_819cca76__.EventEmitter) });
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:events");
 
 /***/ },
 
-/***/ 9627
+/***/ 3024
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:fs");
 
 /***/ },
 
-/***/ 5663
+/***/ 6760
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:path");
 
 /***/ },
 
-/***/ 7721
+/***/ 1708
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_node_process_8d178d73__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:process");
 
 /***/ },
 
-/***/ 8116
+/***/ 857
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_os__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("os");
 
 /***/ },
 
-/***/ 2521
+/***/ 6928
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_path__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("path");
 
 /***/ },
 
-/***/ 8691
+/***/ 932
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_process__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("process");
 
 /***/ },
 
-/***/ 771
+/***/ 3480
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_querystring__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("querystring");
 
 /***/ },
 
-/***/ 702
+/***/ 2203
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_stream__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("stream");
 
 /***/ },
 
-/***/ 9744
+/***/ 3557
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_timers__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("timers");
 
 /***/ },
 
-/***/ 2207
+/***/ 4756
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_tls__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("tls");
 
 /***/ },
 
-/***/ 1285
+/***/ 2018
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_tty__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("tty");
 
 /***/ },
 
-/***/ 6887
+/***/ 7016
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_url__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("url");
 
 /***/ },
 
-/***/ 5578
+/***/ 9023
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_util__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("util");
 
 /***/ },
 
-/***/ 6627
+/***/ 3106
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_zlib__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("zlib");
 
 /***/ },
 
@@ -28109,11 +28090,11 @@ exports.humanReadableArgName = humanReadableArgName;
 /***/ 146
 (__unused_webpack_module, exports, __webpack_require__) {
 
-const EventEmitter = (__webpack_require__(2849).EventEmitter);
-const childProcess = __webpack_require__(6564);
-const path = __webpack_require__(5663);
-const fs = __webpack_require__(9627);
-const process = __webpack_require__(7721);
+const EventEmitter = (__webpack_require__(8474).EventEmitter);
+const childProcess = __webpack_require__(1421);
+const path = __webpack_require__(6760);
+const fs = __webpack_require__(3024);
+const process = __webpack_require__(1708);
 
 const { Argument, humanReadableArgName } = __webpack_require__(1292);
 const { CommanderError } = __webpack_require__(6729);
@@ -32335,7 +32316,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.protocol = exports.Transport = exports.Socket = exports.uServer = exports.parser = exports.transports = exports.Server = void 0;
 exports.listen = listen;
 exports.attach = attach;
-const http_1 = __webpack_require__(3782);
+const http_1 = __webpack_require__(8611);
 const server_1 = __webpack_require__(7493);
 Object.defineProperty(exports, "Server", ({ enumerable: true, get: function () { return server_1.Server; } }));
 const index_1 = __webpack_require__(5495);
@@ -33021,7 +33002,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Server = exports.BaseServer = void 0;
 const base64id = __webpack_require__(6821);
 const transports_1 = __webpack_require__(5495);
-const events_1 = __webpack_require__(8551);
+const events_1 = __webpack_require__(4434);
 const socket_1 = __webpack_require__(5299);
 const debug_1 = __webpack_require__(7181);
 const cookie_1 = __webpack_require__(4058);
@@ -33813,9 +33794,9 @@ function checkInvalidHeaderChar(val) {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Socket = void 0;
-const events_1 = __webpack_require__(8551);
+const events_1 = __webpack_require__(4434);
 const debug_1 = __webpack_require__(7181);
-const timers_1 = __webpack_require__(9744);
+const timers_1 = __webpack_require__(3557);
 const debug = (0, debug_1.default)("engine:socket");
 class Socket extends events_1.EventEmitter {
     get readyState() {
@@ -34280,7 +34261,7 @@ exports.Socket = Socket;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Transport = void 0;
-const events_1 = __webpack_require__(8551);
+const events_1 = __webpack_require__(4434);
 const parser_v4 = __webpack_require__(2680);
 const parser_v3 = __webpack_require__(7994);
 const debug_1 = __webpack_require__(7181);
@@ -34424,7 +34405,7 @@ exports["default"] = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Polling = void 0;
 const transport_1 = __webpack_require__(7413);
-const zlib_1 = __webpack_require__(6627);
+const zlib_1 = __webpack_require__(3106);
 const accepts = __webpack_require__(9);
 const debug_1 = __webpack_require__(7181);
 const debug = (0, debug_1.default)("engine:polling");
@@ -34905,7 +34886,7 @@ polling.upgradesTo = ["websocket", "webtransport"];
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JSONP = void 0;
 const polling_1 = __webpack_require__(172);
-const qs = __webpack_require__(771);
+const qs = __webpack_require__(3480);
 const rDoubleSlashes = /\\\\n/g;
 const rSlashes = /(\\)?\\n/g;
 class JSONP extends polling_1.Polling {
@@ -34953,7 +34934,7 @@ exports.JSONP = JSONP;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Polling = void 0;
 const transport_1 = __webpack_require__(7413);
-const zlib_1 = __webpack_require__(6627);
+const zlib_1 = __webpack_require__(3106);
 const accepts = __webpack_require__(9);
 const debug_1 = __webpack_require__(7181);
 const debug = (0, debug_1.default)("engine:polling");
@@ -37019,15 +37000,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Namespace = exports.Socket = exports.Server = void 0;
-const http_1 = __importDefault(__webpack_require__(3782));
-const fs_1 = __webpack_require__(4421);
-const zlib_1 = __webpack_require__(6627);
+const http_1 = __importDefault(__webpack_require__(8611));
+const fs_1 = __webpack_require__(9896);
+const zlib_1 = __webpack_require__(3106);
 const accepts = __webpack_require__(9);
-const stream_1 = __webpack_require__(702);
-const path = __webpack_require__(2521);
+const stream_1 = __webpack_require__(2203);
+const path = __webpack_require__(6928);
 const engine_io_1 = __webpack_require__(6911);
 const client_1 = __webpack_require__(6941);
-const events_1 = __webpack_require__(8551);
+const events_1 = __webpack_require__(4434);
 const namespace_1 = __webpack_require__(5219);
 Object.defineProperty(exports, "Namespace", ({ enumerable: true, get: function () { return namespace_1.Namespace; } }));
 const parent_namespace_1 = __webpack_require__(4576);
@@ -39506,7 +39487,7 @@ exports.Socket = Socket;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StrictEventEmitter = void 0;
-const events_1 = __webpack_require__(8551);
+const events_1 = __webpack_require__(4434);
 /**
  * Strictly typed version of an `EventEmitter`. A `TypedEventEmitter` takes type
  * parameters for mappings of event names to event data types, and strictly
@@ -39600,7 +39581,7 @@ exports.patchAdapter = patchAdapter;
 exports.restoreAdapter = restoreAdapter;
 exports.serveFile = serveFile;
 const socket_io_adapter_1 = __webpack_require__(7395);
-const fs_1 = __webpack_require__(4421);
+const fs_1 = __webpack_require__(9896);
 const debug_1 = __importDefault(__webpack_require__(7181));
 const debug = (0, debug_1.default)("socket.io:adapter-uws");
 const SEPARATOR = "\x1f"; // see https://en.wikipedia.org/wiki/Delimiter#ASCII_delimited_text
@@ -40092,7 +40073,7 @@ exports.composeScalar = composeScalar;
 
 
 
-var node_process = __webpack_require__(8691);
+var node_process = __webpack_require__(932);
 var directives = __webpack_require__(7034);
 var Document = __webpack_require__(6121);
 var errors = __webpack_require__(1188);
@@ -42382,7 +42363,7 @@ exports.visitAsync = visit.visitAsync;
 
 
 
-var node_process = __webpack_require__(8691);
+var node_process = __webpack_require__(932);
 
 function debug(logLevel, ...messages) {
     if (logLevel === 'debug')
@@ -44564,7 +44545,7 @@ exports.LineCounter = LineCounter;
 
 
 
-var node_process = __webpack_require__(8691);
+var node_process = __webpack_require__(932);
 var cst = __webpack_require__(2081);
 var lexer = __webpack_require__(5989);
 
@@ -46142,7 +46123,7 @@ exports.getTags = getTags;
 
 
 
-var node_buffer = __webpack_require__(604);
+var node_buffer = __webpack_require__(181);
 var Scalar = __webpack_require__(7201);
 var stringifyString = __webpack_require__(5921);
 
@@ -62615,25 +62596,25 @@ function translate(data, map) {
     return data;
 }
 
-// EXTERNAL MODULE: external "node:fs"
-var external_node_fs_ = __webpack_require__(9627);
-// EXTERNAL MODULE: external "node:path"
-var external_node_path_ = __webpack_require__(5663);
+;// external "node:fs"
+
+;// external "node:path"
+
 ;// ./src/server/util/write_file_recursively.ts
 
 
 function write_file_recursively(base, file, content) {
     try {
-        (0,external_node_fs_.mkdirSync)((0,external_node_path_.resolve)(base, (0,external_node_path_.dirname)(file)), { recursive: true });
-        (0,external_node_fs_.writeFileSync)((0,external_node_path_.resolve)(base, file), content);
+        __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_mkdirSync__(__WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(base, __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_dirname__(file)), { recursive: true });
+        __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_writeFileSync__(__WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(base, file), content);
     }
     catch (error) {
         throw Error(`写入文件 '${file}' 失败: ${error}`);
     }
 }
 
-// EXTERNAL MODULE: external "path"
-var external_path_ = __webpack_require__(2521);
+;// external "path"
+
 ;// ./src/type/settings.en.ts
 
 
@@ -62667,11 +62648,11 @@ const Settings = strictObject({
             else {
                 switch (value.type) {
                     case 'character':
-                        value.bundle_file = (0,external_path_.resolve)((0,external_path_.dirname)((0,external_path_.resolve)(__webpack_dirname__, value.file)), `${key}.png`);
+                        value.bundle_file = __WEBPACK_EXTERNAL_MODULE_path_resolve__(__WEBPACK_EXTERNAL_MODULE_path_dirname__(__WEBPACK_EXTERNAL_MODULE_path_resolve__(__webpack_dirname__, value.file)), `${key}.png`);
                         break;
                     case 'worldbook':
                     case 'preset':
-                        value.bundle_file = (0,external_path_.resolve)((0,external_path_.dirname)((0,external_path_.resolve)(__webpack_dirname__, value.file)), `${key}.json`);
+                        value.bundle_file = __WEBPACK_EXTERNAL_MODULE_path_resolve__(__WEBPACK_EXTERNAL_MODULE_path_dirname__(__WEBPACK_EXTERNAL_MODULE_path_resolve__(__webpack_dirname__, value.file)), `${key}.json`);
                         break;
                 }
             }
@@ -62717,22 +62698,22 @@ const settings_zh_Settings = strictObject({
             if (value.导出文件路径 !== undefined) {
                 switch (value.类型) {
                     case '角色卡':
-                        value.导出文件路径 = (0,external_path_.resolve)(__webpack_dirname__, value.导出文件路径.endsWith('.png') ? value.导出文件路径 : value.导出文件路径 + '.png');
+                        value.导出文件路径 = __WEBPACK_EXTERNAL_MODULE_path_resolve__(__webpack_dirname__, value.导出文件路径.endsWith('.png') ? value.导出文件路径 : value.导出文件路径 + '.png');
                         break;
                     case '世界书':
                     case '预设':
-                        value.导出文件路径 = (0,external_path_.resolve)(__webpack_dirname__, value.导出文件路径.endsWith('.json') ? value.导出文件路径 : value.导出文件路径 + '.json');
+                        value.导出文件路径 = __WEBPACK_EXTERNAL_MODULE_path_resolve__(__webpack_dirname__, value.导出文件路径.endsWith('.json') ? value.导出文件路径 : value.导出文件路径 + '.json');
                         break;
                 }
             }
             else {
                 switch (value.类型) {
                     case '角色卡':
-                        value.导出文件路径 = (0,external_path_.resolve)((0,external_path_.dirname)((0,external_path_.resolve)(__webpack_dirname__, value.本地文件路径)), `${key}.png`);
+                        value.导出文件路径 = __WEBPACK_EXTERNAL_MODULE_path_resolve__(__WEBPACK_EXTERNAL_MODULE_path_dirname__(__WEBPACK_EXTERNAL_MODULE_path_resolve__(__webpack_dirname__, value.本地文件路径)), `${key}.png`);
                         break;
                     case '世界书':
                     case '预设':
-                        value.导出文件路径 = (0,external_path_.resolve)((0,external_path_.dirname)((0,external_path_.resolve)(__webpack_dirname__, value.本地文件路径)), `${key}.json`);
+                        value.导出文件路径 = __WEBPACK_EXTERNAL_MODULE_path_resolve__(__WEBPACK_EXTERNAL_MODULE_path_dirname__(__WEBPACK_EXTERNAL_MODULE_path_resolve__(__webpack_dirname__, value.本地文件路径)), `${key}.json`);
                         break;
                 }
             }
@@ -62741,8 +62722,8 @@ const settings_zh_Settings = strictObject({
     }),
 });
 
-// EXTERNAL MODULE: external "node:process"
-var external_node_process_ = __webpack_require__(7721);
+;// external "node:process"
+
 // EXTERNAL MODULE: ./node_modules/.pnpm/yaml@2.8.2/node_modules/yaml/dist/index.js
 var dist = __webpack_require__(2075);
 ;// ./src/server/settings.ts
@@ -62759,13 +62740,13 @@ var dist = __webpack_require__(2075);
 let settings = null;
 function get_settings() {
     if (!settings) {
-        const config_file = (0,external_node_path_.resolve)(__webpack_dirname__, 'tavern_sync.yaml');
-        if (!(0,external_node_fs_.existsSync)(config_file)) {
+        const config_file = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(__webpack_dirname__, 'tavern_sync.yaml');
+        if (!__WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_existsSync__(config_file)) {
             write_file_recursively(__webpack_dirname__, config_file, settings_defaultraw_namespaceObject);
             console.error(`配置文件不存在，已自动生成在 '${config_file}'，请填写配置文件后重新运行`);
-            (0,external_node_process_.exit)(1);
+            __WEBPACK_EXTERNAL_MODULE_node_process_8d178d73_exit__(1);
         }
-        const data = dist.parse((0,external_node_fs_.readFileSync)(config_file, 'utf8'));
+        const data = dist.parse(__WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__(config_file, 'utf8'));
         settings = is_zh(data)
             ? translate(detailed_parse(settings_zh_Settings, data), zh_to_en_map)
             : detailed_parse(Settings, data);
@@ -62888,13 +62869,13 @@ const crc1 = (current, previous = 0) => {
 };
 /* harmony default export */ const calculators_crc1 = (crc1);
 
-// EXTERNAL MODULE: external "buffer"
-var external_buffer_ = __webpack_require__(604);
+;// external "buffer"
+
 ;// ./node_modules/.pnpm/crc@4.3.2/node_modules/crc/mjs/create_buffer.js
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-prototype-builtins */
 
-const createBuffer = (value, encoding) => external_buffer_.Buffer.from(value, encoding);
+const createBuffer = (value, encoding) => __WEBPACK_EXTERNAL_MODULE_buffer_Buffer__.from(value, encoding);
 /* harmony default export */ const create_buffer = (createBuffer);
 
 ;// ./node_modules/.pnpm/crc@4.3.2/node_modules/crc/mjs/define_crc.js
@@ -63715,12 +63696,12 @@ function replace_user_name(text) {
     return text;
 }
 
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __webpack_require__(4421);
+;// external "fs"
+
 ;// external "fs/promises"
 
-// EXTERNAL MODULE: external "events"
-var external_events_ = __webpack_require__(8551);
+;// external "events"
+
 ;// external "node:fs/promises"
 
 ;// external "node:stream"
@@ -63806,7 +63787,7 @@ class ReaddirpStream extends __WEBPACK_EXTERNAL_MODULE_node_stream_62980834_Read
         this._wantsDir = type ? DIR_TYPES.has(type) : false;
         this._wantsFile = type ? FILE_TYPES.has(type) : false;
         this._wantsEverything = type === EntryTypes.EVERYTHING_TYPE;
-        this._root = (0,external_node_path_.resolve)(root);
+        this._root = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(root);
         this._isDirent = !opts.alwaysStat;
         this._statsProp = this._isDirent ? 'dirent' : 'stats';
         this._rdOptions = { encoding: 'utf8', withFileTypes: this._isDirent };
@@ -63884,8 +63865,8 @@ class ReaddirpStream extends __WEBPACK_EXTERNAL_MODULE_node_stream_62980834_Read
         let entry;
         const basename = this._isDirent ? dirent.name : dirent;
         try {
-            const fullPath = (0,external_node_path_.resolve)((0,external_node_path_.join)(path, basename));
-            entry = { path: (0,external_node_path_.relative)(this._root, fullPath), fullPath, basename };
+            const fullPath = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(__WEBPACK_EXTERNAL_MODULE_node_path_02319fef_join__(path, basename));
+            entry = { path: __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this._root, fullPath), fullPath, basename };
             entry[this._statsProp] = this._isDirent ? dirent : await this._stat(fullPath);
         }
         catch (err) {
@@ -63923,7 +63904,7 @@ class ReaddirpStream extends __WEBPACK_EXTERNAL_MODULE_node_stream_62980834_Read
                 }
                 if (entryRealPathStats.isDirectory()) {
                     const len = entryRealPath.length;
-                    if (full.startsWith(entryRealPath) && full.substr(len, 1) === external_node_path_.sep) {
+                    if (full.startsWith(entryRealPath) && full.substr(len, 1) === __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_sep__) {
                         const recursiveError = new Error(`Circular symlink detected: "${full}" points to "${entryRealPath}"`);
                         // @ts-ignore
                         recursiveError.code = RECURSIVE_ERROR_CODE;
@@ -63984,8 +63965,8 @@ function readdirpPromise(root, options = {}) {
 }
 /* harmony default export */ const esm = ((/* unused pure expression or super */ null && (readdirp)));
 
-// EXTERNAL MODULE: external "os"
-var external_os_ = __webpack_require__(8116);
+;// external "os"
+
 ;// ./node_modules/.pnpm/chokidar@4.0.3/node_modules/chokidar/esm/handler.js
 
 
@@ -64001,7 +63982,7 @@ const isWindows = handler_pl === 'win32';
 const isMacos = handler_pl === 'darwin';
 const isLinux = handler_pl === 'linux';
 const isFreeBSD = handler_pl === 'freebsd';
-const isIBMi = (0,external_os_.type)() === 'OS400';
+const isIBMi = __WEBPACK_EXTERNAL_MODULE_os_type__() === 'OS400';
 const EVENTS = {
     ALL: 'all',
     READY: 'ready',
@@ -64055,7 +64036,7 @@ const binaryExtensions = new Set([
     'xmind', 'xpi', 'xpm', 'xwd', 'xz',
     'z', 'zip', 'zipx',
 ]);
-const isBinaryPath = (filePath) => binaryExtensions.has(external_path_.extname(filePath).slice(1).toLowerCase());
+const isBinaryPath = (filePath) => binaryExtensions.has(__WEBPACK_EXTERNAL_MODULE_path_extname__(filePath).slice(1).toLowerCase());
 // TODO: emit errors properly. Example: EMFILE on Macos.
 const foreach = (val, fn) => {
     if (val instanceof Set) {
@@ -64108,11 +64089,11 @@ function createFsWatchInstance(path, options, listener, errHandler, emitRaw) {
         // emit based on events occurring for files from a directory's watcher in
         // case the file's watcher misses it (and rely on throttling to de-dupe)
         if (evPath && path !== evPath) {
-            fsWatchBroadcast(external_path_.resolve(path, evPath), KEY_LISTENERS, external_path_.join(path, evPath));
+            fsWatchBroadcast(__WEBPACK_EXTERNAL_MODULE_path_resolve__(path, evPath), KEY_LISTENERS, __WEBPACK_EXTERNAL_MODULE_path_join__(path, evPath));
         }
     };
     try {
-        return (0,external_fs_.watch)(path, {
+        return __WEBPACK_EXTERNAL_MODULE_fs_watch__(path, {
             persistent: options.persistent,
         }, handleEvent);
     }
@@ -64234,7 +64215,7 @@ const setFsWatchFileListener = (path, fullPath, options, handlers) => {
         // doesn't seem worthwhile for the added complexity.
         // listeners = cont.listeners;
         // rawEmitters = cont.rawEmitters;
-        (0,external_fs_.unwatchFile)(fullPath);
+        __WEBPACK_EXTERNAL_MODULE_fs_unwatchFile__(fullPath);
         cont = undefined;
     }
     if (cont) {
@@ -64249,7 +64230,7 @@ const setFsWatchFileListener = (path, fullPath, options, handlers) => {
             listeners: listener,
             rawEmitters: rawEmitter,
             options,
-            watcher: (0,external_fs_.watchFile)(fullPath, options, (curr, prev) => {
+            watcher: __WEBPACK_EXTERNAL_MODULE_fs_watchFile__(fullPath, options, (curr, prev) => {
                 foreach(cont.rawEmitters, (rawEmitter) => {
                     rawEmitter(EV.CHANGE, fullPath, { curr, prev });
                 });
@@ -64269,7 +64250,7 @@ const setFsWatchFileListener = (path, fullPath, options, handlers) => {
         delFromSet(cont, KEY_RAW, rawEmitter);
         if (isEmptySet(cont.listeners)) {
             FsWatchFileInstances.delete(fullPath);
-            (0,external_fs_.unwatchFile)(fullPath);
+            __WEBPACK_EXTERNAL_MODULE_fs_unwatchFile__(fullPath);
             cont.options = cont.watcher = undefined;
             Object.freeze(cont);
         }
@@ -64291,11 +64272,11 @@ class NodeFsHandler {
      */
     _watchWithNodeFs(path, listener) {
         const opts = this.fsw.options;
-        const directory = external_path_.dirname(path);
-        const basename = external_path_.basename(path);
+        const directory = __WEBPACK_EXTERNAL_MODULE_path_dirname__(path);
+        const basename = __WEBPACK_EXTERNAL_MODULE_path_basename__(path);
         const parent = this.fsw._getWatchedDir(directory);
         parent.add(basename);
-        const absolutePath = external_path_.resolve(path);
+        const absolutePath = __WEBPACK_EXTERNAL_MODULE_path_resolve__(path);
         const options = {
             persistent: opts.persistent,
         };
@@ -64327,8 +64308,8 @@ class NodeFsHandler {
         if (this.fsw.closed) {
             return;
         }
-        const dirname = external_path_.dirname(file);
-        const basename = external_path_.basename(file);
+        const dirname = __WEBPACK_EXTERNAL_MODULE_path_dirname__(file);
+        const basename = __WEBPACK_EXTERNAL_MODULE_path_basename__(file);
         const parent = this.fsw._getWatchedDir(dirname);
         // stats is always present
         let prevStats = stats;
@@ -64435,7 +64416,7 @@ class NodeFsHandler {
     }
     _handleRead(directory, initialAdd, wh, target, dir, depth, throttler) {
         // Normalize the directory name on Windows
-        directory = external_path_.join(directory, '');
+        directory = __WEBPACK_EXTERNAL_MODULE_path_join__(directory, '');
         throttler = this.fsw._throttle('readdir', directory, 1000);
         if (!throttler)
             return;
@@ -64454,7 +64435,7 @@ class NodeFsHandler {
                 return;
             }
             const item = entry.path;
-            let path = external_path_.join(directory, item);
+            let path = __WEBPACK_EXTERNAL_MODULE_path_join__(directory, item);
             current.add(item);
             if (entry.stats.isSymbolicLink() &&
                 (await this._handleSymlink(entry, directory, path, item))) {
@@ -64470,7 +64451,7 @@ class NodeFsHandler {
             if (item === target || (!target && !previous.has(item))) {
                 this.fsw._incrReadyCount();
                 // ensure relativeness of path is preserved in case of watcher reuse
-                path = external_path_.join(dir, external_path_.relative(dir, path));
+                path = __WEBPACK_EXTERNAL_MODULE_path_join__(dir, __WEBPACK_EXTERNAL_MODULE_path_relative__(dir, path));
                 this._addToNodeFs(path, initialAdd, wh, depth + 1);
             }
         })
@@ -64515,13 +64496,13 @@ class NodeFsHandler {
      * @returns closer for the watcher instance.
      */
     async _handleDir(dir, stats, initialAdd, depth, target, wh, realpath) {
-        const parentDir = this.fsw._getWatchedDir(external_path_.dirname(dir));
-        const tracked = parentDir.has(external_path_.basename(dir));
+        const parentDir = this.fsw._getWatchedDir(__WEBPACK_EXTERNAL_MODULE_path_dirname__(dir));
+        const tracked = parentDir.has(__WEBPACK_EXTERNAL_MODULE_path_basename__(dir));
         if (!(initialAdd && this.fsw.options.ignoreInitial) && !target && !tracked) {
             this.fsw._emit(EV.ADD_DIR, dir, stats);
         }
         // ensure dir is tracked (harmless if redundant)
-        parentDir.add(external_path_.basename(dir));
+        parentDir.add(__WEBPACK_EXTERNAL_MODULE_path_basename__(dir));
         this.fsw._getWatchedDir(dir);
         let throttler;
         let closer;
@@ -64573,7 +64554,7 @@ class NodeFsHandler {
             const follow = this.fsw.options.followSymlinks;
             let closer;
             if (stats.isDirectory()) {
-                const absPath = external_path_.resolve(path);
+                const absPath = __WEBPACK_EXTERNAL_MODULE_path_resolve__(path);
                 const targetPath = follow ? await __WEBPACK_EXTERNAL_MODULE_fs_promises_f8dae9d1_realpath__(path) : path;
                 if (this.fsw.closed)
                     return;
@@ -64589,7 +64570,7 @@ class NodeFsHandler {
                 const targetPath = follow ? await __WEBPACK_EXTERNAL_MODULE_fs_promises_f8dae9d1_realpath__(path) : path;
                 if (this.fsw.closed)
                     return;
-                const parent = external_path_.dirname(wh.watchPath);
+                const parent = __WEBPACK_EXTERNAL_MODULE_path_dirname__(wh.watchPath);
                 this.fsw._getWatchedDir(parent).add(wh.watchPath);
                 this.fsw._emit(EV.ADD, wh.watchPath, stats);
                 closer = await this._handleDir(parent, stats, initialAdd, depth, path, wh, targetPath);
@@ -64597,7 +64578,7 @@ class NodeFsHandler {
                     return;
                 // preserve this symlink's target path
                 if (targetPath !== undefined) {
-                    this.fsw._symlinkPaths.set(external_path_.resolve(path), targetPath);
+                    this.fsw._symlinkPaths.set(__WEBPACK_EXTERNAL_MODULE_path_resolve__(path), targetPath);
                 }
             }
             else {
@@ -64650,11 +64631,11 @@ function createPattern(matcher) {
             if (matcher.path === string)
                 return true;
             if (matcher.recursive) {
-                const relative = external_path_.relative(matcher.path, string);
+                const relative = __WEBPACK_EXTERNAL_MODULE_path_relative__(matcher.path, string);
                 if (!relative) {
                     return false;
                 }
-                return !relative.startsWith('..') && !external_path_.isAbsolute(relative);
+                return !relative.startsWith('..') && !__WEBPACK_EXTERNAL_MODULE_path_isAbsolute__(relative);
             }
             return false;
         };
@@ -64664,7 +64645,7 @@ function createPattern(matcher) {
 function normalizePath(path) {
     if (typeof path !== 'string')
         throw new Error('string expected');
-    path = external_path_.normalize(path);
+    path = __WEBPACK_EXTERNAL_MODULE_path_normalize__(path);
     path = path.replace(/\\/g, '/');
     let prepend = false;
     if (path.startsWith('//'))
@@ -64725,21 +64706,21 @@ const toUnix = (string) => {
 };
 // Our version of upath.normalize
 // TODO: this is not equal to path-normalize module - investigate why
-const normalizePathToUnix = (path) => toUnix(external_path_.normalize(toUnix(path)));
+const normalizePathToUnix = (path) => toUnix(__WEBPACK_EXTERNAL_MODULE_path_normalize__(toUnix(path)));
 // TODO: refactor
 const normalizeIgnored = (cwd = '') => (path) => {
     if (typeof path === 'string') {
-        return normalizePathToUnix(external_path_.isAbsolute(path) ? path : external_path_.join(cwd, path));
+        return normalizePathToUnix(__WEBPACK_EXTERNAL_MODULE_path_isAbsolute__(path) ? path : __WEBPACK_EXTERNAL_MODULE_path_join__(cwd, path));
     }
     else {
         return path;
     }
 };
 const getAbsolutePath = (path, cwd) => {
-    if (external_path_.isAbsolute(path)) {
+    if (__WEBPACK_EXTERNAL_MODULE_path_isAbsolute__(path)) {
         return path;
     }
-    return external_path_.join(cwd, path);
+    return __WEBPACK_EXTERNAL_MODULE_path_join__(cwd, path);
 };
 const EMPTY_SET = Object.freeze(new Set());
 /**
@@ -64771,7 +64752,7 @@ class DirEntry {
         }
         catch (err) {
             if (this._removeWatcher) {
-                this._removeWatcher(external_path_.dirname(dir), external_path_.basename(dir));
+                this._removeWatcher(__WEBPACK_EXTERNAL_MODULE_path_dirname__(dir), __WEBPACK_EXTERNAL_MODULE_path_basename__(dir));
             }
         }
     }
@@ -64803,7 +64784,7 @@ class WatchHelper {
         const watchPath = path;
         this.path = path = path.replace(REPLACER_RE, '');
         this.watchPath = watchPath;
-        this.fullWatchPath = external_path_.resolve(watchPath);
+        this.fullWatchPath = __WEBPACK_EXTERNAL_MODULE_path_resolve__(watchPath);
         this.dirParts = [];
         this.dirParts.forEach((parts) => {
             if (parts.length > 1)
@@ -64813,7 +64794,7 @@ class WatchHelper {
         this.statMethod = follow ? STAT_METHOD_F : STAT_METHOD_L;
     }
     entryPath(entry) {
-        return external_path_.join(this.watchPath, external_path_.relative(this.watchPath, entry.fullPath));
+        return __WEBPACK_EXTERNAL_MODULE_path_join__(this.watchPath, __WEBPACK_EXTERNAL_MODULE_path_relative__(this.watchPath, entry.fullPath));
     }
     filterPath(entry) {
         const { stats } = entry;
@@ -64835,7 +64816,7 @@ class WatchHelper {
  *       .add(directories)
  *       .on('add', path => log('File', path, 'was added'))
  */
-class FSWatcher extends external_events_.EventEmitter {
+class FSWatcher extends __WEBPACK_EXTERNAL_MODULE_events_EventEmitter__ {
     // Not indenting methods for history sake; for now.
     constructor(_opts = {}) {
         super();
@@ -64969,7 +64950,7 @@ class FSWatcher extends external_events_.EventEmitter {
                 return;
             results.forEach((item) => {
                 if (item)
-                    this.add(external_path_.dirname(item), external_path_.basename(_origAdd || item));
+                    this.add(__WEBPACK_EXTERNAL_MODULE_path_dirname__(item), __WEBPACK_EXTERNAL_MODULE_path_basename__(_origAdd || item));
             });
         });
         return this;
@@ -64984,10 +64965,10 @@ class FSWatcher extends external_events_.EventEmitter {
         const { cwd } = this.options;
         paths.forEach((path) => {
             // convert to absolute path unless relative path already matches
-            if (!external_path_.isAbsolute(path) && !this._closers.has(path)) {
+            if (!__WEBPACK_EXTERNAL_MODULE_path_isAbsolute__(path) && !this._closers.has(path)) {
                 if (cwd)
-                    path = external_path_.join(cwd, path);
-                path = external_path_.resolve(path);
+                    path = __WEBPACK_EXTERNAL_MODULE_path_join__(cwd, path);
+                path = __WEBPACK_EXTERNAL_MODULE_path_resolve__(path);
             }
             this._closePath(path);
             this._addIgnoredPath(path);
@@ -65041,7 +65022,7 @@ class FSWatcher extends external_events_.EventEmitter {
     getWatched() {
         const watchList = {};
         this._watched.forEach((entry, dir) => {
-            const key = this.options.cwd ? external_path_.relative(this.options.cwd, dir) : dir;
+            const key = this.options.cwd ? __WEBPACK_EXTERNAL_MODULE_path_relative__(this.options.cwd, dir) : dir;
             const index = key || ONE_DOT;
             watchList[index] = entry.getChildren().sort();
         });
@@ -65067,9 +65048,9 @@ class FSWatcher extends external_events_.EventEmitter {
             return;
         const opts = this.options;
         if (isWindows)
-            path = external_path_.normalize(path);
+            path = __WEBPACK_EXTERNAL_MODULE_path_normalize__(path);
         if (opts.cwd)
-            path = external_path_.relative(opts.cwd, path);
+            path = __WEBPACK_EXTERNAL_MODULE_path_relative__(opts.cwd, path);
         const args = [path];
         if (stats != null)
             args.push(stats);
@@ -65125,7 +65106,7 @@ class FSWatcher extends external_events_.EventEmitter {
         if (opts.alwaysStat &&
             stats === undefined &&
             (event === EVENTS.ADD || event === EVENTS.ADD_DIR || event === EVENTS.CHANGE)) {
-            const fullPath = opts.cwd ? external_path_.join(opts.cwd, path) : path;
+            const fullPath = opts.cwd ? __WEBPACK_EXTERNAL_MODULE_path_join__(opts.cwd, path) : path;
             let stats;
             try {
                 stats = await __WEBPACK_EXTERNAL_MODULE_fs_promises_f8dae9d1_stat__(fullPath);
@@ -65208,13 +65189,13 @@ class FSWatcher extends external_events_.EventEmitter {
         const pollInterval = awf.pollInterval;
         let timeoutHandler;
         let fullPath = path;
-        if (this.options.cwd && !external_path_.isAbsolute(path)) {
-            fullPath = external_path_.join(this.options.cwd, path);
+        if (this.options.cwd && !__WEBPACK_EXTERNAL_MODULE_path_isAbsolute__(path)) {
+            fullPath = __WEBPACK_EXTERNAL_MODULE_path_join__(this.options.cwd, path);
         }
         const now = new Date();
         const writes = this._pendingWrites;
         function awaitWriteFinishFn(prevStat) {
-            (0,external_fs_.stat)(fullPath, (err, curStat) => {
+            __WEBPACK_EXTERNAL_MODULE_fs_stat__(fullPath, (err, curStat) => {
                 if (err || !writes.has(path)) {
                     if (err && err.code !== 'ENOENT')
                         awfEmit(err);
@@ -65280,7 +65261,7 @@ class FSWatcher extends external_events_.EventEmitter {
      * @param directory path of the directory
      */
     _getWatchedDir(directory) {
-        const dir = external_path_.resolve(directory);
+        const dir = __WEBPACK_EXTERNAL_MODULE_path_resolve__(directory);
         if (!this._watched.has(dir))
             this._watched.set(dir, new DirEntry(dir, this._boundRemove));
         return this._watched.get(dir);
@@ -65306,8 +65287,8 @@ class FSWatcher extends external_events_.EventEmitter {
         // if what is being deleted is a directory, get that directory's paths
         // for recursive deleting and cleaning of watched object
         // if it is not a directory, nestedDirectoryChildren will be empty array
-        const path = external_path_.join(directory, item);
-        const fullPath = external_path_.resolve(path);
+        const path = __WEBPACK_EXTERNAL_MODULE_path_join__(directory, item);
+        const fullPath = __WEBPACK_EXTERNAL_MODULE_path_resolve__(path);
         isDirectory =
             isDirectory != null ? isDirectory : this._watched.has(path) || this._watched.has(fullPath);
         // prevent duplicate handling in case of arriving here nearly simultaneously
@@ -65339,7 +65320,7 @@ class FSWatcher extends external_events_.EventEmitter {
         // If we wait for this file to be fully written, cancel the wait.
         let relPath = path;
         if (this.options.cwd)
-            relPath = external_path_.relative(this.options.cwd, path);
+            relPath = __WEBPACK_EXTERNAL_MODULE_path_relative__(this.options.cwd, path);
         if (this.options.awaitWriteFinish && this._pendingWrites.has(relPath)) {
             const event = this._pendingWrites.get(relPath).cancelWait();
             if (event === EVENTS.ADD)
@@ -65360,8 +65341,8 @@ class FSWatcher extends external_events_.EventEmitter {
      */
     _closePath(path) {
         this._closeFile(path);
-        const dir = external_path_.dirname(path);
-        this._getWatchedDir(dir).remove(external_path_.basename(path));
+        const dir = __WEBPACK_EXTERNAL_MODULE_path_dirname__(path);
+        this._getWatchedDir(dir).remove(__WEBPACK_EXTERNAL_MODULE_path_basename__(path));
     }
     /**
      * Closes only file-specific watchers
@@ -65479,7 +65460,7 @@ async function wait_socket() {
 }
 async function close_server() {
     await io?.close();
-    (0,external_node_process_.exit)(0);
+    __WEBPACK_EXTERNAL_MODULE_node_process_8d178d73_exit__(0);
 }
 
 ;// ./src/server/util/exit_on_error.ts
@@ -65491,14 +65472,14 @@ function exit_on_error(error) {
     else {
         console.error(error);
     }
-    (0,external_node_process_.exit)(1);
+    __WEBPACK_EXTERNAL_MODULE_node_process_8d178d73_exit__(1);
 }
 
 ;// ./src/server/util/is_parent.ts
 
 function is_parent(parent_path, possible_child_path) {
-    const result = (0,external_path_.relative)(parent_path, possible_child_path);
-    return Boolean(result) && !result.startsWith('..') && !(0,external_path_.isAbsolute)(result);
+    const result = __WEBPACK_EXTERNAL_MODULE_path_relative__(parent_path, possible_child_path);
+    return Boolean(result) && !result.startsWith('..') && !__WEBPACK_EXTERNAL_MODULE_path_isAbsolute__(result);
 }
 
 ;// ./src/server/syncer/interface.ts
@@ -65532,9 +65513,9 @@ class Syncer_interface {
         this.type_zh = type_zh;
         this.config_name = config_name;
         this.name = name;
-        this.file = (0,external_node_path_.resolve)(__webpack_dirname__, file);
-        this.dir = (0,external_node_path_.dirname)(this.file);
-        this.bundle_file = bundle_file ? (0,external_node_path_.resolve)(__webpack_dirname__, bundle_file) : (0,external_node_path_.resolve)(this.dir, `${this.config_name}.json`);
+        this.file = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(__webpack_dirname__, file);
+        this.dir = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_dirname__(this.file);
+        this.bundle_file = bundle_file ? __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(__webpack_dirname__, bundle_file) : __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(this.dir, `${this.config_name}.json`);
         this.en_type = en_type;
         this.zh_type = zh_type;
         this.zh_to_en_map = zh_to_en_map;
@@ -65547,10 +65528,10 @@ class Syncer_interface {
         return typeof data === 'string' ? data : detailed_parse(this.tavern_type, data);
     }
     get_parsed_local() {
-        if (!(0,external_node_fs_.existsSync)(this.file)) {
+        if (!__WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_existsSync__(this.file)) {
             return `配置文件 '${this.file}' 不存在`;
         }
-        const content = (0,external_node_fs_.readFileSync)(this.file, 'utf-8');
+        const content = __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__(this.file, 'utf-8');
         if (!/\S/.test(content)) {
             return `配置文件 '${this.file}' 为空`;
         }
@@ -65596,7 +65577,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
         }
         const collection_files = lodash_default()(files)
             .remove(file => is_collection_file(file.path))
-            .groupBy(file => (0,external_node_path_.resolve)(this.dir, file.path))
+            .groupBy(file => __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(this.dir, file.path))
             .map((files, path) => {
             let content = files.map(file => `# ^${file.name}\n` + file.content).join('\n');
             try {
@@ -65695,7 +65676,7 @@ ${this.do_beautify_config(tavern_data, language)}`;
             exit_on_error(dist.stringify({ [`打包${this.type_zh} '${this.name}' 失败`]: error_data }));
         }
         write_file_recursively(this.dir, Buffer.isBuffer(result_data) ? this.bundle_file.replace('.json', '.png') : this.bundle_file, Buffer.isBuffer(result_data) ? result_data : JSON.stringify(result_data, null, 2));
-        console.info(`成功将${this.type_zh} '${this.name}' 打包到 '${(0,external_node_path_.resolve)(this.dir, this.bundle_file)}' 中`);
+        console.info(`成功将${this.type_zh} '${this.name}' 打包到 '${__WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(this.dir, this.bundle_file)}' 中`);
     }
 }
 
@@ -65987,14 +65968,14 @@ function detect_extension(content) {
 ;// ./src/server/util/extract_file_content.ts
 
 function extract_file_content(path) {
-    return (0,external_node_fs_.readFileSync)(path, 'utf-8');
+    return __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__(path, 'utf-8');
 }
 
 ;// ./src/server/util/glob_file.ts
 
 
 function glob_file(base, file) {
-    return (0,external_node_fs_.globSync)((0,external_node_path_.resolve)(base, file).replaceAll(/[\[\]\{\}]/g, '[$&]') + '{.*,}');
+    return __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_globSync__(__WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(base, file).replaceAll(/[\[\]\{\}]/g, '[$&]') + '{.*,}');
 }
 
 ;// ./src/server/util/sanitize_filename.ts
@@ -66793,7 +66774,7 @@ class Character_syncer extends Syncer_interface {
             }
             else if (glob_files.length === 1) {
                 file_to_write = glob_files[0];
-                file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+                file_to_set = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
             }
             else {
                 file_to_write = file;
@@ -66835,7 +66816,7 @@ class Character_syncer extends Syncer_interface {
                     }
                     else if (glob_files.length === 1) {
                         file_to_write = glob_files[0];
-                        file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+                        file_to_set = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
                     }
                     else {
                         file_to_write = file;
@@ -66851,7 +66832,7 @@ class Character_syncer extends Syncer_interface {
                 };
                 const state = states.find(state => state.name === `!!!第一条消息${index}`);
                 if (state === undefined && should_split) {
-                    handle_file(entry, (0,external_node_path_.join)(language === 'zh' ? '第一条消息' : 'first_message', `${index}.txt`));
+                    handle_file(entry, __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_join__(language === 'zh' ? '第一条消息' : 'first_message', `${index}.txt`));
                 }
                 else if (state?.file !== undefined) {
                     handle_file(entry, state.file);
@@ -66902,7 +66883,7 @@ class Character_syncer extends Syncer_interface {
                     }
                     else if (glob_files.length === 1) {
                         file_to_write = glob_files[0];
-                        file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+                        file_to_set = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
                     }
                     else {
                         file_to_write = file;
@@ -66918,7 +66899,7 @@ class Character_syncer extends Syncer_interface {
                 };
                 const state = states.find(state => state.name === entry.name);
                 if (state === undefined && should_split) {
-                    handle_file(entry, (0,external_node_path_.join)(language === 'zh' ? '世界书' : 'worldbook', sanitize_filename(entry.name) + detect_extension(entry.content)));
+                    handle_file(entry, __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_join__(language === 'zh' ? '世界书' : 'worldbook', sanitize_filename(entry.name) + detect_extension(entry.content)));
                 }
                 else if (state?.file !== undefined) {
                     handle_file(entry, state.file);
@@ -66946,7 +66927,7 @@ class Character_syncer extends Syncer_interface {
                     }
                     else if (glob_files.length === 1) {
                         file_to_write = glob_files[0];
-                        file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+                        file_to_set = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
                     }
                     else {
                         file_to_write = file;
@@ -66962,7 +66943,7 @@ class Character_syncer extends Syncer_interface {
                 };
                 const state = states.find(state => state.name === `!!!正则${entry.script_name}`);
                 if (state === undefined && should_split) {
-                    handle_file(entry, (0,external_node_path_.join)(language === 'zh' ? '正则' : 'regex', sanitize_filename(entry.script_name) + '.txt'));
+                    handle_file(entry, __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_join__(language === 'zh' ? '正则' : 'regex', sanitize_filename(entry.script_name) + '.txt'));
                 }
                 else if (state?.file !== undefined) {
                     handle_file(entry, state.file);
@@ -67042,7 +67023,7 @@ class Character_syncer extends Syncer_interface {
                     error_data.通过补全文件后缀找到了多个文件.push({ 头像: paths });
                 }
                 else {
-                    const content = (0,external_node_fs_.readFileSync)(paths[0]);
+                    const content = __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__(paths[0]);
                     lodash_default().set(local_data, 'avatar', content);
                 }
             }
@@ -67144,9 +67125,9 @@ class Character_syncer extends Syncer_interface {
         return lodash_default()(lodash_default()(local_data.first_messages)
             .concat(local_data.entries)
             .filter(entry => entry.file !== undefined)
-            .map(entry => (0,external_node_path_.resolve)(this.dir, entry.file))
+            .map(entry => __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(this.dir, entry.file))
             .value())
-            .map(path => (0,external_node_path_.dirname)(path))
+            .map(path => __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_dirname__(path))
             .concat(this.dir)
             .concat(this.file)
             .value();
@@ -67898,7 +67879,7 @@ class Preset_syncer extends Syncer_interface {
                 }
                 else if (glob_files.length === 1) {
                     file_to_write = glob_files[0];
-                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+                    file_to_set = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
                 }
                 else {
                     file_to_write = file;
@@ -67910,7 +67891,7 @@ class Preset_syncer extends Syncer_interface {
             };
             const state = prompts_state.find(state => state.name === prompt.name);
             if (state === undefined && should_split) {
-                const file = (0,external_node_path_.join)(sanitize_filename(this.config_name), used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name) + detect_extension(prompt.content));
+                const file = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_join__(sanitize_filename(this.config_name), used ? '' : language === 'zh' ? '未使用' : 'unused', sanitize_filename(prompt.name) + detect_extension(prompt.content));
                 handle_file(prompt, file);
                 return;
             }
@@ -67942,7 +67923,7 @@ class Preset_syncer extends Syncer_interface {
                     }
                     else if (glob_files.length === 1) {
                         file_to_write = glob_files[0];
-                        file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+                        file_to_set = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
                     }
                     else {
                         file_to_write = file;
@@ -67958,7 +67939,7 @@ class Preset_syncer extends Syncer_interface {
                 };
                 const state = states.find(state => state.name === `!!!正则${entry.script_name}`);
                 if (state === undefined && should_split) {
-                    handle_file(entry, (0,external_node_path_.join)(language === 'zh' ? '正则' : 'regex', sanitize_filename(entry.script_name) + '.txt'));
+                    handle_file(entry, __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_join__(language === 'zh' ? '正则' : 'regex', sanitize_filename(entry.script_name) + '.txt'));
                 }
                 else if (state?.file !== undefined) {
                     handle_file(entry, state.file);
@@ -68110,9 +68091,9 @@ class Preset_syncer extends Syncer_interface {
         return lodash_default()(lodash_default()(local_data.prompts)
             .concat(local_data.prompts_unused)
             .filter(prompt => prompt.file !== undefined)
-            .map(prompt => (0,external_node_path_.resolve)(this.dir, prompt.file))
+            .map(prompt => __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(this.dir, prompt.file))
             .value())
-            .map(path => (0,external_node_path_.dirname)(path))
+            .map(path => __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_dirname__(path))
             .value();
     }
     do_bundle(local_data) {
@@ -68190,7 +68171,7 @@ class Worldbook_syncer extends Syncer_interface {
                 }
                 else if (glob_files.length === 1) {
                     file_to_write = glob_files[0];
-                    file_to_set = (0,external_node_path_.relative)(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+                    file_to_set = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
                 }
                 else {
                     file_to_write = file;
@@ -68206,7 +68187,7 @@ class Worldbook_syncer extends Syncer_interface {
             };
             const state = entries_state.find(state => state.name === entry.name);
             if (state === undefined && should_split) {
-                handle_file(entry, (0,external_node_path_.join)(sanitize_filename(this.config_name), sanitize_filename(entry.name) + detect_extension(entry.content)));
+                handle_file(entry, __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_join__(sanitize_filename(this.config_name), sanitize_filename(entry.name) + detect_extension(entry.content)));
             }
             else if (state?.file !== undefined) {
                 handle_file(entry, state.file);
@@ -68286,9 +68267,9 @@ class Worldbook_syncer extends Syncer_interface {
     do_watch(local_data) {
         return lodash_default()(lodash_default()(local_data.entries)
             .filter(entry => entry.file !== undefined)
-            .map(entry => (0,external_node_path_.resolve)(this.dir, entry.file))
+            .map(entry => __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_resolve__(this.dir, entry.file))
             .value())
-            .map(path => (0,external_node_path_.dirname)(path))
+            .map(path => __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_dirname__(path))
             .concat(this.dir)
             .concat(this.file)
             .value();
@@ -68403,7 +68384,7 @@ async function download_latest(signal) {
     throw Error(dist.stringify({ 无法获取最新版脚本: erorr_data }));
 }
 async function check_update(signal) {
-    const current_content = (0,external_node_fs_.readFileSync)(__webpack_filename__, 'utf8');
+    const current_content = __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__(__webpack_filename__, 'utf8');
     const remote_content = await download_latest(signal);
     if (current_content === remote_content) {
         return null;
@@ -68538,7 +68519,7 @@ function add_update_command() {
                 console.info('当前版本已是最新版本，无需更新');
                 return;
             }
-            (0,external_node_fs_.writeFileSync)(__webpack_filename__, result);
+            __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_writeFileSync__(__webpack_filename__, result);
             console.info('更新成功! 请重新启动脚本以使用新版本');
         }
         catch (error) {

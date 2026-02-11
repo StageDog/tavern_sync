@@ -1,6 +1,7 @@
 import {fileURLToPath as __webpack_fileURLToPath__} from "node:url";
 var __webpack_dirname__ = __webpack_fileURLToPath__(import.meta.url.replace(/\/(?:[^\/]*)$/, ""));
-import * as __WEBPACK_EXTERNAL_MODULE_crypto__ from "crypto";
+import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "node:module";
+const __WEBPACK_EXTERNAL_createRequire_require = __WEBPACK_EXTERNAL_createRequire(import.meta.url);
 import { dirname as __WEBPACK_EXTERNAL_MODULE_path_dirname__, resolve as __WEBPACK_EXTERNAL_MODULE_path_resolve__ } from "path";
 import { mkdirSync as __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_mkdirSync__, writeFileSync as __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_writeFileSync__ } from "node:fs";
 import { join as __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_join__ } from "node:path";
@@ -17305,7 +17306,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
   }
 
   if (true) {
-    crypt0 = crypt0 || __webpack_require__(823);
+    crypt0 = crypt0 || __webpack_require__(982);
     module.exports = uuid;
   } else // removed by dead control flow
 {}
@@ -17377,10 +17378,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ },
 
-/***/ 823
+/***/ 982
 (module) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_crypto__;
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("crypto");
 
 /***/ }
 
