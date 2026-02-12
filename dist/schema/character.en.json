@@ -7,12 +7,15 @@
       "$ref": "#/$defs/__schema0"
     },
     "version": {
+      "default": "",
       "type": "string"
     },
     "creator": {
+      "default": "",
       "type": "string"
     },
     "creator_notes": {
+      "default": "",
       "type": "string"
     },
     "first_messages": {
@@ -81,9 +84,6 @@
     }
   },
   "required": [
-    "version",
-    "creator",
-    "creator_notes",
     "entries"
   ],
   "additionalProperties": false,
@@ -503,7 +503,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "0187a628-489f-4fd6-9301-73c0688c0267",
+                        "default": "1ba9c2d1-ea92-42f8-b459-994fce8b96de",
                         "type": "string"
                       },
                       "enabled": {
@@ -560,7 +560,7 @@
           "type": "string"
         },
         "id": {
-          "default": "83bc6eb5-b294-4493-9990-f2a85188fa9f",
+          "default": "f8309e75-9f6a-4d73-8f34-312bcac85f8e",
           "type": "string"
         },
         "enabled": {
@@ -668,7 +668,7 @@
           "type": "string"
         },
         "id": {
-          "default": "6f7db868-3451-4f7a-8549-1447f0b8fef0",
+          "default": "1a8ed824-b3c1-46de-aef1-56cac688ac90",
           "type": "string"
         },
         "enabled": {

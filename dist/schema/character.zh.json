@@ -7,12 +7,15 @@
       "$ref": "#/$defs/__schema0"
     },
     "版本": {
+      "default": "",
       "type": "string"
     },
     "作者": {
+      "default": "",
       "type": "string"
     },
     "备注": {
+      "default": "",
       "type": "string"
     },
     "第一条消息": {
@@ -81,9 +84,6 @@
     }
   },
   "required": [
-    "版本",
-    "作者",
-    "备注",
     "条目"
   ],
   "additionalProperties": false,
@@ -502,7 +502,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "19020a47-0ad1-45a8-97ab-722de9b5e1df",
+                        "default": "63a92398-0d50-489e-a2c0-a31c1cd731f7",
                         "type": "string"
                       },
                       "启用": {
@@ -559,7 +559,7 @@
           "type": "string"
         },
         "id": {
-          "default": "513b9928-b70a-4ca0-a17b-55bda4d5eb55",
+          "default": "1a2a7ef1-27ba-4178-849c-b55f14974966",
           "type": "string"
         },
         "启用": {
@@ -667,7 +667,7 @@
           "type": "string"
         },
         "id": {
-          "default": "ac827a47-8f45-49e5-bcd9-4af547e4e8c7",
+          "default": "f76e61fd-8b80-43bf-9055-762839e751ca",
           "type": "string"
         },
         "启用": {

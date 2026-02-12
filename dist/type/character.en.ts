@@ -8,9 +8,9 @@ export const Character = z.strictObject({
     .string()
     .nullish()
     .describe('角色卡头像: 填写角色卡头像图片路径, 填为 `null` 或不设置该字段则打包时会打包为 JSON 文件'),
-  version: z.coerce.string(),
-  creator: z.coerce.string(),
-  creator_notes: z.coerce.string(),
+  version: z.coerce.string().default(''),
+  creator: z.coerce.string().default(''),
+  creator_notes: z.coerce.string().default(''),
 
   first_messages: z
     .array(
