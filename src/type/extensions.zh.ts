@@ -102,7 +102,7 @@ export const Extensions = z.looseObject({
         .transform(data => {
           if (data.替换为 !== undefined) {
             _.set(data, '内容', data.替换为);
-            _.unset(data, '内容');
+            _.unset(data, '替换为');
           }
           return data;
         })
