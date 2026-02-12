@@ -24,9 +24,9 @@ export const Character = z.strictObject({
     .string()
     .nullish()
     .describe('角色卡头像: 填写角色卡头像图片路径, 填为 `null` 或不设置该字段则打包时会打包为 JSON 文件'),
-  版本: z.coerce.string(),
-  作者: z.coerce.string(),
-  备注: z.coerce.string(),
+  版本: z.coerce.string().default(''),
+  作者: z.coerce.string().default(''),
+  备注: z.coerce.string().default(''),
 
   第一条消息: z
     .array(
