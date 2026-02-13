@@ -143,11 +143,6 @@ export function bundle_preset(preset: Preset): _OriginalPreset {
   const prompt_used = preset.prompts.map(prompt => fromPresetPrompt(prompt));
   const prompt_unused = preset.prompts_unused.map(prompt => fromPresetPrompt(prompt));
 
-  const extensions = _.cloneDeep(preset.extensions);
-  if (_.has(extensions, 'regex_scripts[0].source')) {
-    extensions.regex_scripts = extensions.regex_scripts.map(from_tavern_regex);
-  }
-
   return {
     max_context_unlocked: true,
     openai_max_context: preset.settings.max_context,
@@ -198,6 +193,10 @@ export function bundle_preset(preset: Preset): _OriginalPreset {
       },
     ],
 
-    extensions: preset.extensions ?? {},
+    extensions: {
+      regex_scripts: preset.extensions?.regex_scripts?.map((script: any) => from_tavern_regex(script)) ?? [],
+      tavern_helper: preset.extensions?.tavern_helper ?? {},
+      ..._.omit(preset.extensions, 'regex_scripts', 'tavern_helper'),
+    },
   };
 }
