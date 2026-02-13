@@ -65967,7 +65967,7 @@ function detect_extension(content) {
 ;// ./src/server/util/extract_file_content.ts
 
 function extract_file_content(path) {
-    return __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__(path, 'utf-8');
+    return __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__(path, 'utf-8').replaceAll('\r\n', '\n');
 }
 
 ;// ./src/server/util/glob_file.ts
