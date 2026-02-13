@@ -73,82 +73,86 @@ export class Preset_syncer extends Syncer_interface {
   } {
     let files: { name: string; path: string; content: string }[] = [];
 
-    const prompts_state: { name: string; content?: string; file?: string }[] =
-      local_data === null
-        ? []
-        : [...local_data.prompts, ...local_data.prompts_unused].filter(prompt => !_.has(prompt, 'id'));
+    // 条目
+    {
+      const states: { name: string; content?: string; file?: string }[] =
+        local_data === null
+          ? []
+          : [...local_data.prompts, ...local_data.prompts_unused].filter(
+              prompt => !prompt.id || !prompt_placeholder_ids.includes(prompt.id),
+            );
 
-    const local_names = prompts_state.map(entry => entry.name);
-    const tavern_names = [...tavern_data.prompts, ...tavern_data.prompts_unused]
-      .filter(entry => entry.name !== undefined)
-      .map(entry => entry.name);
-    const duplicated_names = _(tavern_names)
-      .filter(name => {
-        const index = local_names.findIndex(n => n === name);
-        if (index !== -1) {
-          local_names.splice(index, 1);
-          return false;
-        }
-        return true;
-      })
-      .countBy()
-      .pickBy(count => count > 1)
-      .keys()
-      .uniq()
-      .sort()
-      .value();
-    if (duplicated_names.length > 0) {
-      return { result_data: {}, error_data: { 以下条目存在同名条目: duplicated_names }, files: [] };
-    }
+      const local_names = states.map(entry => entry.name);
+      const tavern_names = [...tavern_data.prompts, ...tavern_data.prompts_unused]
+        .filter(entry => entry.name !== undefined)
+        .map(entry => entry.name);
+      const duplicated_names = _(tavern_names)
+        .filter(name => {
+          const index = local_names.findIndex(n => n === name);
+          if (index !== -1) {
+            local_names.splice(index, 1);
+            return false;
+          }
+          return true;
+        })
+        .countBy()
+        .pickBy(count => count > 1)
+        .keys()
+        .uniq()
+        .sort()
+        .value();
+      if (duplicated_names.length > 0) {
+        return { result_data: {}, error_data: { 以下条目存在同名条目: duplicated_names }, files: [] };
+      }
 
-    const convert_prompts = (prompts: Preset_tavern['prompts'], { used }: { used: boolean }) =>
-      prompts.forEach(prompt => {
-        if (_.has(prompt, 'id')) {
-          return;
-        }
-        _.set(prompt, 'content', replace_user_name(prompt.content ?? ''));
-        if (prompt.content === '') {
-          return;
-        }
-
-        const handle_file = (prompt: Preset_tavern['prompts'][number], file: string) => {
-          let file_to_write = '';
-          let file_to_set = '';
-
-          const glob_files = glob_file(this.dir, file);
-          if (glob_files.length === 0) {
-            file_to_write = file.replace(/\.[^\\/.]+$|$/, detect_extension(prompt.content!));
-            file_to_set = file.replace(/\.[^\\/.]+$/, '');
-          } else if (glob_files.length === 1) {
-            file_to_write = glob_files[0];
-            file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
-          } else {
-            file_to_write = file;
-            file_to_set = file;
+      const convert_prompts = (prompts: Preset_tavern['prompts'], { used }: { used: boolean }) =>
+        prompts.forEach(prompt => {
+          if (_.has(prompt, 'id')) {
+            return;
+          }
+          _.set(prompt, 'content', replace_user_name(prompt.content ?? ''));
+          if (prompt.content === '') {
+            return;
           }
 
-          files.push({ name: prompt.name, path: file_to_write, content: append_yaml_endline(prompt.content!) });
-          _.unset(prompt, 'content');
-          _.set(prompt, 'file', file_to_set);
-        };
+          const handle_file = (prompt: Preset_tavern['prompts'][number], file: string) => {
+            let file_to_write = '';
+            let file_to_set = '';
 
-        const state = prompts_state.find(state => state.name === prompt.name);
-        if (state === undefined && should_split) {
-          const file = join(
-            sanitize_filename(this.config_name),
-            used ? '' : language === 'zh' ? '未使用' : 'unused',
-            sanitize_filename(prompt.name) + detect_extension(prompt.content!),
-          );
-          handle_file(prompt, file);
-          return;
-        }
-        if (state?.file !== undefined) {
-          handle_file(prompt, state.file);
-          return;
-        }
-      });
-    convert_prompts(tavern_data.prompts, { used: true });
-    convert_prompts(tavern_data.prompts_unused, { used: false });
+            const glob_files = glob_file(this.dir, file);
+            if (glob_files.length === 0) {
+              file_to_write = file.replace(/\.[^\\/.]+$|$/, detect_extension(prompt.content!));
+              file_to_set = file.replace(/\.[^\\/.]+$/, '');
+            } else if (glob_files.length === 1) {
+              file_to_write = glob_files[0];
+              file_to_set = relative(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+            } else {
+              file_to_write = file;
+              file_to_set = file;
+            }
+
+            files.push({ name: prompt.name, path: file_to_write, content: append_yaml_endline(prompt.content!) });
+            _.unset(prompt, 'content');
+            _.set(prompt, 'file', file_to_set);
+          };
+
+          const state = states.find(state => state.name === prompt.name);
+          if (state === undefined && should_split) {
+            const file = join(
+              used ? (language === 'zh' ? '条目' : 'prompts') : language === 'zh' ? '未使用条目' : 'unused_prompts',
+              sanitize_filename(prompt.name) + detect_extension(prompt.content!),
+            );
+            handle_file(prompt, file);
+            return;
+          }
+          if (state?.file !== undefined) {
+            handle_file(prompt, state.file);
+            return;
+          }
+        });
+      convert_prompts(tavern_data.prompts, { used: true });
+      convert_prompts(tavern_data.prompts_unused, { used: false });
+    }
 
     // 正则
     {
