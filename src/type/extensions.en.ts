@@ -46,6 +46,7 @@ export const Extensions = z.looseObject({
 
           find_regex: z.coerce.string(),
           replace_string: z.coerce.string().optional().describe(`已弃用, 请使用 'content' 或 'file'`),
+          trim_strings: z.array(z.coerce.string()).default([]),
           content: z.coerce.string().optional().describe('要替换为的内容'),
           file: z.coerce.string().optional().describe('要替换为的内容所在的文件路径'),
 

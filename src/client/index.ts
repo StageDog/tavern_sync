@@ -11,7 +11,7 @@ async function checkMinimumVersion(expected: string, title: string) {
 }
 
 $(async () => {
-  checkMinimumVersion('4.6.4', '角色卡/世界书/预设同步脚本');
+  checkMinimumVersion('4.7.9', '角色卡/世界书/预设同步脚本');
 
   if (!get_settings().notify_for_character) {
     const result = await SillyTavern.callGenericPopup(

@@ -62772,7 +62772,7 @@ function from_tavern_regex(tavern_regex) {
         runOnEdit: tavern_regex.run_on_edit,
         findRegex: tavern_regex.find_regex,
         replaceString: tavern_regex.replace_string,
-        trimStrings: [], // TODO: handle this?
+        trimStrings: tavern_regex.trim_strings,
         placement: [
             ...(tavern_regex.source.user_input ? [1] : []),
             ...(tavern_regex.source.ai_output ? [2] : []),
@@ -65720,6 +65720,7 @@ const Extensions = looseObject({
         enabled: schemas_boolean(),
         find_regex: coerce_string(),
         replace_string: coerce_string().optional().describe(`已弃用, 请使用 'content' 或 'file'`),
+        trim_strings: array(coerce_string()).default([]),
         content: coerce_string().optional().describe('要替换为的内容'),
         file: coerce_string().optional().describe('要替换为的内容所在的文件路径'),
         source: strictObject({
@@ -65771,6 +65772,9 @@ const Extensions = looseObject({
 
 const extensions_Extensions = Extensions.transform(data => {
     data.regex_scripts.forEach(script => {
+        if (script?.trim_strings?.length ?? 0 === 0) {
+            _.unset(script, 'trim_strings');
+        }
         if (script.source.slash_command === false) {
             _.unset(script, 'source.slash_command');
         }
@@ -66333,6 +66337,7 @@ const extensions_zh_zh_to_en_map = {
     正则名称: 'script_name',
     启用: 'enabled',
     查找表达式: 'find_regex',
+    修剪掉: 'trim_strings',
     替换为: 'replace_string',
     来源: 'source',
     用户输入: 'user_input',
@@ -66390,6 +66395,7 @@ const extensions_zh_Extensions = looseObject({
         id: coerce_string().prefault((uuid_random_default())),
         启用: schemas_boolean(),
         查找表达式: coerce_string(),
+        修剪掉: array(coerce_string()).default([]),
         替换为: coerce_string().optional().describe(`已弃用, 请使用 '内容' 或 '文件'`),
         内容: coerce_string().optional().describe('要替换为的内容'),
         文件: coerce_string().optional().describe('要替换为的内容所在的文件路径'),

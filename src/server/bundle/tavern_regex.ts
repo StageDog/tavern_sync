@@ -5,6 +5,7 @@ export type TavernRegex = {
   run_on_edit: boolean;
 
   find_regex: string;
+  trim_strings: string[];
   replace_string: string;
 
   source: {
@@ -31,7 +32,7 @@ export function from_tavern_regex(tavern_regex: TavernRegex): any {
 
     findRegex: tavern_regex.find_regex,
     replaceString: tavern_regex.replace_string,
-    trimStrings: [], // TODO: handle this?
+    trimStrings: tavern_regex.trim_strings,
 
     placement: [
       ...(tavern_regex.source.user_input ? [1] : []),

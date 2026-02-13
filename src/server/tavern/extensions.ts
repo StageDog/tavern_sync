@@ -2,6 +2,9 @@ import { Extensions as Extensions_en } from '@type/extensions.en';
 
 export const Extensions = Extensions_en.transform(data => {
   data.regex_scripts.forEach(script => {
+    if (script?.trim_strings?.length ?? 0 === 0) {
+      _.unset(script, 'trim_strings');
+    }
     if (script.source.slash_command === false) {
       _.unset(script, 'source.slash_command');
     }

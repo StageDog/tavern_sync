@@ -10,6 +10,7 @@ export const zh_to_en_map = {
   正则名称: 'script_name',
   启用: 'enabled',
   查找表达式: 'find_regex',
+  修剪掉: 'trim_strings',
   替换为: 'replace_string',
   来源: 'source',
   用户输入: 'user_input',
@@ -79,6 +80,7 @@ export const Extensions = z.looseObject({
           启用: z.boolean(),
 
           查找表达式: z.coerce.string(),
+          修剪掉: z.array(z.coerce.string()).default([]),
           替换为: z.coerce.string().optional().describe(`已弃用, 请使用 '内容' 或 '文件'`),
           内容: z.coerce.string().optional().describe('要替换为的内容'),
           文件: z.coerce.string().optional().describe('要替换为的内容所在的文件路径'),
