@@ -194,7 +194,10 @@ export function bundle_preset(preset: Preset): _OriginalPreset {
     ],
 
     extensions: {
-      regex_scripts: preset.extensions?.regex_scripts?.map((script: any) => from_tavern_regex(script)) ?? [],
+      regex_scripts:
+        preset.extensions?.regex_scripts?.map((script: any) =>
+          script.source !== undefined ? from_tavern_regex(script) : script,
+        ) ?? [],
       tavern_helper: preset.extensions?.tavern_helper ?? {},
       ..._.omit(preset.extensions, 'regex_scripts', 'tavern_helper'),
     },
