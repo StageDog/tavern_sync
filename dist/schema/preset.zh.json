@@ -514,7 +514,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "45c56306-8cce-48de-ad50-3b88dd8d3fa7",
+                        "default": "9dea76a3-c303-4340-925c-075f3d925a69",
                         "type": "string"
                       },
                       "启用": {
@@ -571,7 +571,7 @@
           "type": "string"
         },
         "id": {
-          "default": "ac28d51b-4222-43dc-a67c-098adbea57b0",
+          "default": "aec0f615-ff41-44cd-b0dd-e5e207c25c68",
           "type": "string"
         },
         "启用": {
@@ -579,6 +579,13 @@
         },
         "查找表达式": {
           "type": "string"
+        },
+        "修剪掉": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "替换为": {
           "description": "已弃用, 请使用 '内容' 或 '文件'",
@@ -679,7 +686,7 @@
           "type": "string"
         },
         "id": {
-          "default": "17cffc91-e837-41df-83af-cc871bd42c1b",
+          "default": "6b3a56aa-e12f-4b2c-b1f1-14db53fa27f7",
           "type": "string"
         },
         "启用": {

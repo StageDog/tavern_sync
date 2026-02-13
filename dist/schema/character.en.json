@@ -503,7 +503,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "66e89599-b3d4-46a8-a4b6-2865336d3383",
+                        "default": "10c72be8-557f-4730-8070-799660d526b9",
                         "type": "string"
                       },
                       "enabled": {
@@ -560,7 +560,7 @@
           "type": "string"
         },
         "id": {
-          "default": "4f518a7d-8f08-42bb-866e-85dbf178e7e9",
+          "default": "8b8c503a-c68a-4422-bee9-ec5cd3acef72",
           "type": "string"
         },
         "enabled": {
@@ -572,6 +572,13 @@
         "replace_string": {
           "description": "已弃用, 请使用 'content' 或 'file'",
           "$ref": "#/$defs/__schema40"
+        },
+        "trim_strings": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "content": {
           "description": "要替换为的内容",
@@ -668,7 +675,7 @@
           "type": "string"
         },
         "id": {
-          "default": "ed1b4217-cdc1-4282-93af-49de105b6d95",
+          "default": "a7906940-9d95-43ce-a27a-e29958f404cd",
           "type": "string"
         },
         "enabled": {
