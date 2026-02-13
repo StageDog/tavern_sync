@@ -67205,7 +67205,7 @@ function bundle_preset(preset) {
             },
         ],
         extensions: {
-            regex_scripts: preset.extensions?.regex_scripts?.map((script) => from_tavern_regex(script)) ?? [],
+            regex_scripts: preset.extensions?.regex_scripts?.map((script) => script.source !== undefined ? from_tavern_regex(script) : script) ?? [],
             tavern_helper: preset.extensions?.tavern_helper ?? {},
             ...lodash_default().omit(preset.extensions, 'regex_scripts', 'tavern_helper'),
         },
