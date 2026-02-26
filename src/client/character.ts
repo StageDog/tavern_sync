@@ -47,7 +47,19 @@ export function register_character() {
         throw Error(`未能找到角色卡绑定的世界书 '${character.worldbook}', 请确认已经导入到酒馆中`);
       }
       _.set(character, 'worldbook', character.worldbook ?? data.name);
-      _.set(character, 'entries', character.worldbook !== null ? await getWorldbook(character.worldbook) : []);
+      _.set(
+        character,
+        'entries',
+        character.worldbook !== null
+          ? await getWorldbook(character.worldbook).then(worldbook => {
+              worldbook.forEach(entry => {
+                entry.strategy.keys = entry.strategy.keys.map(_.toString);
+                entry.strategy.keys_secondary.keys = entry.strategy.keys_secondary.keys.map(_.toString);
+              });
+              return worldbook;
+            })
+          : [],
+      );
       if (_.has(character, 'extensions.tavern_helper')) {
         _.update(character, 'extensions.tavern_helper', tavern_helper =>
           Array.isArray(tavern_helper) ? Object.fromEntries(tavern_helper) : tavern_helper,
