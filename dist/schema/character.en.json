@@ -503,7 +503,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "d6ec7df1-6c04-4021-b571-cb5642011787",
+                        "default": "bcc7f9d5-fcf7-4dfd-a21b-b71085d35004",
                         "type": "string"
                       },
                       "enabled": {
@@ -560,7 +560,7 @@
           "type": "string"
         },
         "id": {
-          "default": "9f344a04-2b82-4781-8ac7-e67093e71cb3",
+          "default": "a1de68ad-5a8f-413c-80db-82658bd0979c",
           "type": "string"
         },
         "enabled": {
@@ -672,71 +672,108 @@
       "type": "object",
       "properties": {
         "name": {
-          "type": "string"
+          "$ref": "#/$defs/__schema44"
         },
         "id": {
-          "default": "8189b3e0-c094-4557-8e9b-cc52e1212776",
-          "type": "string"
+          "$ref": "#/$defs/__schema45"
         },
         "enabled": {
-          "type": "boolean"
+          "$ref": "#/$defs/__schema46"
         },
         "type": {
-          "type": "string",
-          "const": "script"
+          "$ref": "#/$defs/__schema47"
         },
         "content": {
-          "type": "string"
+          "$ref": "#/$defs/__schema48"
+        },
+        "file": {
+          "$ref": "#/$defs/__schema50"
         },
         "info": {
-          "type": "string"
+          "$ref": "#/$defs/__schema52"
         },
         "button": {
-          "default": {},
-          "type": "object",
-          "properties": {
-            "enabled": {
-              "default": true,
-              "type": "boolean"
-            },
-            "buttons": {
-              "default": [],
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "visible": {
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "name",
-                  "visible"
-                ],
-                "additionalProperties": false
-              }
-            }
-          }
+          "$ref": "#/$defs/__schema53"
         },
         "data": {
-          "default": {},
-          "type": "object",
-          "propertyNames": {
-            "type": "string"
-          },
-          "additionalProperties": {}
+          "$ref": "#/$defs/__schema54"
         }
       },
       "required": [
         "name",
         "enabled",
-        "type",
-        "content"
+        "type"
       ],
       "additionalProperties": false
+    },
+    "__schema44": {
+      "type": "string"
+    },
+    "__schema45": {
+      "default": "faa62c7c-d62d-4f5a-8ef9-fdd5034ed56c",
+      "type": "string"
+    },
+    "__schema46": {
+      "type": "boolean"
+    },
+    "__schema47": {
+      "type": "string",
+      "const": "script"
+    },
+    "__schema48": {
+      "description": "内嵌的脚本内容",
+      "$ref": "#/$defs/__schema49"
+    },
+    "__schema49": {
+      "type": "string"
+    },
+    "__schema50": {
+      "description": "外链的脚本文件路径",
+      "$ref": "#/$defs/__schema51"
+    },
+    "__schema51": {
+      "type": "string"
+    },
+    "__schema52": {
+      "type": "string"
+    },
+    "__schema53": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": true,
+          "type": "boolean"
+        },
+        "buttons": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "visible": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "name",
+              "visible"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "__schema54": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
     }
   }
 }

@@ -502,7 +502,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "c0821204-3cba-4f99-a637-4d392498cdfd",
+                        "default": "926554bd-20dc-42f9-a6ce-41a0aa48d51d",
                         "type": "string"
                       },
                       "启用": {
@@ -559,7 +559,7 @@
           "type": "string"
         },
         "id": {
-          "default": "cae74ebe-473c-4578-a448-f464eb1c0edc",
+          "default": "f7fa3b11-1e71-4877-8038-87a51a19ba95",
           "type": "string"
         },
         "启用": {
@@ -671,71 +671,108 @@
       "type": "object",
       "properties": {
         "名称": {
-          "type": "string"
+          "$ref": "#/$defs/__schema44"
         },
         "id": {
-          "default": "d0d46aa0-6a67-4937-9fa1-ab3731c544da",
-          "type": "string"
+          "$ref": "#/$defs/__schema45"
         },
         "启用": {
-          "type": "boolean"
+          "$ref": "#/$defs/__schema46"
         },
         "类型": {
-          "type": "string",
-          "const": "脚本"
+          "$ref": "#/$defs/__schema47"
         },
         "内容": {
-          "type": "string"
+          "$ref": "#/$defs/__schema48"
+        },
+        "文件": {
+          "$ref": "#/$defs/__schema50"
         },
         "介绍": {
-          "type": "string"
+          "$ref": "#/$defs/__schema52"
         },
         "按钮": {
-          "default": {},
-          "type": "object",
-          "properties": {
-            "启用": {
-              "default": true,
-              "type": "boolean"
-            },
-            "按钮列表": {
-              "default": [],
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "名称": {
-                    "type": "string"
-                  },
-                  "可见": {
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "名称",
-                  "可见"
-                ],
-                "additionalProperties": false
-              }
-            }
-          }
+          "$ref": "#/$defs/__schema53"
         },
         "数据": {
-          "default": {},
-          "type": "object",
-          "propertyNames": {
-            "type": "string"
-          },
-          "additionalProperties": {}
+          "$ref": "#/$defs/__schema54"
         }
       },
       "required": [
         "名称",
         "启用",
-        "类型",
-        "内容"
+        "类型"
       ],
       "additionalProperties": false
+    },
+    "__schema44": {
+      "type": "string"
+    },
+    "__schema45": {
+      "default": "b828348e-a0f7-4e51-824d-1cec15d65cb8",
+      "type": "string"
+    },
+    "__schema46": {
+      "type": "boolean"
+    },
+    "__schema47": {
+      "type": "string",
+      "const": "脚本"
+    },
+    "__schema48": {
+      "description": "内嵌的脚本内容",
+      "$ref": "#/$defs/__schema49"
+    },
+    "__schema49": {
+      "type": "string"
+    },
+    "__schema50": {
+      "description": "外链的脚本文件路径",
+      "$ref": "#/$defs/__schema51"
+    },
+    "__schema51": {
+      "type": "string"
+    },
+    "__schema52": {
+      "type": "string"
+    },
+    "__schema53": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "启用": {
+          "default": true,
+          "type": "boolean"
+        },
+        "按钮列表": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "名称": {
+                "type": "string"
+              },
+              "可见": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "名称",
+              "可见"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "__schema54": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
     }
   }
 }

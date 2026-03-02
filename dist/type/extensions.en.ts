@@ -6,21 +6,43 @@ const ScriptButton = z.strictObject({
   visible: z.boolean(),
 });
 
-const Script = z.strictObject({
-  name: z.coerce.string(),
-  id: z.coerce.string().prefault(uuid),
-  enabled: z.boolean(),
-  type: z.literal('script'),
-  content: z.coerce.string(),
-  info: z.coerce.string().prefault(''),
-  button: z
-    .object({
-      enabled: z.boolean().prefault(true),
-      buttons: z.array(ScriptButton).prefault([]),
-    })
-    .prefault({}),
-  data: z.record(z.string(), z.any()).prefault({}),
-});
+export const Script = z
+  .strictObject({
+    name: z.coerce.string(),
+    id: z.coerce.string().prefault(uuid),
+    enabled: z.boolean(),
+    type: z.literal('script'),
+    content: z.coerce.string().optional().describe('内嵌的脚本内容'),
+    file: z.coerce.string().optional().describe('外链的脚本文件路径'),
+    info: z.coerce.string().prefault(''),
+    button: z
+      .object({
+        enabled: z.boolean().prefault(true),
+        buttons: z.array(ScriptButton).prefault([]),
+      })
+      .prefault({}),
+    data: z.record(z.string(), z.any()).prefault({}),
+  })
+  .superRefine((data, context) => {
+    if (data.content === undefined && data.file === undefined) {
+      ['content', 'file'].forEach(key =>
+        context.addIssue({
+          code: 'custom',
+          path: [key],
+          message: '必须填写 `content` 或 `file`',
+        }),
+      );
+    }
+    if (data.content !== undefined && data.file !== undefined) {
+      ['content', 'file'].forEach(key =>
+        context.addIssue({
+          code: 'custom',
+          path: [key],
+          message: '不能同时填写 `content` 和 `file`',
+        }),
+      );
+    }
+  });
 
 const ScriptFolder = z.strictObject({
   name: z.coerce.string(),

@@ -29,11 +29,14 @@ export const zh_to_en_map = {
   文件夹: 'folder',
   名称: 'name',
   内容: 'content',
+  文件: 'file',
   介绍: 'info',
   按钮: 'button',
   按钮列表: 'buttons',
   数据: 'data',
   可见: 'visible',
+  图标: 'icon',
+  颜色: 'color',
 };
 
 const ScriptButton = z.strictObject({
@@ -41,21 +44,43 @@ const ScriptButton = z.strictObject({
   可见: z.boolean(),
 });
 
-const Script = z.strictObject({
-  名称: z.coerce.string(),
-  id: z.coerce.string().prefault(uuid),
-  启用: z.boolean(),
-  类型: z.literal('脚本'),
-  内容: z.coerce.string(),
-  介绍: z.coerce.string().prefault(''),
-  按钮: z
-    .object({
-      启用: z.boolean().prefault(true),
-      按钮列表: z.array(ScriptButton).prefault([]),
-    })
-    .prefault({}),
-  数据: z.record(z.string(), z.any()).prefault({}),
-});
+const Script = z
+  .strictObject({
+    名称: z.coerce.string(),
+    id: z.coerce.string().prefault(uuid),
+    启用: z.boolean(),
+    类型: z.literal('脚本'),
+    内容: z.coerce.string().optional().describe('内嵌的脚本内容'),
+    文件: z.coerce.string().optional().describe('外链的脚本文件路径'),
+    介绍: z.coerce.string().prefault(''),
+    按钮: z
+      .object({
+        启用: z.boolean().prefault(true),
+        按钮列表: z.array(ScriptButton).prefault([]),
+      })
+      .prefault({}),
+    数据: z.record(z.string(), z.any()).prefault({}),
+  })
+  .superRefine((data, context) => {
+    if (data.内容 === undefined && data.文件 === undefined) {
+      ['内容', '文件'].forEach(key =>
+        context.addIssue({
+          code: 'custom',
+          path: [key],
+          message: '必须填写`内容`或`文件`',
+        }),
+      );
+    }
+    if (data.内容 !== undefined && data.文件 !== undefined) {
+      ['内容', '文件'].forEach(key =>
+        context.addIssue({
+          code: 'custom',
+          path: [key],
+          message: '不能同时填写`内容`和`文件`',
+        }),
+      );
+    }
+  });
 
 const ScriptFolder = z.strictObject({
   名称: z.coerce.string(),

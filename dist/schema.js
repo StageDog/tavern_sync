@@ -31543,7 +31543,8 @@ const Script = strictObject({
     id: coerce_string().prefault((uuid_random_default())),
     enabled: schemas_boolean(),
     type: literal('script'),
-    content: coerce_string(),
+    content: coerce_string().optional().describe('内嵌的脚本内容'),
+    file: coerce_string().optional().describe('外链的脚本文件路径'),
     info: coerce_string().prefault(''),
     button: object({
         enabled: schemas_boolean().prefault(true),
@@ -31551,6 +31552,22 @@ const Script = strictObject({
     })
         .prefault({}),
     data: record(schemas_string(), any()).prefault({}),
+})
+    .superRefine((data, context) => {
+    if (data.content === undefined && data.file === undefined) {
+        ['content', 'file'].forEach(key => context.addIssue({
+            code: 'custom',
+            path: [key],
+            message: '必须填写 `content` 或 `file`',
+        }));
+    }
+    if (data.content !== undefined && data.file !== undefined) {
+        ['content', 'file'].forEach(key => context.addIssue({
+            code: 'custom',
+            path: [key],
+            message: '不能同时填写 `content` 和 `file`',
+        }));
+    }
 });
 const ScriptFolder = strictObject({
     name: coerce_string(),
@@ -31971,11 +31988,14 @@ const zh_to_en_map = {
     文件夹: 'folder',
     名称: 'name',
     内容: 'content',
+    文件: 'file',
     介绍: 'info',
     按钮: 'button',
     按钮列表: 'buttons',
     数据: 'data',
     可见: 'visible',
+    图标: 'icon',
+    颜色: 'color',
 };
 const extensions_zh_ScriptButton = strictObject({
     名称: coerce_string(),
@@ -31986,7 +32006,8 @@ const extensions_zh_Script = strictObject({
     id: coerce_string().prefault((uuid_random_default())),
     启用: schemas_boolean(),
     类型: literal('脚本'),
-    内容: coerce_string(),
+    内容: coerce_string().optional().describe('内嵌的脚本内容'),
+    文件: coerce_string().optional().describe('外链的脚本文件路径'),
     介绍: coerce_string().prefault(''),
     按钮: object({
         启用: schemas_boolean().prefault(true),
@@ -31994,6 +32015,22 @@ const extensions_zh_Script = strictObject({
     })
         .prefault({}),
     数据: record(schemas_string(), any()).prefault({}),
+})
+    .superRefine((data, context) => {
+    if (data.内容 === undefined && data.文件 === undefined) {
+        ['内容', '文件'].forEach(key => context.addIssue({
+            code: 'custom',
+            path: [key],
+            message: '必须填写`内容`或`文件`',
+        }));
+    }
+    if (data.内容 !== undefined && data.文件 !== undefined) {
+        ['内容', '文件'].forEach(key => context.addIssue({
+            code: 'custom',
+            path: [key],
+            message: '不能同时填写`内容`和`文件`',
+        }));
+    }
 });
 const extensions_zh_ScriptFolder = strictObject({
     名称: coerce_string(),
