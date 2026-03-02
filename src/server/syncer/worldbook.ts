@@ -95,6 +95,9 @@ export class Worldbook_syncer extends Syncer_interface {
 
     tavern_data.entries.forEach(entry => {
       _.set(entry, 'content', replace_user_name(entry.content ?? ''));
+      if (entry.content === '' || entry.content!.split('\n').length <= 3) {
+        return;
+      }
 
       const handle_file = (entry: Worldbook_tavern['entries'][number], file: string) => {
         let file_to_write = '';
