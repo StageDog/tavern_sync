@@ -514,7 +514,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "f65bee52-d617-4ef3-bfe1-350d444acc69",
+                        "default": "7550c509-36c6-4837-b263-f31273f10d2d",
                         "type": "string"
                       },
                       "启用": {
@@ -571,7 +571,7 @@
           "type": "string"
         },
         "id": {
-          "default": "7ab28038-0146-427f-b7d3-4b2c8e6e20e1",
+          "default": "767a8396-4428-46ea-a8c4-fa25b7ebd237",
           "type": "string"
         },
         "启用": {
@@ -721,7 +721,7 @@
       "type": "string"
     },
     "__schema46": {
-      "default": "cf0b0149-c864-4a7d-a23c-ba67828212ad",
+      "default": "a98982c1-2dce-43f9-a277-79b25e46180f",
       "type": "string"
     },
     "__schema47": {
