@@ -31,6 +31,7 @@
   "dependencies": {
     "@types/png-chunk-text": "^1.0.3",
     "@types/png-chunks-extract": "^1.0.2",
+    "axios": "1.14.0",
     "chokidar": "^4.0.3",
     "commander": "^13.1.0",
     "compare-versions": "^6.1.1",
