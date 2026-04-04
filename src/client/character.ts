@@ -6,7 +6,7 @@ async function update_character(name: string, data: Character) {
   let worldbook = RawCharacter.find({ name }) ? getCharWorldbookNames(name).primary : null;
   if (data.entries.length !== 0 || worldbook !== null) {
     worldbook ??= data.worldbook;
-    await replaceWorldbook(worldbook, data.entries);
+    await createOrReplaceWorldbook(worldbook, data.entries);
     _.set(data, 'worldbook', worldbook);
   }
 
