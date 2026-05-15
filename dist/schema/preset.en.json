@@ -54,16 +54,19 @@
           "$ref": "#/$defs/__schema1"
         },
         "min_p": {
+          "default": 0,
           "type": "number",
           "minimum": 0,
           "maximum": 1
         },
         "top_k": {
+          "default": 0,
           "type": "number",
           "minimum": 0,
           "maximum": 500
         },
         "top_a": {
+          "default": 0,
           "type": "number",
           "minimum": 0,
           "maximum": 1
@@ -126,6 +129,7 @@
         },
         "wrap_user_messages_in_quotes": {
           "description": "用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹",
+          "default": false,
           "$ref": "#/$defs/__schema10"
         }
       },
@@ -508,7 +512,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "d65ad15f-e7d2-46b5-9507-814334be484a",
+                        "default": "41024d4f-9b58-4fc0-984f-2f8ffb4726f2",
                         "type": "string"
                       },
                       "enabled": {
@@ -565,7 +569,7 @@
           "type": "string"
         },
         "id": {
-          "default": "792b3cab-ff28-4431-aff8-5468adbc6bf2",
+          "default": "5f8a8707-1ff3-4479-8c40-0c0f2604ce55",
           "type": "string"
         },
         "enabled": {
@@ -603,9 +607,11 @@
               "type": "boolean"
             },
             "slash_command": {
+              "default": false,
               "type": "boolean"
             },
             "world_info": {
+              "default": false,
               "type": "boolean"
             }
           },
@@ -632,9 +638,11 @@
           "additionalProperties": false
         },
         "run_on_edit": {
+          "default": false,
           "type": "boolean"
         },
         "min_depth": {
+          "default": null,
           "anyOf": [
             {
               "type": "number"
@@ -645,6 +653,7 @@
           ]
         },
         "max_depth": {
+          "default": null,
           "anyOf": [
             {
               "type": "number"
@@ -702,6 +711,9 @@
         },
         "data": {
           "$ref": "#/$defs/__schema55"
+        },
+        "export_with": {
+          "$ref": "#/$defs/__schema56"
         }
       },
       "required": [
@@ -715,7 +727,7 @@
       "type": "string"
     },
     "__schema46": {
-      "default": "2121c6fd-cfff-4d01-a996-a9fd4095b266",
+      "default": "49b169af-0b96-46f3-a064-79b4f5e0c49c",
       "type": "string"
     },
     "__schema47": {
@@ -740,6 +752,7 @@
       "type": "string"
     },
     "__schema53": {
+      "default": "",
       "type": "string"
     },
     "__schema54": {
@@ -779,6 +792,20 @@
         "type": "string"
       },
       "additionalProperties": {}
+    },
+    "__schema56": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "data": {
+          "default": true,
+          "type": "boolean"
+        },
+        "button": {
+          "default": true,
+          "type": "boolean"
+        }
+      }
     }
   }
 }

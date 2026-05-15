@@ -54,16 +54,19 @@
           "$ref": "#/$defs/__schema1"
         },
         "min_p": {
+          "default": 0,
           "type": "number",
           "minimum": 0,
           "maximum": 1
         },
         "top_k": {
+          "default": 0,
           "type": "number",
           "minimum": 0,
           "maximum": 500
         },
         "top_a": {
+          "default": 0,
           "type": "number",
           "minimum": 0,
           "maximum": 1
@@ -126,6 +129,7 @@
         },
         "用引号包裹用户消息": {
           "description": "用引号包裹用户消息: 在发送给模型之前, 将所有用户消息用引号包裹",
+          "default": false,
           "$ref": "#/$defs/__schema10"
         }
       },
@@ -514,7 +518,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "82dbad45-5316-4fcb-85d5-10eb65afc7ce",
+                        "default": "3186ba93-7905-4624-a35c-4cf7754725b5",
                         "type": "string"
                       },
                       "启用": {
@@ -571,7 +575,7 @@
           "type": "string"
         },
         "id": {
-          "default": "be48cdaf-79c2-4ed0-871b-82937e63f2dc",
+          "default": "f83d239f-9a65-461f-a407-d25e018a256a",
           "type": "string"
         },
         "启用": {
@@ -609,9 +613,11 @@
               "type": "boolean"
             },
             "快捷命令": {
+              "default": false,
               "type": "boolean"
             },
             "世界信息": {
+              "default": false,
               "type": "boolean"
             }
           },
@@ -638,9 +644,11 @@
           "additionalProperties": false
         },
         "在编辑时运行": {
+          "default": false,
           "type": "boolean"
         },
         "最小深度": {
+          "default": null,
           "anyOf": [
             {
               "type": "number"
@@ -651,6 +659,7 @@
           ]
         },
         "最大深度": {
+          "default": null,
           "anyOf": [
             {
               "type": "number"
@@ -708,6 +717,9 @@
         },
         "数据": {
           "$ref": "#/$defs/__schema55"
+        },
+        "导出时携带": {
+          "$ref": "#/$defs/__schema56"
         }
       },
       "required": [
@@ -721,7 +733,7 @@
       "type": "string"
     },
     "__schema46": {
-      "default": "838465a7-8657-49ca-bb02-374ae8c162f4",
+      "default": "0069cc18-4adb-40a2-ac82-0f1be98ffe4c",
       "type": "string"
     },
     "__schema47": {
@@ -746,6 +758,7 @@
       "type": "string"
     },
     "__schema53": {
+      "default": "",
       "type": "string"
     },
     "__schema54": {
@@ -785,6 +798,20 @@
         "type": "string"
       },
       "additionalProperties": {}
+    },
+    "__schema56": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "数据": {
+          "default": true,
+          "type": "boolean"
+        },
+        "按钮": {
+          "default": true,
+          "type": "boolean"
+        }
+      }
     }
   }
 }

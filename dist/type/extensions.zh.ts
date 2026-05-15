@@ -34,6 +34,7 @@ export const zh_to_en_map = {
   按钮: 'button',
   按钮列表: 'buttons',
   数据: 'data',
+  导出时携带: 'export_with',
   可见: 'visible',
   图标: 'icon',
   颜色: 'color',
@@ -60,6 +61,12 @@ const Script = z
       })
       .prefault({}),
     数据: z.record(z.string(), z.any()).prefault({}),
+    导出时携带: z
+      .object({
+        数据: z.boolean().prefault(true),
+        按钮: z.boolean().prefault(true),
+      })
+      .prefault({}),
   })
   .superRefine((data, context) => {
     if (data.内容 === undefined && data.文件 === undefined) {

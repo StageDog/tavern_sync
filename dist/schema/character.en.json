@@ -503,7 +503,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "666834ad-5b30-4b0b-bfee-a6cbde6fc7c2",
+                        "default": "71edac75-b680-4eac-9400-335215e09c07",
                         "type": "string"
                       },
                       "enabled": {
@@ -560,7 +560,7 @@
           "type": "string"
         },
         "id": {
-          "default": "ad34005e-cf9c-4bc8-bb39-8f8a59d1da75",
+          "default": "de63f7af-2ad3-45e1-9ae9-662051505fce",
           "type": "string"
         },
         "enabled": {
@@ -598,9 +598,11 @@
               "type": "boolean"
             },
             "slash_command": {
+              "default": false,
               "type": "boolean"
             },
             "world_info": {
+              "default": false,
               "type": "boolean"
             }
           },
@@ -627,9 +629,11 @@
           "additionalProperties": false
         },
         "run_on_edit": {
+          "default": false,
           "type": "boolean"
         },
         "min_depth": {
+          "default": null,
           "anyOf": [
             {
               "type": "number"
@@ -640,6 +644,7 @@
           ]
         },
         "max_depth": {
+          "default": null,
           "anyOf": [
             {
               "type": "number"
@@ -697,6 +702,9 @@
         },
         "data": {
           "$ref": "#/$defs/__schema54"
+        },
+        "export_with": {
+          "$ref": "#/$defs/__schema55"
         }
       },
       "required": [
@@ -710,7 +718,7 @@
       "type": "string"
     },
     "__schema45": {
-      "default": "110ba4e7-7617-4002-9f1c-25d09b69bf84",
+      "default": "0bee6bb9-f0b1-485b-ad15-c71c97770e80",
       "type": "string"
     },
     "__schema46": {
@@ -735,6 +743,7 @@
       "type": "string"
     },
     "__schema52": {
+      "default": "",
       "type": "string"
     },
     "__schema53": {
@@ -774,6 +783,20 @@
         "type": "string"
       },
       "additionalProperties": {}
+    },
+    "__schema55": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "data": {
+          "default": true,
+          "type": "boolean"
+        },
+        "button": {
+          "default": true,
+          "type": "boolean"
+        }
+      }
     }
   }
 }

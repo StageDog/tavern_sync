@@ -502,7 +502,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "0bb59470-a3ad-4d97-9db3-d3a3287bac93",
+                        "default": "7d13fe18-6e46-419a-b199-afa0aead85de",
                         "type": "string"
                       },
                       "启用": {
@@ -559,7 +559,7 @@
           "type": "string"
         },
         "id": {
-          "default": "4568cb6e-5be5-4ac6-a752-922950179426",
+          "default": "db6e26ea-57f3-4f6b-ac87-82243fbcaa7d",
           "type": "string"
         },
         "启用": {
@@ -597,9 +597,11 @@
               "type": "boolean"
             },
             "快捷命令": {
+              "default": false,
               "type": "boolean"
             },
             "世界信息": {
+              "default": false,
               "type": "boolean"
             }
           },
@@ -626,9 +628,11 @@
           "additionalProperties": false
         },
         "在编辑时运行": {
+          "default": false,
           "type": "boolean"
         },
         "最小深度": {
+          "default": null,
           "anyOf": [
             {
               "type": "number"
@@ -639,6 +643,7 @@
           ]
         },
         "最大深度": {
+          "default": null,
           "anyOf": [
             {
               "type": "number"
@@ -696,6 +701,9 @@
         },
         "数据": {
           "$ref": "#/$defs/__schema54"
+        },
+        "导出时携带": {
+          "$ref": "#/$defs/__schema55"
         }
       },
       "required": [
@@ -709,7 +717,7 @@
       "type": "string"
     },
     "__schema45": {
-      "default": "400a92f7-2279-4e26-a35f-5aed2d1d3019",
+      "default": "a0084641-5989-48b6-a586-afb5e4a6d94b",
       "type": "string"
     },
     "__schema46": {
@@ -734,6 +742,7 @@
       "type": "string"
     },
     "__schema52": {
+      "default": "",
       "type": "string"
     },
     "__schema53": {
@@ -773,6 +782,20 @@
         "type": "string"
       },
       "additionalProperties": {}
+    },
+    "__schema55": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "数据": {
+          "default": true,
+          "type": "boolean"
+        },
+        "按钮": {
+          "default": true,
+          "type": "boolean"
+        }
+      }
     }
   }
 }
