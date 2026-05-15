@@ -22,6 +22,12 @@ export const Script = z
       })
       .prefault({}),
     data: z.record(z.string(), z.any()).prefault({}),
+    export_with: z
+      .object({
+        data: z.boolean().prefault(true),
+        button: z.boolean().prefault(true),
+      })
+      .prefault({}),
   })
   .superRefine((data, context) => {
     if (data.content === undefined && data.file === undefined) {
