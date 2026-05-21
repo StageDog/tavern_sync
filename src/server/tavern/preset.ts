@@ -78,7 +78,7 @@ export const Preset = z
       wrap_user_messages_in_quotes: z.boolean(),
     }),
 
-    anchors: z.void().transform(() => ({})),
+    anchors: z.record(z.string(), z.any()).prefault({}),
 
     prompts: z.array(Prompt),
     prompts_unused: z
