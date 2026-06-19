@@ -19,7 +19,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import-x": "^4.16.2",
     "terser-webpack-plugin": "^5.6.1",
-    "ts-loader": "^9.6.0",
+    "ts-loader": "^9.6.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths-webpack-plugin": "^4.2.0",
     "tslib": "^2.8.1",
