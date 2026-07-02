@@ -2,9 +2,10 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
+    "rootDir": ".",
     "outDir": "dist",
     "moduleDetection": "auto",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowUmdGlobalAccess": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,

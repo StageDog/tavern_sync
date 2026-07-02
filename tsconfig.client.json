@@ -10,21 +10,21 @@
     ],
     "target": "ESNext",
     "module": "ESNext",
+    "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": "src",
     "paths": {
       "@client/*": [
-        "client/*"
+        "./src/client/*"
       ],
       "@server/*": [
-        "server/*"
+        "./src/server/*"
       ],
       "@type/*": [
-        "type/*"
+        "./src/type/*"
       ]
     },
     "moduleDetection": "auto",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowUmdGlobalAccess": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,

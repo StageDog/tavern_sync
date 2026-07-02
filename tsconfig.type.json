@@ -6,14 +6,14 @@
     ],
     "target": "ESNext",
     "module": "NodeNext",
+    "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": "src",
     "paths": {
       "@server/*": [
-        "server/*"
+        "./src/server/*"
       ],
       "@type/*": [
-        "type/*"
+        "./src/type/*"
       ]
     },
     "moduleDetection": "auto",
