@@ -176,7 +176,14 @@
       "additionalProperties": false
     },
     "__schema3": {
-      "type": "number"
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "__schema4": {
       "type": "string",

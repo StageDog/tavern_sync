@@ -258,7 +258,14 @@
       "additionalProperties": false
     },
     "__schema9": {
-      "type": "number"
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "__schema10": {
       "type": "string",
@@ -503,7 +510,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "6ec40a48-236c-4dbb-8f8a-099bc54c1a88",
+                        "default": "d4e03b35-b026-4301-934b-739495e0cfca",
                         "type": "string"
                       },
                       "enabled": {
@@ -560,7 +567,7 @@
           "type": "string"
         },
         "id": {
-          "default": "afe83432-d2b1-401b-b3a4-fba6a1b07a5b",
+          "default": "7378a1c4-8432-4841-be9b-f531086085bf",
           "type": "string"
         },
         "enabled": {
@@ -602,6 +609,10 @@
               "type": "boolean"
             },
             "world_info": {
+              "default": false,
+              "type": "boolean"
+            },
+            "reasoning": {
               "default": false,
               "type": "boolean"
             }
@@ -718,7 +729,7 @@
       "type": "string"
     },
     "__schema45": {
-      "default": "2182dd58-5068-4729-b1ee-f6f7eed4350d",
+      "default": "180829a8-b62d-4103-becc-6e2d157ba456",
       "type": "string"
     },
     "__schema46": {

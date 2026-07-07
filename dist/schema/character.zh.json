@@ -258,7 +258,14 @@
       "additionalProperties": false
     },
     "__schema9": {
-      "type": "number"
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "__schema10": {
       "type": "string",
@@ -502,7 +509,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "50ad1374-17cb-4c8e-a52a-341ea4c98139",
+                        "default": "9258b567-4c27-4da1-9782-4899f0858e5c",
                         "type": "string"
                       },
                       "启用": {
@@ -559,7 +566,7 @@
           "type": "string"
         },
         "id": {
-          "default": "2f8323b8-67a7-4c2c-9880-9d35a3bd4c5d",
+          "default": "2935eb29-8a24-4a34-b577-29a9996861d7",
           "type": "string"
         },
         "启用": {
@@ -601,6 +608,10 @@
               "type": "boolean"
             },
             "世界信息": {
+              "default": false,
+              "type": "boolean"
+            },
+            "思维链": {
               "default": false,
               "type": "boolean"
             }
@@ -717,7 +728,7 @@
       "type": "string"
     },
     "__schema45": {
-      "default": "37ade452-87e3-4a9e-b715-641c2773b70b",
+      "default": "0d919d51-43fb-438d-9092-37bcf8d1e637",
       "type": "string"
     },
     "__schema46": {

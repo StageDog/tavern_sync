@@ -512,7 +512,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "3d25be5b-dca8-440b-8963-37c1b2342651",
+                        "default": "f770f30b-6d98-460b-9a07-41180a371b41",
                         "type": "string"
                       },
                       "enabled": {
@@ -569,7 +569,7 @@
           "type": "string"
         },
         "id": {
-          "default": "9db8ffbe-ff59-49ae-b23c-75a75d28e18d",
+          "default": "cf4e0c88-9ed7-4c3b-a006-2144afb84680",
           "type": "string"
         },
         "enabled": {
@@ -611,6 +611,10 @@
               "type": "boolean"
             },
             "world_info": {
+              "default": false,
+              "type": "boolean"
+            },
+            "reasoning": {
               "default": false,
               "type": "boolean"
             }
@@ -727,7 +731,7 @@
       "type": "string"
     },
     "__schema46": {
-      "default": "f4dacaf4-2d5a-4de9-af60-ea84f646d753",
+      "default": "ec0f87b5-aa68-488c-a575-daa5b9609e7b",
       "type": "string"
     },
     "__schema47": {

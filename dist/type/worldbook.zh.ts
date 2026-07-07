@@ -71,7 +71,7 @@ type Worldbook_entry = z.infer<typeof Worldbook_entry>;
 const Worldbook_entry = z
   .strictObject({
     名称: z.coerce.string(),
-    uid: z.number().optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
+    uid: z.union([z.coerce.number(), z.string()]).optional().describe('该条目的唯一标识符, 如果不设置或有重复则会自动分配一个新的'),
     启用: z.boolean(),
 
     激活策略: z
