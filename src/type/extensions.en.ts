@@ -83,6 +83,7 @@ export const Extensions = z.looseObject({
             ai_output: z.boolean(),
             slash_command: z.boolean().prefault(false),
             world_info: z.boolean().prefault(false),
+            reasoning: z.boolean().prefault(false),
           }),
 
           destination: z.strictObject({

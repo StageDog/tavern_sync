@@ -17,6 +17,7 @@ export const zh_to_en_map = {
   AI输出: 'ai_output',
   快捷命令: 'slash_command',
   世界信息: 'world_info',
+  思维链: 'reasoning',
   作用于: 'destination',
   仅格式显示: 'display',
   仅格式提示词: 'prompt',
@@ -122,6 +123,7 @@ export const Extensions = z.looseObject({
             AI输出: z.boolean(),
             快捷命令: z.boolean().prefault(false),
             世界信息: z.boolean().prefault(false),
+            思维链: z.boolean().prefault(false),
           }),
 
           作用于: z.strictObject({

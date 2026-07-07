@@ -34,7 +34,7 @@ type _ImplicitKeys = {
   automationId: '';
 };
 type _OriginalWorldbookEntry = {
-  uid: number;
+  uid: number | string;
   displayIndex: number;
   comment: string;
   disable: boolean;
@@ -64,7 +64,7 @@ type _OriginalWorldbookEntry = {
 
   extra?: Record<string, any>;
 };
-export function to_original_worldbook_entry(entry: Worldbook_entry, index: number): _OriginalWorldbookEntry {
+export function to_original_worldbook_entry(entry: Worldbook_entry, index: number | string): _OriginalWorldbookEntry {
   let result = _({})
     .set('uid', index)
     .set('displayIndex', index)

@@ -4,7 +4,7 @@ export type Worldbook_entry = z.infer<typeof Worldbook_entry>;
 export const Worldbook_entry = z
   .object({
     name: z.string(),
-    uid: z.number(),
+    uid: z.union([z.coerce.number(), z.string()]),
     enabled: z.boolean(),
 
     strategy: z.object({

@@ -13,6 +13,7 @@ export type TavernRegex = {
     ai_output: boolean;
     slash_command: boolean;
     world_info: boolean;
+    reasoning?: boolean;
   };
 
   destination: {
@@ -39,6 +40,7 @@ export function from_tavern_regex(tavern_regex: TavernRegex): any {
       ...(tavern_regex.source.ai_output ? [2] : []),
       ...(tavern_regex.source.slash_command ? [3] : []),
       ...(tavern_regex.source.world_info ? [5] : []),
+      ...(tavern_regex.source.reasoning ? [6] : []),
     ],
 
     substituteRegex: 0, // TODO: handle this?
