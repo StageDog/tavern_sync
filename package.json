@@ -11,7 +11,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^26.1.0",
+    "@types/node": "^26.1.1",
     "@types/toastr": "^2.1.43",
     "@typescript-eslint/parser": "^8.63.0",
     "bufferutil": "^4.1.0",
