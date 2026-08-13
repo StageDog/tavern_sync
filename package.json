@@ -13,7 +13,7 @@
     "@types/lodash": "^4.17.25",
     "@types/node": "^26.2.0",
     "@types/toastr": "^2.1.43",
-    "@typescript-eslint/parser": "^8.66.0",
+    "@typescript-eslint/parser": "^8.67.0",
     "bufferutil": "^4.1.0",
     "eslint": "^10.8.1",
     "eslint-config-prettier": "^10.1.8",
