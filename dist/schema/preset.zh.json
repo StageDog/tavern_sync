@@ -518,7 +518,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "2fa421a3-ffc6-4e87-b76b-76a89a2b32e5",
+                        "default": "ebf5d289-6ab8-4404-9c69-927324590c12",
                         "type": "string"
                       },
                       "启用": {
@@ -575,7 +575,7 @@
           "type": "string"
         },
         "id": {
-          "default": "92573322-31bb-445b-b4dd-9bcf35d4426d",
+          "default": "5c96c0cd-91ec-461b-83da-16175725aa7f",
           "type": "string"
         },
         "启用": {
@@ -653,24 +653,16 @@
         },
         "最小深度": {
           "default": null,
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "number",
+            "null"
           ]
         },
         "最大深度": {
           "default": null,
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "number",
+            "null"
           ]
         }
       },
@@ -737,7 +729,7 @@
       "type": "string"
     },
     "__schema46": {
-      "default": "d9b08972-7aba-43cb-85ee-830801c3269d",
+      "default": "74af86b2-ac2a-4844-a539-0b21538cfc33",
       "type": "string"
     },
     "__schema47": {

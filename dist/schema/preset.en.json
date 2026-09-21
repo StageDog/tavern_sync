@@ -512,7 +512,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "f770f30b-6d98-460b-9a07-41180a371b41",
+                        "default": "596fe151-a293-4057-94e9-278cf11e13c7",
                         "type": "string"
                       },
                       "enabled": {
@@ -569,7 +569,7 @@
           "type": "string"
         },
         "id": {
-          "default": "cf4e0c88-9ed7-4c3b-a006-2144afb84680",
+          "default": "7a27d1a0-5a1b-4c85-a96f-7336da749e5d",
           "type": "string"
         },
         "enabled": {
@@ -647,24 +647,16 @@
         },
         "min_depth": {
           "default": null,
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "number",
+            "null"
           ]
         },
         "max_depth": {
           "default": null,
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "number",
+            "null"
           ]
         }
       },
@@ -731,7 +723,7 @@
       "type": "string"
     },
     "__schema46": {
-      "default": "ec0f87b5-aa68-488c-a575-daa5b9609e7b",
+      "default": "91071082-3ff9-4e55-8551-3e9fff737aa5",
       "type": "string"
     },
     "__schema47": {

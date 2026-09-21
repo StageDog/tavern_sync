@@ -89,13 +89,9 @@
   "additionalProperties": false,
   "$defs": {
     "__schema0": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "__schema1": {
@@ -114,13 +110,9 @@
     },
     "__schema5": {},
     "__schema6": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "__schema7": {
@@ -258,13 +250,9 @@
       "additionalProperties": false
     },
     "__schema9": {
-      "anyOf": [
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
-        }
+      "type": [
+        "number",
+        "string"
       ]
     },
     "__schema10": {
@@ -510,7 +498,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "d4e03b35-b026-4301-934b-739495e0cfca",
+                        "default": "bf579a7a-e81f-4cba-b8a9-b737b0581aaa",
                         "type": "string"
                       },
                       "enabled": {
@@ -567,7 +555,7 @@
           "type": "string"
         },
         "id": {
-          "default": "7378a1c4-8432-4841-be9b-f531086085bf",
+          "default": "ad41c3f7-06cc-452f-8cbf-8120e6dc29e5",
           "type": "string"
         },
         "enabled": {
@@ -645,24 +633,16 @@
         },
         "min_depth": {
           "default": null,
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "number",
+            "null"
           ]
         },
         "max_depth": {
           "default": null,
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "number",
+            "null"
           ]
         }
       },
@@ -729,7 +709,7 @@
       "type": "string"
     },
     "__schema45": {
-      "default": "180829a8-b62d-4103-becc-6e2d157ba456",
+      "default": "d0bd9528-2e25-4cbc-9255-396afbbe1eba",
       "type": "string"
     },
     "__schema46": {

@@ -176,13 +176,9 @@
       "additionalProperties": false
     },
     "__schema3": {
-      "anyOf": [
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
-        }
+      "type": [
+        "number",
+        "string"
       ]
     },
     "__schema4": {

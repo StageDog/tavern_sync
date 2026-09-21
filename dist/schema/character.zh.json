@@ -89,13 +89,9 @@
   "additionalProperties": false,
   "$defs": {
     "__schema0": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "__schema1": {
@@ -114,13 +110,9 @@
     },
     "__schema5": {},
     "__schema6": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "__schema7": {
@@ -258,13 +250,9 @@
       "additionalProperties": false
     },
     "__schema9": {
-      "anyOf": [
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
-        }
+      "type": [
+        "number",
+        "string"
       ]
     },
     "__schema10": {
@@ -509,7 +497,7 @@
                         "type": "string"
                       },
                       "id": {
-                        "default": "9258b567-4c27-4da1-9782-4899f0858e5c",
+                        "default": "0451907c-383a-49cc-8468-f21c9a5d12ab",
                         "type": "string"
                       },
                       "启用": {
@@ -566,7 +554,7 @@
           "type": "string"
         },
         "id": {
-          "default": "2935eb29-8a24-4a34-b577-29a9996861d7",
+          "default": "49c836f1-3eb8-4b2d-b0f1-4ad224bbdd83",
           "type": "string"
         },
         "启用": {
@@ -644,24 +632,16 @@
         },
         "最小深度": {
           "default": null,
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "number",
+            "null"
           ]
         },
         "最大深度": {
           "default": null,
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "number",
+            "null"
           ]
         }
       },
@@ -728,7 +708,7 @@
       "type": "string"
     },
     "__schema45": {
-      "default": "0d919d51-43fb-438d-9092-37bcf8d1e637",
+      "default": "d8ea9de0-c32d-48d5-bd7a-67a78098c5f1",
       "type": "string"
     },
     "__schema46": {
