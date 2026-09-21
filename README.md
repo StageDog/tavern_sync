@@ -18,4 +18,4 @@ git config --global merge.ours.driver true
 
 ## 许可证
 
-- [Aladdin](LICENSE)
+[PolyForm Noncommercial License 1.0.0](LICENSE)
