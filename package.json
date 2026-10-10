@@ -10,8 +10,8 @@
   ],
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/lodash": "^4.17.25",
-    "@types/node": "^26.6.4",
+    "@types/lodash": "^4.17.26",
+    "@types/node": "^26.6.5",
     "@types/toastr": "^2.1.44",
     "@typescript-eslint/parser": "^8.71.1",
     "bufferutil": "^4.1.0",
