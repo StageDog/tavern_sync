@@ -17354,7 +17354,7 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("crypto");
 /************************************************************************/
 
 // MODULE: ./node_modules/.pnpm/uuid-random@1.3.2/node_modules/uuid-random/index.js
-var uuid_random_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var uuid_random_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (function(){
@@ -17482,7 +17482,7 @@ var external_crypto_namespaceFn = () => {
 uuid_random_namespaceFn();
 
 function uuid_random_default() { return uuid_random_default.c || (uuid_random_default.c = __webpack_require__.n(uuid_random_namespaceFn())); }
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/util.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js
 
 // functions
 function assertEqual(val) {
@@ -18035,6 +18035,20 @@ function unwrapMessage(message) {
     return typeof message === "string" ? message : message?.message;
 }
 /* A check holds no link back to the schema it is attached to — the same check instance is shared by every clone of that schema — so the owner is stamped onto the issues a check just raised, at the only point where both are in scope. Runs on the failure path only; `start` is the issue count from before the check ran. */
+/** The leading size checks of `defChecks` that set an upper bound, each paired with it. */
+function sizeCaps(defChecks) {
+    const caps = [];
+    for (const ch of defChecks ?? []) {
+        const d = ch._zod.def;
+        // a later check may rewrite the value
+        if (!/_(length|size)$|_equals$/.test(d.check))
+            break;
+        const max = d.maximum ?? d.length ?? d.size;
+        if (max >= 0)
+            caps.push([max, ch]);
+    }
+    return caps;
+}
 function attachSchema(issues, start, inst) {
     var _a;
     for (let i = start; i < issues.length; i++) {
@@ -18343,7 +18357,7 @@ function constantCatch(value) {
     return fn;
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/core.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/core.js
 var _a;
 
 /** A special constant with type `never` */
@@ -18486,7 +18500,7 @@ function config(newConfig) {
     return globalConfig;
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/memoizer.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/memoizer.js
 
 class $ZodCyclicError extends Error {
     constructor() {
@@ -18799,7 +18813,7 @@ function isBackEdge(ctx, value) {
     return backEdges !== undefined && isRef(value) && backEdges.has(value);
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/regexes.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/regexes.js
 /* unused harmony import specifier */ var util;
 
 /**
@@ -18958,7 +18972,7 @@ const sha512_hex = /^[0-9a-fA-F]{128}$/;
 const sha512_base64 = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64(86, "==")));
 const sha512_base64url = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64url(86)));
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/checks.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/checks.js
 /* unused harmony import specifier */ var core;
 /* unused harmony import specifier */ var checks_util;
 // import { $ZodType } from "./schemas.js";
@@ -19478,7 +19492,7 @@ const $ZodCheckOverwrite = /*@__PURE__*/ $constructor("$ZodCheckOverwrite", (ins
     };
 });
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/doc.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/doc.js
 class Doc {
     constructor(args = [], closed = {}) {
         this.content = [];
@@ -19518,14 +19532,14 @@ class Doc {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/versions.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/versions.js
 const version = {
     major: 4,
     minor: 6,
-    patch: 5,
+    patch: 7,
 };
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/schemas.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.js
 /* unused harmony import specifier */ var checks;
 /* unused harmony import specifier */ var schemas_core;
 /* unused harmony import specifier */ var parse;
@@ -20350,6 +20364,33 @@ const $ZodDate = /*@__PURE__*/ (/* unused pure expression or super */ null && (s
         return payload;
     };
 })));
+// an oversized container fails its leading size checks before any element is parsed
+function capSize(inst, size) {
+    const caps = sizeCaps(inst._zod.def.checks);
+    if (!caps.length)
+        return;
+    const cap = Math.min(...caps.map((c) => c[0]));
+    const parse = inst._zod.parse;
+    inst._zod.parse = (payload, ctx) => {
+        const n = size(payload.value);
+        if (n > cap && !ctx?.skipChecks && ctx?.direction !== "backward") {
+            for (const [max, ch] of sizeCaps(inst._zod.def.checks)) {
+                if (n > max && ch._zod.def.when(payload)) {
+                    const start = payload.issues.length;
+                    ch._zod.check(payload);
+                    // the value is still the raw input, so no later check may read it
+                    payload.issues[start].continue = false;
+                    attachSchema(payload.issues, start, inst);
+                    return payload;
+                }
+            }
+        }
+        return parse(payload, ctx);
+    };
+}
+const arraySize = (input) => (Array.isArray(input) ? input.length : -1);
+const mapSize = (input) => (input instanceof Map ? input.size : -1);
+const setSize = (input) => (input instanceof Set ? input.size : -1);
 function handleArrayResult(result, final, index) {
     if (result.issues.length) {
         final.issues.push(...prefixIssues(index, result.issues));
@@ -20395,6 +20436,7 @@ const $ZodArray = /*@__PURE__*/ $constructor("$ZodArray", (inst, def) => {
         }
         return payload; //handleArrayResultsAsync(parseResults, final);
     };
+    capSize(inst, arraySize);
 });
 function handlePropertyResult(result, final, key, input, optin, optout) {
     const isPresent = key in input;
@@ -21432,6 +21474,7 @@ const $ZodMap = /*@__PURE__*/ (/* unused pure expression or super */ null && (sc
             return Promise.all(proms).then(() => payload);
         return payload;
     };
+    capSize(inst, mapSize);
 })));
 function handleMapResult(keyResult, valueResult, final, key, input, inst, ctx) {
     if (keyResult.issues.length) {
@@ -21501,6 +21544,7 @@ const $ZodSet = /*@__PURE__*/ (/* unused pure expression or super */ null && (sc
             return Promise.all(proms).then(() => payload);
         return payload;
     };
+    capSize(inst, setSize);
 })));
 function handleSetResult(result, final) {
     if (result.issues.length) {
@@ -22139,7 +22183,7 @@ function handleRefineResult(result, payload, input, inst) {
     }
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/registries.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/registries.js
 var registries_a;
 const $output = /*@__PURE__*/ (/* unused pure expression or super */ null && (Symbol("ZodOutput")));
 const $input = /*@__PURE__*/ (/* unused pure expression or super */ null && (Symbol("ZodInput")));
@@ -22192,7 +22236,7 @@ function registry() {
 (registries_a = globalThis).__zod_globalRegistry ?? (registries_a.__zod_globalRegistry = registry());
 const globalRegistry = globalThis.__zod_globalRegistry;
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/api.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/api.js
 /* unused harmony import specifier */ var api_checks;
 /* unused harmony import specifier */ var schemas;
 /* unused harmony import specifier */ var api_util;
@@ -23300,7 +23344,7 @@ function _stringFormat(Class, format, fnOrRegex, _params = {}) {
     return inst;
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/to-json-schema.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.js
 
 
 function assignProps(target, ...sources) {
@@ -23953,7 +23997,7 @@ const createStandardJSONSchemaMethod = (schema, io, processors = {}) => (params)
     return finalize(ctx, schema);
 };
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/json-schema-processors.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/json-schema-processors.js
 
 
 
@@ -24798,7 +24842,7 @@ function toJSONSchema(input, params) {
     return finalize(ctx, input);
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/locales/en.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/en.js
 
 const error = () => {
     const Sizable = {
@@ -24925,7 +24969,7 @@ const error = () => {
     };
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/errors.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/errors.js
 
 
 /* Computing the message eagerly is expensive (pretty-printed JSON of all
@@ -25194,7 +25238,7 @@ function prettifyError(error) {
     return lines.join("\n");
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/parse.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/parse.js
 
 
 
@@ -25371,7 +25415,7 @@ const _safeDecodeAsync = (_Err) => async (schema, value, _ctx) => {
 };
 const safeDecodeAsync = /* @__PURE__*/ _safeDecodeAsync($ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/classic/errors.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/errors.js
 /* unused harmony import specifier */ var errors_core;
 
 
@@ -25431,7 +25475,7 @@ const ZodRealError = /*@__PURE__*/ $constructor("ZodError", errors_initializer, 
 // /** @deprecated Use `z.core.$ZodErrorMapCtx` instead. */
 // export type ErrorMapCtx = core.$ZodErrorMapCtx;
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/classic/parse.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/parse.js
 
 
 const classic_parse_parse = /* @__PURE__ */ _parse(ZodRealError);
@@ -25449,7 +25493,7 @@ const parse_safeDecode = /* @__PURE__ */ _safeDecode(ZodRealError);
 const parse_safeEncodeAsync = /* @__PURE__ */ _safeEncodeAsync(ZodRealError);
 const parse_safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/classic/schemas.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/schemas.js
 /* unused harmony import specifier */ var classic_schemas_core;
 /* unused harmony import specifier */ var classic_schemas_util;
 /* unused harmony import specifier */ var processors;
@@ -26991,7 +27035,7 @@ function preprocess(fn, schema) {
     });
 }
 
-;// ./node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/classic/coerce.js
+;// ./node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/coerce.js
 /* unused harmony import specifier */ var coerce_core;
 /* unused harmony import specifier */ var coerce_schemas;
 
