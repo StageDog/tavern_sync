@@ -43,7 +43,7 @@ importers:
         version: 1.0.0
       socket.io:
         specifier: ^4.8.4
-        version: 4.8.4(bufferutil@4.2.0)(utf-8-validate@6.0.6)
+        version: 4.8.4(bufferutil@4.2.0)(utf-8-validate@6.1.0)
       type-fest:
         specifier: ^5.10.0
         version: 5.10.0
@@ -86,10 +86,10 @@ importers:
         version: 4.18.1(eslint@10.15.0)
       terser-webpack-plugin:
         specifier: ^5.6.1
-        version: 5.6.1(webpack@5.112.2)
+        version: 5.6.1(webpack@5.113.0)
       ts-loader:
         specifier: ^9.6.2
-        version: 9.6.2(typescript@6.0.3)(webpack@5.112.2)
+        version: 9.6.2(typescript@6.0.3)(webpack@5.113.0)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@26.6.6)(typescript@6.0.3)
@@ -103,14 +103,14 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
       utf-8-validate:
-        specifier: ^6.0.6
-        version: 6.0.6
+        specifier: ^6.1.0
+        version: 6.1.0
       webpack:
-        specifier: ^5.112.2
-        version: 5.112.2(webpack-cli@7.3.1)
+        specifier: ^5.113.0
+        version: 5.113.0(webpack-cli@7.3.1)
       webpack-cli:
         specifier: ^7.3.1
-        version: 7.3.1(json5@2.2.3)(webpack@5.112.2)
+        version: 7.3.1(json5@2.2.3)(webpack@5.113.0)
 
 packages:
 
@@ -531,8 +531,8 @@ packages:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
-  baseline-browser-mapping@2.11.38:
-    resolution: {integrity: sha512-rMgy5YW7x28SMfXHLlVZDBqlWzYZ0x2rVR/6FWrNBF0chjigARK1H6nM0hKA1Um3kPOlkQFVtjJs00d2N1ezuw==}
+  baseline-browser-mapping@2.11.39:
+    resolution: {integrity: sha512-Q9buOYhr2ggrEZpImICecZTJHCCd8yXkRUokFlUEQ8uiD6oP82F4W4jWnhOHZYV+wlvrC51V7Wy0ULyWjil5Wg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -670,15 +670,15 @@ packages:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
 
-  electron-to-chromium@1.5.491:
-    resolution: {integrity: sha512-zMOQrvaTekJMwENqx1Rnyl3qieqGxIui5CRu9g6ktKzQ/T54fq0Qfr3V/SEhGrkStWI3eYMSzMN4rbyFwfQSzA==}
+  electron-to-chromium@1.5.492:
+    resolution: {integrity: sha512-4uMs7omhajKiud0GqALLTazS/zyvHLTLmDWVTR+e6BnyJo5bSNrph/JoRWEFJJmY75ct9hCiSGsbFF9fLe5gDw==}
 
   engine.io-parser@5.2.3:
     resolution: {integrity: sha512-HqD3yTBfnBxIrbnM1DoD6Pcq8NECnh8d4As1Qgh0z5Gg3jRRIqijury0CL3ghu/edArpUYiYqQiDUQBIs4np3Q==}
     engines: {node: '>=10.0.0'}
 
-  engine.io@6.6.11:
-    resolution: {integrity: sha512-z34mGpLoY/82ZbkX1LqGMIaf3wjVMPL6gVC681QDqnmzJ26synI8qAE32P+a7UazmpJZ8UGrFIeAavgRfXzYrg==}
+  engine.io@6.6.12:
+    resolution: {integrity: sha512-o6WqrYV9WuxuGxpaPLibbqnvgO7YUpVf2Z6hYJNpizzNYCxQbAEu5w9Cm0aW8u4FIefnWCdGM1uZwor6iDRERg==}
     engines: {node: '>=10.2.0'}
 
   enhanced-resolve@5.27.0:
@@ -697,9 +697,6 @@ packages:
   es-errors@1.3.0:
     resolution: {integrity: sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==}
     engines: {node: '>= 0.4'}
-
-  es-module-lexer@2.3.2:
-    resolution: {integrity: sha512-poHGpORABojJJucnV9KbOavETW8lBVnphkW77ER5/BQ5Fz7oXSoCNek7IH3vR5nRjdsEz926ibFYX8KtLQmdyw==}
 
   es-module-lexer@3.0.5:
     resolution: {integrity: sha512-RNq2lKJw53c7z9QRHeiKeA6Ez0oikOqiBGdmxQhKDxEiOX1g5QJR4IoFVwicn8uCZcRWNrXC3NZaJihgK7aEbg==}
@@ -996,8 +993,8 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  minimizer-webpack-plugin@5.14.0:
-    resolution: {integrity: sha512-PnvQXCJxhgH2ZVVO7Lj0sM6q8L1XGxnUvd8wVQIRwi8khMCLq5wg0Ngxe44bcuZL2FSN81RdVE7YHEVzTKsQDQ==}
+  minimizer-webpack-plugin@5.14.1:
+    resolution: {integrity: sha512-qsfTb5Ao4nre9krFweqj8k5bVU7KxgsP4WkLO/ITTuiJkbitCzYBY+Aum5KTKRhY0wDr8VJ1RILsTCSUtPd1kQ==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       '@minify-html/node': '*'
@@ -1258,8 +1255,8 @@ packages:
       uglify-js:
         optional: true
 
-  terser@5.51.2:
-    resolution: {integrity: sha512-bWnjSNscmuI+GJze6ZupnHP8G/cTcsJF+bXCeQknk2SHQsgbNJnLrqiH9jZ2W4STPVXH2mDKKRX3iwPhc9Cn/Q==}
+  terser@5.51.4:
+    resolution: {integrity: sha512-VPi1CkDvCWLGUVIToctNBG+NdHbSXwOPjHJnQ3pdB0XknaldnI76wSkAFOGxV2ZdkzOP5d6gpQ5c58XvDghRvw==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -1337,8 +1334,8 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
-  utf-8-validate@6.0.6:
-    resolution: {integrity: sha512-q3l3P9UtEEiAHcsgsqTgf9PPjctrDWoIXW3NpOHFdRDbLvu4DLIcxHangJ4RLrWkBcKjmcs/6NkerI8T/rE4LA==}
+  utf-8-validate@6.1.0:
+    resolution: {integrity: sha512-+VqK0s7hdUuvL95ExzfqCqvsuA2A+3KzNYibPeeDnGU9L5onk8CY5/H30kCHLpVMzEh6HV9Dv8uw+E+Mz4X/dA==}
     engines: {node: '>=6.14.2'}
 
   uuid-random@1.3.2:
@@ -1389,8 +1386,8 @@ packages:
     resolution: {integrity: sha512-mcxs7A2LsEdwsNqQburqS4QHPR2Ca3NGplUakn6J5GPQvnVZ4oD4IM4FJcT3f8AVN2e2EsjuIVxKj4rorHvyuQ==}
     engines: {node: '>=10.13.0'}
 
-  webpack@5.112.2:
-    resolution: {integrity: sha512-B2tp1LI9D8GVpPDqprdt12ukTkXXahj9MzqSWJq4faSPgOUM7CdZaGAB6HrL/8E6UwbBpdj4vzWDbKoFnVoU6g==}
+  webpack@5.113.0:
+    resolution: {integrity: sha512-q54iF0LNaAAdLEt3al9qMXC2zARvcx7LVKjHp+ExjCRkGx0M8TmawGHAXykXwofWzxhNzPTAh3kLVXvNg0El4A==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     peerDependencies:
@@ -1843,7 +1840,7 @@ snapshots:
 
   balanced-match@4.0.4: {}
 
-  baseline-browser-mapping@2.11.38: {}
+  baseline-browser-mapping@2.11.39: {}
 
   brace-expansion@5.0.13:
     dependencies:
@@ -1851,9 +1848,9 @@ snapshots:
 
   browserslist@4.29.6:
     dependencies:
-      baseline-browser-mapping: 2.11.38
+      baseline-browser-mapping: 2.11.39
       caniuse-lite: 1.0.30001826
-      electron-to-chromium: 1.5.491
+      electron-to-chromium: 1.5.492
       node-releases: 2.0.65
       update-browserslist-db: 1.4.0(browserslist@4.29.6)
 
@@ -1954,11 +1951,11 @@ snapshots:
       es-errors: 1.3.0
       gopd: 1.2.0
 
-  electron-to-chromium@1.5.491: {}
+  electron-to-chromium@1.5.492: {}
 
   engine.io-parser@5.2.3: {}
 
-  engine.io@6.6.11(bufferutil@4.2.0)(utf-8-validate@6.0.6):
+  engine.io@6.6.12(bufferutil@4.2.0)(utf-8-validate@6.1.0):
     dependencies:
       '@types/cors': 2.8.19
       '@types/node': 26.6.6
@@ -1968,7 +1965,7 @@ snapshots:
       cors: 2.8.6
       debug: 4.4.3
       engine.io-parser: 5.2.3
-      ws: 8.21.3(bufferutil@4.2.0)(utf-8-validate@6.0.6)
+      ws: 8.21.3(bufferutil@4.2.0)(utf-8-validate@6.1.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -1984,8 +1981,6 @@ snapshots:
   es-define-property@1.0.1: {}
 
   es-errors@1.3.0: {}
-
-  es-module-lexer@2.3.2: {}
 
   es-module-lexer@3.0.5: {}
 
@@ -2270,12 +2265,12 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  minimizer-webpack-plugin@5.14.0(webpack@5.112.2):
+  minimizer-webpack-plugin@5.14.1(webpack@5.113.0):
     dependencies:
       jest-worker: 27.5.1
-      schema-utils: 4.8.5(webpack@5.112.2)
-      terser: 5.51.2
-      webpack: 5.112.2(webpack-cli@7.3.1)
+      schema-utils: 4.8.5(webpack@5.113.0)
+      terser: 5.51.4
+      webpack: 5.113.0(webpack-cli@7.3.1)
 
   ms@2.1.3: {}
 
@@ -2340,14 +2335,14 @@ snapshots:
 
   resolve-pkg-maps@1.0.0: {}
 
-  schema-utils@4.8.5(webpack@5.112.2):
+  schema-utils@4.8.5(webpack@5.113.0):
     dependencies:
       '@types/json-schema': 7.0.15
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       ajv-keywords: 5.1.0(ajv@8.20.0)
     optionalDependencies:
-      webpack: 5.112.2(webpack-cli@7.3.1)
+      webpack: 5.113.0(webpack-cli@7.3.1)
 
   semver@7.8.6: {}
 
@@ -2361,10 +2356,10 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  socket.io-adapter@2.5.8(bufferutil@4.2.0)(utf-8-validate@6.0.6):
+  socket.io-adapter@2.5.8(bufferutil@4.2.0)(utf-8-validate@6.1.0):
     dependencies:
       debug: 4.4.3
-      ws: 8.21.3(bufferutil@4.2.0)(utf-8-validate@6.0.6)
+      ws: 8.21.3(bufferutil@4.2.0)(utf-8-validate@6.1.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -2377,13 +2372,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  socket.io@4.8.4(bufferutil@4.2.0)(utf-8-validate@6.0.6):
+  socket.io@4.8.4(bufferutil@4.2.0)(utf-8-validate@6.1.0):
     dependencies:
       accepts: 1.3.8
       cors: 2.8.6
       debug: 4.4.3
-      engine.io: 6.6.11(bufferutil@4.2.0)(utf-8-validate@6.0.6)
-      socket.io-adapter: 2.5.8(bufferutil@4.2.0)(utf-8-validate@6.0.6)
+      engine.io: 6.6.12(bufferutil@4.2.0)(utf-8-validate@6.1.0)
+      socket.io-adapter: 2.5.8(bufferutil@4.2.0)(utf-8-validate@6.1.0)
       socket.io-parser: 4.2.7
     transitivePeerDependencies:
       - bufferutil
@@ -2415,15 +2410,15 @@ snapshots:
 
   tapable@2.3.4: {}
 
-  terser-webpack-plugin@5.6.1(webpack@5.112.2):
+  terser-webpack-plugin@5.6.1(webpack@5.113.0):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
-      schema-utils: 4.8.5(webpack@5.112.2)
-      terser: 5.51.2
-      webpack: 5.112.2(webpack-cli@7.3.1)
+      schema-utils: 4.8.5(webpack@5.113.0)
+      terser: 5.51.4
+      webpack: 5.113.0(webpack-cli@7.3.1)
 
-  terser@5.51.2:
+  terser@5.51.4:
     dependencies:
       '@jridgewell/source-map': 0.3.11
       acorn: 8.19.0
@@ -2439,13 +2434,13 @@ snapshots:
     dependencies:
       typescript: 6.0.3
 
-  ts-loader@9.6.2(typescript@6.0.3)(webpack@5.112.2):
+  ts-loader@9.6.2(typescript@6.0.3)(webpack@5.113.0):
     dependencies:
       chalk: 4.1.2
       picomatch: 4.0.7
       source-map: 0.7.6
       typescript: 6.0.3
-      webpack: 5.112.2(webpack-cli@7.3.1)
+      webpack: 5.113.0(webpack-cli@7.3.1)
 
   ts-node@10.9.2(@types/node@26.6.6)(typescript@6.0.3):
     dependencies:
@@ -2528,7 +2523,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  utf-8-validate@6.0.6:
+  utf-8-validate@6.1.0:
     dependencies:
       node-gyp-build: 4.8.4
 
@@ -2542,14 +2537,14 @@ snapshots:
     dependencies:
       graceful-fs: 4.2.12
 
-  webpack-cli@7.3.1(json5@2.2.3)(webpack@5.112.2):
+  webpack-cli@7.3.1(json5@2.2.3)(webpack@5.113.0):
     dependencies:
       '@discoveryjs/json-ext': 1.1.0
       commander: 14.0.3
       envinfo: 7.21.0
       interpret: 3.1.1
       rechoir: 1.0.0
-      webpack: 5.112.2(webpack-cli@7.3.1)
+      webpack: 5.113.0(webpack-cli@7.3.1)
       webpack-merge: 6.0.1
     optionalDependencies:
       json5: 2.2.3
@@ -2562,7 +2557,7 @@ snapshots:
 
   webpack-sources@3.7.1: {}
 
-  webpack@5.112.2(webpack-cli@7.3.1):
+  webpack@5.113.0(webpack-cli@7.3.1):
     dependencies:
       '@types/estree': 1.0.10
       '@types/json-schema': 7.0.15
@@ -2572,17 +2567,16 @@ snapshots:
       browserslist: 4.29.6
       chrome-trace-event: 1.0.4
       enhanced-resolve: 5.27.0
-      es-module-lexer: 2.3.2
       events: 3.3.0
       graceful-fs: 4.2.12
       mime-db: 1.54.0
-      minimizer-webpack-plugin: 5.14.0(webpack@5.112.2)
-      schema-utils: 4.8.5(webpack@5.112.2)
+      minimizer-webpack-plugin: 5.14.1(webpack@5.113.0)
+      schema-utils: 4.8.5(webpack@5.113.0)
       tapable: 2.3.4
       watchpack: 2.6.4
       webpack-sources: 3.7.1
     optionalDependencies:
-      webpack-cli: 7.3.1(json5@2.2.3)(webpack@5.112.2)
+      webpack-cli: 7.3.1(json5@2.2.3)(webpack@5.113.0)
     transitivePeerDependencies:
       - '@minify-html/node'
       - '@napi-rs/image'
@@ -2609,10 +2603,10 @@ snapshots:
 
   word-wrap@1.2.5: {}
 
-  ws@8.21.3(bufferutil@4.2.0)(utf-8-validate@6.0.6):
+  ws@8.21.3(bufferutil@4.2.0)(utf-8-validate@6.1.0):
     optionalDependencies:
       bufferutil: 4.2.0
-      utf-8-validate: 6.0.6
+      utf-8-validate: 6.1.0
 
   yaml@2.9.1: {}
 
